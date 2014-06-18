@@ -9,6 +9,9 @@ namespace NSspi
 {
     public class NativeMethods
     {
+
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374713(v=vs.85).aspx
+
         /*
         SECURITY_STATUS sResult = AcquireCredentialsHandle(
 		        NULL,											// [in] name of principal. NULL = principal of current security context
@@ -35,17 +38,17 @@ namespace NSspi
             );
         */
 
-        [DllImport( "Secur32.dll", CallingConvention = CallingConvention.Winapi, SetLastError=false)]
+        [DllImport( "Secur32.dll", CallingConvention = CallingConvention.Winapi, SetLastError=true)]
         public extern int AcquireCredentialHandle(
             string principleName,
             string packageName,
-            int credentialUse,
+            CredentialUse credentialUse,
             IntPtr loginId,
             IntPtr packageData,
             IntPtr getKeyFunc,
             IntPtr getKeyData,
             IntPtr credentialHandle,
-            long expiry
+            ref long expiry
         );
     }
 }
