@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSspi
 {
-    public static sealed class PackageNames
+    public static class PackageNames
     {
         public const string Negotiate = "Negotiate";
 
