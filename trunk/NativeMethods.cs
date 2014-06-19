@@ -98,7 +98,8 @@ namespace NSspi
 
         /// <summary>
         /// The overload of the QueryCredentialsAttribute method that is used for querying the name attribute.
-        /// In this call, it takes a void* to a structure that contains a wide char pointer.
+        /// In this call, it takes a void* to a structure that contains a wide char pointer. The wide character
+        /// pointer is allocated by the SSPI api, and thus needs to be released by a call to FreeContextBuffer().
         /// </summary>
         /// <param name="credentialHandle"></param>
         /// <param name="attributeName"></param>
@@ -122,5 +123,66 @@ namespace NSspi
         {
             public IntPtr Name;
         }
+
+
+
+        // When used in the ClientContext:
+        /*
+			SECURITY_STATUS sResult = InitializeSecurityContext(
+				phCredential,										// [in] handle to the credentials
+				NULL,												// [in/out] handle of partially formed context. Always NULL the first time through
+				pwszServerPrincipalName,							// [in] name of the target of the context. Not needed by NTLM
+				reqContextAttributes,								// [in] required context attributes
+				0,													// [reserved] reserved; must be zero
+				SECURITY_NATIVE_DREP,								// [in] data representation on the target
+				NULL,												// [in/out] pointer to the input buffers.  Always NULL the first time through
+				0,													// [reserved] reserved; must be zero
+				this->contextHandle,								// [in/out] receives the new context handle (must be pre-allocated)
+				&outBuffDesc,										// [out] pointer to the output buffers
+				pulContextAttributes,								// [out] receives the context attributes
+				&tsLifeSpan											// [out] receives the life span of the security context
+			);
+        */
+        /*
+        SECURITY_STATUS SEC_Entry InitializeSecurityContext(
+          _In_opt_     PCredHandle phCredential,
+          _In_opt_     PCtxtHandle phContext,
+          _In_opt_     SEC_CHAR *pszTargetName,
+          _In_         ULONG fContextReq,
+          _In_         ULONG Reserved1,
+          _In_         ULONG TargetDataRep,
+          _In_opt_     PSecBufferDesc pInput,
+          _In_         ULONG Reserved2,
+          _Inout_opt_  PCtxtHandle phNewContext,
+          _Inout_opt_  PSecBufferDesc pOutput,
+          _Out_        PULONG pfContextAttr,
+          _Out_opt_    PTimeStamp ptsExpiry
+        );
+        */
+
+        public static extern SecurityStatus InitializeSecurityContext_Client(
+            ref long credentialHandle,
+            ref long prevContextHandle, 
+            string serverPrincipleName,
+            int requiredAttribs,
+            int reserved1,
+            int dataRep,
+            IntPtr dataBuffers,
+            int reserved2, 
+            ref long newContextHandle,
+            IntPtr outputBuffer,
+            ref int contextAttribs,
+            ref long expiry
+        );
+
+
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "DeleteSecurityContext",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus DeleteSecurityContext( ref long contextHandle );
     }
 }
