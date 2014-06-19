@@ -9,7 +9,6 @@ namespace NSspi
 {
     public class NativeMethods
     {
-
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374713(v=vs.85).aspx
 
         /*
@@ -160,6 +159,13 @@ namespace NSspi
         );
         */
 
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "InitializeSecurityContext",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
         public static extern SecurityStatus InitializeSecurityContext_Client(
             ref long credentialHandle,
             ref long prevContextHandle, 
@@ -167,7 +173,7 @@ namespace NSspi
             int requiredAttribs,
             int reserved1,
             int dataRep,
-            IntPtr dataBuffers,
+            IntPtr inputBuffer,
             int reserved2, 
             ref long newContextHandle,
             IntPtr outputBuffer,
