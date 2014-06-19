@@ -13,13 +13,74 @@ namespace NSspi
 
         private SecurityPackage securityPackage;
 
+        private long credHandle;
+        private long expiry;
+
         public Credential(SecurityPackage package, CredentialType credentialType)
         {
             this.disposed = false;
-
             this.securityPackage = package;
-            
-            Init();
+
+            this.credHandle = 0;
+            this.expiry = 0;
+
+            Init( package, credentialType );
+        }
+
+        private void Init( SecurityPackage package, CredentialType credentialType )
+        {
+            string packageName;
+            CredentialUse use;
+
+            // -- Package --
+            if ( package == SecurityPackage.Kerberos )
+            {
+                packageName = PackageNames.Kerberos;
+            }
+            else if ( package == NSspi.SecurityPackage.Negotiate )
+            {
+                packageName = PackageNames.Negotiate;
+            }
+            else if ( package == NSspi.SecurityPackage.NTLM )
+            {
+                packageName = PackageNames.Ntlm;
+            }
+            else
+            {
+                throw new ArgumentException( "Invalid value provided for the 'package' parameter." );
+            }
+
+            // -- Credential --
+            if ( credentialType == CredentialType.Client )
+            {
+                use = CredentialUse.Outbound;
+            }
+            else if ( credentialType == CredentialType.Server )
+            {
+                use = CredentialUse.Inbound;
+            }
+            else
+            {
+                throw new ArgumentException( "Invalid value provided for the 'credentialType' parameter." );
+            }
+
+            // -- Invoke --
+            SecurityStatus status = NativeMethods.AcquireCredentialsHandle(
+                null,
+                packageName,
+                use,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                ref this.credHandle,
+                ref this.expiry
+            );
+
+            if ( status != SecurityStatus.Success )
+            {
+                throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
+            }
         }
 
         ~Credential()
@@ -45,12 +106,11 @@ namespace NSspi
             return null;
         }
 
-        // TODO use safe handle ...
-        public IntPtr CredentialHandle
+        public long CredentialHandle
         {
             get
             {
-                return IntPtr.Zero;
+                return this.credHandle;
             }
         }
 
@@ -62,12 +122,19 @@ namespace NSspi
 
         protected virtual void Dispose( bool disposing )
         {
-            this.disposed = true;
-        }
+            if ( this.disposed == false )
+            {
+                SecurityStatus result;
 
-        private void Init()
-        {
-        }
+                result = NativeMethods.FreeCredentialsHandle( ref this.credHandle );
 
+                this.disposed = true;
+
+                if ( disposing && result != SecurityStatus.Success )
+                {
+                    throw new SSPIException( "Failed to release credentials handle", result );
+                }
+            }
+        }
     }
 }

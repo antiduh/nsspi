@@ -10,17 +10,17 @@ namespace NSspi
     [Serializable]
     public class SSPIException : Exception
     {
-        private int errorCode;
+        private SecurityStatus errorCode;
         private string message;
 
         public SSPIException( SerializationInfo info, StreamingContext context )
             : base( info, context )
         {
             this.message = info.GetString( "messsage" );
-            this.errorCode = info.GetInt32( "errorCode" );
+            this.errorCode = (SecurityStatus)info.GetUInt32( "errorCode" );
         }
 
-        public SSPIException( string message, int errorCode )
+        public SSPIException( string message, SecurityStatus errorCode )
         {
             this.message = message;
             this.errorCode = errorCode;
@@ -34,7 +34,7 @@ namespace NSspi
             info.AddValue( "errorCode", this.errorCode );
         }
 
-        public int ErrorCode
+        public SecurityStatus ErrorCode
         {
             get
             {

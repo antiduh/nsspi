@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSspi
 {
-    public enum CredentialUse : int
+    public enum CredentialUse : uint
     {
         Inbound = 1,
         Outbound = 2,

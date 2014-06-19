@@ -38,8 +38,14 @@ namespace NSspi
             );
         */
 
-        [DllImport( "Secur32.dll", CallingConvention = CallingConvention.Winapi, SetLastError=true)]
-        public extern int AcquireCredentialHandle(
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "AcquireCredentialsHandle",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus AcquireCredentialsHandle(
             string principleName,
             string packageName,
             CredentialUse credentialUse,
@@ -47,8 +53,25 @@ namespace NSspi
             IntPtr packageData,
             IntPtr getKeyFunc,
             IntPtr getKeyData,
-            IntPtr credentialHandle,
+            ref long credentialHandle,
             ref long expiry
         );
+
+        /*
+        SECURITY_STATUS SEC_Entry FreeCredentialsHandle(
+            _In_  PCredHandle phCredential
+        );
+        */
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "FreeCredentialsHandle",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus FreeCredentialsHandle(
+            ref long credentialHandle
+        );
+
     }
 }
