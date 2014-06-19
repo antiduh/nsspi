@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace NSspi
 {
-    class ClientCredential
+    public class ClientCredential : Credential
     {
+        public ClientCredential( SecurityPackage package ) : base( package, CredentialType.Client ) { }
     }
 }
