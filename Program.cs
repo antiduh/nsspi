@@ -10,9 +10,22 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            Credential cred = new Credential( SecurityPackage.Negotiate, CredentialType.Client );
-            cred.Dispose();
+            Credential cred = null;
+            try
+            {
+                cred = new Credential( SecurityPackage.Negotiate, CredentialType.Client );
 
+                string name = cred.GetName();
+                Console.Out.WriteLine( name );
+                Console.Out.Flush();
+            }
+            finally
+            {
+                if ( cred != null )
+                {
+                    cred.Dispose();
+                }
+            }
         }
     }
 }

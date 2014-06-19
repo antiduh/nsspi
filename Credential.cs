@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -101,9 +102,33 @@ namespace NSspi
             }
         }
 
-        public string GetName()
+        public string Name 
         {
-            return null;
+            get
+            {
+                NativeMethods.QueryNameAttribCarrier carrier = new NativeMethods.QueryNameAttribCarrier();
+
+                SecurityStatus status;
+                string name = null;
+
+                status = NativeMethods.QueryCredentialsAttribute_Name(
+                    ref this.credHandle,
+                    CredentialQueryAttrib.Names,
+                    ref carrier
+                );
+
+                if ( status == SecurityStatus.Success )
+                {
+                    name = Marshal.PtrToStringUni( carrier.Name );
+                    NativeMethods.FreeContextBuffer( carrier.Name );
+                }
+                else
+                {
+                    throw new SSPIException( "Failed to query credential name", status );
+                }
+
+                return name;
+            }
         }
 
         public long CredentialHandle
