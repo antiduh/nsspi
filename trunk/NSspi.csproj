@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Credential.cs" />
     <Compile Include="CredentialPackage.cs" />
+    <Compile Include="CredentialQueryAttrib.cs" />
     <Compile Include="CredentialType.cs" />
     <Compile Include="CredentialUse.cs" />
     <Compile Include="NativeMethods.cs" />

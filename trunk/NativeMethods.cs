@@ -73,5 +73,55 @@ namespace NSspi
             ref long credentialHandle
         );
 
+        /*
+        SECURITY_STATUS SEC_Entry FreeContextBuffer(
+          _In_  PVOID pvContextBuffer
+        );
+        */
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "FreeContextBuffer",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
+
+        
+
+        /*
+        SECURITY_STATUS SEC_Entry QueryCredentialsAttributes(
+          _In_   PCredHandle phCredential,
+          _In_   ULONG ulAttribute,
+          _Out_  PVOID pBuffer
+        );
+        */
+
+        /// <summary>
+        /// The overload of the QueryCredentialsAttribute method that is used for querying the name attribute.
+        /// In this call, it takes a void* to a structure that contains a wide char* pointer.
+        /// </summary>
+        /// <param name="credentialHandle"></param>
+        /// <param name="attributeName"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "QueryCredentialsAttributes",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus QueryCredentialsAttribute_Name(
+            ref long credentialHandle,
+            CredentialQueryAttrib attributeName,
+            ref QueryNameAttribCarrier name
+        );
+
+        [StructLayout( LayoutKind.Sequential )]
+        public struct QueryNameAttribCarrier
+        {
+            public IntPtr Name;
+        }
     }
 }
