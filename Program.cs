@@ -15,7 +15,7 @@ namespace NSspi
             {
                 cred = new Credential( SecurityPackage.Negotiate, CredentialType.Client );
 
-                string name = cred.GetName();
+                string name = cred.Name;
                 Console.Out.WriteLine( name );
                 Console.Out.Flush();
             }

@@ -86,7 +86,6 @@ namespace NSspi
             SetLastError = true
         )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
-
         
 
         /*
@@ -99,7 +98,7 @@ namespace NSspi
 
         /// <summary>
         /// The overload of the QueryCredentialsAttribute method that is used for querying the name attribute.
-        /// In this call, it takes a void* to a structure that contains a wide char* pointer.
+        /// In this call, it takes a void* to a structure that contains a wide char pointer.
         /// </summary>
         /// <param name="credentialHandle"></param>
         /// <param name="attributeName"></param>
