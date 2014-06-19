@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientCredential.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="CredentialPackage.cs" />
     <Compile Include="CredentialQueryAttrib.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityStatus.cs" />
+    <Compile Include="ServerCredential.cs" />
     <Compile Include="SSPIException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
