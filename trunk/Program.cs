@@ -14,7 +14,7 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            IdentTest();
+            CredTest();
         }
 
         private static void IdentTest()
