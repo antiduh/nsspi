@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NSspi.Contexts;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,13 +38,23 @@ namespace NSspi
 
         private static void CredTest()
         {
-            Credential cred = null;
+            ClientCredential cred = null;
+            ClientContext client;
             try
             {
-                cred = new Credential( SecurityPackage.Negotiate, CredentialType.Client );
+                cred = new ClientCredential( SecurityPackage.Negotiate );
+                Console.Out.WriteLine( cred.Name );
 
-                string name = cred.Name;
-                Console.Out.WriteLine( name );
+                client = new ClientContext( 
+                    cred, 
+                    "", 
+                    ContextAttrib.MutualAuth | 
+                    ContextAttrib.InitIdentify |
+                    ContextAttrib.Confidentiality |
+                    ContextAttrib.ReplayDetect |
+                    ContextAttrib.SequenceDetect
+                );
+                
                 Console.Out.Flush();
             }
             finally

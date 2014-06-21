@@ -43,11 +43,6 @@ namespace NSspi.Contexts
         /// </summary>
         ReplayDetect = 0x00000004,
 
-        // The context must be allowed to detect out-of-order
-        // delivery of packets later through the message support
-        // functions. Use of this flag implies all of the
-        // conditions specified by the Integrity flag.
-
         /// <summary>
         /// Detect messages received out of sequence when using the message support functionality. 
         /// This flag implies all of the conditions specified by the Integrity flag - out-of-order sequence 
@@ -125,6 +120,9 @@ namespace NSspi.Contexts
         /// Set ReplayDetect and SequenceDetect also if these behaviors are desired.
         /// </summary>
         AcceptIntegrity = 0x00020000,
+
+        InitIdentify = 0x00020000,
+        AcceptIdentify = 0x00080000,
 
         /// <summary>
         /// An Schannel provider connection is instructed to not authenticate the server automatically.

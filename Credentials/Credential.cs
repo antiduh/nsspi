@@ -78,7 +78,7 @@ namespace NSspi
                 ref this.expiry
             );
 
-            if ( status != SecurityStatus.Success )
+            if ( status != SecurityStatus.OK )
             {
                 throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
             }
@@ -117,7 +117,7 @@ namespace NSspi
                     ref carrier
                 );
 
-                if ( status == SecurityStatus.Success )
+                if ( status == SecurityStatus.OK )
                 {
                     name = Marshal.PtrToStringUni( carrier.Name );
                     NativeMethods.FreeContextBuffer( carrier.Name );
@@ -155,7 +155,7 @@ namespace NSspi
 
                 this.disposed = true;
 
-                if ( disposing && result != SecurityStatus.Success )
+                if ( disposing && result != SecurityStatus.OK )
                 {
                     throw new SSPIException( "Failed to release credentials handle", result );
                 }

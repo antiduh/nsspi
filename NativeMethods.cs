@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NSspi.Contexts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,6 +11,11 @@ namespace NSspi
     public class NativeMethods
     {
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374713(v=vs.85).aspx
+
+        // The REMSSPI sample:
+
+        // A C++ pure client/server example:
+        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa380536(v=vs.85).aspx
 
         /*
         SECURITY_STATUS sResult = AcquireCredentialsHandle(
@@ -166,18 +172,18 @@ namespace NSspi
             CharSet = CharSet.Unicode,
             SetLastError = true
         )]
-        public static extern SecurityStatus InitializeSecurityContext_Client(
+        public static extern SecurityStatus InitializeSecurityContext_Client1(
             ref long credentialHandle,
-            ref long prevContextHandle, 
+            IntPtr zero, 
             string serverPrincipleName,
-            int requiredAttribs,
+            ContextAttrib requiredAttribs,
             int reserved1,
-            int dataRep,
+            SecureBufferDataRep dataRep,
             IntPtr inputBuffer,
             int reserved2, 
             ref long newContextHandle,
             IntPtr outputBuffer,
-            ref int contextAttribs,
+            ref ContextAttrib contextAttribs,
             ref long expiry
         );
 
