@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,10 @@
     <Compile Include="Contexts\ClientContext.cs" />
     <Compile Include="Contexts\Context.cs" />
     <Compile Include="Contexts\ContextAttrib.cs" />
+    <Compile Include="Contexts\SecureBuffer.cs" />
+    <Compile Include="Contexts\SecureBufferDataRep.cs" />
+    <Compile Include="Contexts\SecureBufferDesc.cs" />
+    <Compile Include="Contexts\SecureBufferType.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
