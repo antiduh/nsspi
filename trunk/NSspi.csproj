@@ -48,10 +48,6 @@
     <Compile Include="Contexts\ClientContext.cs" />
     <Compile Include="Contexts\Context.cs" />
     <Compile Include="Contexts\ContextAttrib.cs" />
-    <Compile Include="Contexts\SecureBuffer.cs" />
-    <Compile Include="Contexts\SecureBufferDataRep.cs" />
-    <Compile Include="Contexts\SecureBufferDesc.cs" />
-    <Compile Include="Contexts\SecureBufferType.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
@@ -64,8 +60,15 @@
     <Compile Include="PackageNames.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecureBuffer\SecureBuffer.cs" />
+    <Compile Include="SecureBuffer\SecureBufferDataRep.cs" />
+    <Compile Include="SecureBuffer\SecureBufferDesc.cs" />
+    <Compile Include="SecureBuffer\SecureBufferType.cs" />
     <Compile Include="SecurityStatus.cs" />
     <Compile Include="SSPIException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SecureBuffers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
