@@ -61,6 +61,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecureBuffer\SecureBuffer.cs" />
+    <Compile Include="SecureBuffer\SecureBufferAdapter.cs" />
     <Compile Include="SecureBuffer\SecureBufferDataRep.cs" />
     <Compile Include="SecureBuffer\SecureBufferDesc.cs" />
     <Compile Include="SecureBuffer\SecureBufferType.cs" />

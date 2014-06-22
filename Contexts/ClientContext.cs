@@ -21,54 +21,30 @@ namespace NSspi.Contexts
             ContextAttrib newContextAttribs = 0;
 
             SecurityStatus status;
-            SecureBufferDesc descriptor;
-            SecureBuffer secureBuffer;
-            byte[] tokenBuffer = new byte[100000];
-            GCHandle tokenBufferHandle;
-            GCHandle bufferArrayHandle;
-            GCHandle descriptorHandle;
-            SecureBuffer[] bufferArray;
+            SecureBuffer tokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
+            SecureBufferAdapter list = new SecureBufferAdapter( tokenBuffer );
 
-            tokenBufferHandle = GCHandle.Alloc( tokenBuffer, GCHandleType.Pinned );
-
-            secureBuffer = new SecureBuffer();
-            secureBuffer.Type = BufferType.Token;
-            secureBuffer.Count = tokenBuffer.Length;
-            secureBuffer.Buffer = tokenBufferHandle.AddrOfPinnedObject();
-
-            bufferArray = new SecureBuffer[1];
-            bufferArray[0] = secureBuffer;
-            bufferArrayHandle = GCHandle.Alloc( bufferArray, GCHandleType.Pinned );
+            using ( list )
+            {
+                status = NativeMethods.InitializeSecurityContext_Client1(
+                    ref credHandle,
+                    IntPtr.Zero,
+                    serverPrinc,
+                    attribs,
+                    0,
+                    SecureBufferDataRep.Network,
+                    IntPtr.Zero,
+                    0,
+                    ref newContextHandle,
+                    list.Handle,
+                    ref newContextAttribs,
+                    ref expiry
+                );
+            }
             
-            descriptor = new SecureBufferDesc();
-            descriptor.Version = SecureBufferDesc.ApiVersion;
-            descriptor.NumBuffers = bufferArray.Length;
-            descriptor.Buffers = bufferArrayHandle.AddrOfPinnedObject();
-
-            descriptorHandle = GCHandle.Alloc( descriptor, GCHandleType.Pinned );
-
-            status = NativeMethods.InitializeSecurityContext_Client1(
-                ref credHandle,
-                IntPtr.Zero,
-                serverPrinc,
-                attribs,
-                0,
-                SecureBufferDataRep.Network,
-                IntPtr.Zero,
-                0,
-                ref newContextHandle,
-                descriptorHandle.AddrOfPinnedObject(),
-                ref newContextAttribs,
-                ref expiry
-            );
-
-            descriptorHandle.Free();
-            bufferArrayHandle.Free();
-            tokenBufferHandle.Free();
-
-            secureBuffer = bufferArray[0];
-
-            Console.Out.WriteLine( status );
+            Console.Out.WriteLine( "Call status: " + status );
+            Console.Out.WriteLine( "Buffer length: " + tokenBuffer.Length );
+            Console.Out.WriteLine( "First bytes: " + tokenBuffer.Buffer[0] );
             base.ContextHandle = newContextHandle;
             
         }
