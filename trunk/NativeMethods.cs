@@ -172,7 +172,7 @@ namespace NSspi
             CharSet = CharSet.Unicode,
             SetLastError = true
         )]
-        public static extern SecurityStatus InitializeSecurityContext_Client1(
+        public static extern SecurityStatus InitializeSecurityContext_1(
             ref long credentialHandle,
             IntPtr zero, 
             string serverPrincipleName,
@@ -187,6 +187,27 @@ namespace NSspi
             ref long expiry
         );
 
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "InitializeSecurityContext",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus InitializeSecurityContext_2(
+            ref long credentialHandle,
+            ref long previousHandle,
+            string serverPrincipleName,
+            ContextAttrib requiredAttribs,
+            int reserved1,
+            SecureBufferDataRep dataRep,
+            IntPtr inputBuffer,
+            int reserved2,
+            ref long newContextHandle,
+            IntPtr outputBuffer,
+            ref ContextAttrib contextAttribs,
+            ref long expiry
+        );
 
         [DllImport(
             "Secur32.dll",

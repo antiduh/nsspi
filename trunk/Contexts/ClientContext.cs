@@ -9,44 +9,112 @@ namespace NSspi.Contexts
 {
     public class ClientContext : Context
     {
-        public ClientContext( ClientCredential cred, string serverPrinc, ContextAttrib attribs )
+        private bool complete;
+        private ContextAttrib requestedAttribs;
+        private ContextAttrib finalAttribs;
+        private string serverPrinc;
+
+        public ClientContext( ClientCredential cred, string serverPrinc, ContextAttrib requestedAttribs )
             : base( cred )
+        {
+            this.complete = false;
+
+            this.serverPrinc = serverPrinc;
+            this.requestedAttribs = requestedAttribs;
+        }
+
+        public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
             long credHandle = base.Credential.CredentialHandle;
 
-            long prevContextHandle = 0;
+            long prevContextHandle = base.ContextHandle;
             long newContextHandle = 0;
 
             long expiry = 0;
-            ContextAttrib newContextAttribs = 0;
 
             SecurityStatus status;
-            SecureBuffer tokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
-            SecureBufferAdapter list = new SecureBufferAdapter( tokenBuffer );
 
-            using ( list )
+            SecureBuffer outTokenBuffer;
+            SecureBufferAdapter outAdapter;
+
+            SecureBuffer serverBuffer;
+            SecureBufferAdapter serverAdapter;
+
+            if ( (serverToken != null) && (prevContextHandle == 0) )
             {
-                status = NativeMethods.InitializeSecurityContext_Client1(
-                    ref credHandle,
-                    IntPtr.Zero,
-                    serverPrinc,
-                    attribs,
-                    0,
-                    SecureBufferDataRep.Network,
-                    IntPtr.Zero,
-                    0,
-                    ref newContextHandle,
-                    list.Handle,
-                    ref newContextAttribs,
-                    ref expiry
-                );
+                throw new InvalidOperationException( "Out-of-order usage detected - have a server token, but no previous client token had been created." );
             }
-            
-            Console.Out.WriteLine( "Call status: " + status );
-            Console.Out.WriteLine( "Buffer length: " + tokenBuffer.Length );
-            Console.Out.WriteLine( "First bytes: " + tokenBuffer.Buffer[0] );
+            else if ( (serverToken == null) && (prevContextHandle != 0) )
+            {
+                throw new InvalidOperationException( "Must provide the server's response when continuing the init process." );
+            }
+
+            outTokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
+            serverBuffer = new SecureBuffer( serverToken, BufferType.Token );
+
+
+            using ( outAdapter = new SecureBufferAdapter( outTokenBuffer ) )
+            {
+                if ( prevContextHandle == 0 )
+                {
+                    status = NativeMethods.InitializeSecurityContext_1(
+                        ref credHandle,
+                        IntPtr.Zero,
+                        this.serverPrinc,
+                        this.requestedAttribs,
+                        0,
+                        SecureBufferDataRep.Network,
+                        IntPtr.Zero,
+                        0,
+                        ref newContextHandle,
+                        outAdapter.Handle,
+                        ref this.finalAttribs,
+                        ref expiry
+                    );
+                }
+                else
+                {
+                    using ( serverAdapter = new SecureBufferAdapter( serverBuffer ) )
+                    {
+                        status = NativeMethods.InitializeSecurityContext_2(
+                            ref credHandle,
+                            ref prevContextHandle,
+                            this.serverPrinc,
+                            this.requestedAttribs,
+                            0,
+                            SecureBufferDataRep.Network,
+                            serverAdapter.Handle,
+                            0,
+                            ref newContextHandle,
+                            outAdapter.Handle,
+                            ref this.finalAttribs,
+                            ref expiry
+                        );
+                    }
+                }
+
+            }
+
+            if ( status == SecurityStatus.OK )
+            {
+                this.complete = true;
+                outToken = null;
+            }
+            else if ( status == SecurityStatus.ContinueNeeded )
+            {
+                this.complete = false;
+
+                outToken = new byte[outTokenBuffer.Length];
+                Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );
+            }
+            else
+            {
+                throw new SSPIException( "Failed to invoke InitializeSecurityContext for a client", status );
+            }
+
             base.ContextHandle = newContextHandle;
-            
+
+            return status;
         }
     }
 }
