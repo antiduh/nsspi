@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NSspi.Contexts
 {
     [StructLayout( LayoutKind.Sequential )]
-    public unsafe struct SecureBufferInternal
+    public struct SecureBufferInternal
     {
         public int Count;
 
