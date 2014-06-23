@@ -101,6 +101,39 @@ namespace NSspi
                 Console.Out.WriteLine( "Client authority: " + client.AuthorityName );
                 Console.Out.WriteLine( "Client context user: " + client.ContextUserName );
 
+                string message = "Hello, world. This is a long message that will be encrypted";
+                string rtMessage;
+
+                byte[] plainText = new byte[Encoding.UTF8.GetByteCount( message )];
+                byte[] cipherText;
+                byte[] roundTripPlaintext;
+
+                Encoding.UTF8.GetBytes( message, 0, message.Length, plainText, 0 );
+
+                cipherText = client.Encrypt( plainText );
+
+                roundTripPlaintext = server.Decrypt( cipherText );
+
+                if( roundTripPlaintext.Length != plainText.Length )
+                {
+                    throw new Exception();
+                }
+
+                for( int i= 0; i < plainText.Length; i++ )
+                {
+                    if( plainText[i] != roundTripPlaintext[i] )
+                    {
+                        throw new Exception();
+                    }
+                }
+
+                rtMessage = Encoding.UTF8.GetString( roundTripPlaintext, 0, roundTripPlaintext.Length );
+
+                if( rtMessage.Equals( message ) == false )
+                {
+                    throw new Exception();
+                }
+
                 Console.Out.Flush();
             }
             finally
