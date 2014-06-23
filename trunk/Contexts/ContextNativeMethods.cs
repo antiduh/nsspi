@@ -148,5 +148,19 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus DeleteSecurityContext( ref long contextHandle );
+
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "EncryptMessag",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus EncryptMessage(
+            ref long contextHandle,
+            int qualityOfProtection,
+            IntPtr bufferDescriptor,
+            int sequenceNumber
+        );
     }
 }
