@@ -151,7 +151,7 @@ namespace NSspi.Contexts
 
         [DllImport(
             "Secur32.dll",
-            EntryPoint = "EncryptMessag",
+            EntryPoint = "EncryptMessage",
             CallingConvention = CallingConvention.Winapi,
             CharSet = CharSet.Unicode,
             SetLastError = true
@@ -162,5 +162,35 @@ namespace NSspi.Contexts
             IntPtr bufferDescriptor,
             int sequenceNumber
         );
+
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "QueryContextAttributes",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode )]
+        public static extern SecurityStatus QueryContextAttributes_Sizes(
+            ref long contextHandle,
+            ContextQueryAttrib attrib,
+            ref SecPkgContext_Sizes sizes
+        );
+
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "QueryContextAttributes",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode )]
+        public static extern SecurityStatus QueryContextAttributes_String(
+            ref long contextHandle,
+            ContextQueryAttrib attrib,
+            ref SecPkgContext_String names
+        );
+
+
+        [DllImport( 
+            "Secur32.dll",
+            EntryPoint = "FreeContextBuffer", 
+            CallingConvention = CallingConvention.Winapi, 
+            CharSet = CharSet.Unicode )]
+        public static extern SecurityStatus FreeContextBuffer( IntPtr handle );
     }
 }

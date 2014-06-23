@@ -91,7 +91,16 @@ namespace NSspi
 
                     if ( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
                 }
-                
+
+
+                Console.Out.WriteLine( "Server authority: " + server.AuthorityName );
+                Console.Out.WriteLine( "Server context user: " + server.ContextUserName );
+
+                Console.Out.WriteLine();
+
+                Console.Out.WriteLine( "Client authority: " + client.AuthorityName );
+                Console.Out.WriteLine( "Client context user: " + client.ContextUserName );
+
                 Console.Out.Flush();
             }
             finally
