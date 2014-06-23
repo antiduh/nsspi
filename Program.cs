@@ -38,15 +38,25 @@ namespace NSspi
 
         private static void CredTest()
         {
-            ClientCredential cred = null;
-            ClientContext client;
+            ClientCredential clientCred = null;
+            ClientContext client = null;
+
+            ServerCredential serverCred = null;
+            ServerContext server = null;
+
+            byte[] clientToken;
+            byte[] serverToken;
+
+            SecurityStatus clientStatus;
+            SecurityStatus serverStatus;
+
             try
             {
-                cred = new ClientCredential( SecurityPackage.Negotiate );
-                Console.Out.WriteLine( cred.Name );
+                clientCred = new ClientCredential( SecurityPackage.Negotiate );
+                Console.Out.WriteLine( clientCred.Name );
 
                 client = new ClientContext( 
-                    cred, 
+                    clientCred, 
                     "", 
                     ContextAttrib.MutualAuth | 
                     ContextAttrib.InitIdentify |
@@ -54,14 +64,56 @@ namespace NSspi
                     ContextAttrib.ReplayDetect |
                     ContextAttrib.SequenceDetect
                 );
+
+                serverCred = new ServerCredential( SecurityPackage.Negotiate );
+
+                server = new ServerContext(
+                    serverCred,
+                    ContextAttrib.MutualAuth |
+                    ContextAttrib.AcceptIdentify |
+                    ContextAttrib.Confidentiality |
+                    ContextAttrib.ReplayDetect |
+                    ContextAttrib.SequenceDetect
+                );
+
+                clientToken = null;
+                serverToken = null;
+
+                clientStatus = client.Init( serverToken, out clientToken );
+
+                while ( true )
+                {
+                    serverStatus = server.AcceptToken( clientToken, out serverToken );
+
+                    if ( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
+
+                    clientStatus = client.Init( serverToken, out clientToken );
+
+                    if ( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
+                }
                 
                 Console.Out.Flush();
             }
             finally
             {
-                if( cred != null )
+                if ( server != null )
                 {
-                    cred.Dispose();
+                    server.Dispose();
+                }
+
+                if ( client != null )
+                {
+                    client.Dispose();
+                }
+
+                if( clientCred != null )
+                {
+                    clientCred.Dispose();
+                }
+
+                if ( serverCred != null )
+                {
+                    serverCred.Dispose();
                 }
             }
         }

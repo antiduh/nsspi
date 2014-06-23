@@ -75,6 +75,16 @@ namespace NSspi.Contexts
             {
                 nextToken = null;
                 this.complete = true;
+
+                if ( outBuffer.Length != 0 )
+                {
+                    nextToken = new byte[outBuffer.Length];
+                    Array.Copy( outBuffer.Buffer, nextToken, nextToken.Length );
+                }
+                else
+                {
+                    nextToken = null;
+                }
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {

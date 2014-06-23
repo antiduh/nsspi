@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NSspi.Contexts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,7 @@ namespace NSspi
             }
 
             long contextHandleCopy = this.ContextHandle;
-            NativeMethods.DeleteSecurityContext( ref contextHandleCopy );
+            ContextNativeMethods.DeleteSecurityContext( ref contextHandleCopy );
 
             this.ContextHandle = 0;
 
