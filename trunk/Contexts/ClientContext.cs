@@ -50,14 +50,18 @@ namespace NSspi.Contexts
             }
 
             outTokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
-            serverBuffer = new SecureBuffer( serverToken, BufferType.Token );
 
+            serverBuffer = null;
+            if ( serverToken != null )
+            {
+                serverBuffer = new SecureBuffer( serverToken, BufferType.Token );
+            }
 
             using ( outAdapter = new SecureBufferAdapter( outTokenBuffer ) )
             {
                 if ( prevContextHandle == 0 )
                 {
-                    status = NativeMethods.InitializeSecurityContext_1(
+                    status = ContextNativeMethods.InitializeSecurityContext_1(
                         ref credHandle,
                         IntPtr.Zero,
                         this.serverPrinc,
@@ -76,7 +80,7 @@ namespace NSspi.Contexts
                 {
                     using ( serverAdapter = new SecureBufferAdapter( serverBuffer ) )
                     {
-                        status = NativeMethods.InitializeSecurityContext_2(
+                        status = ContextNativeMethods.InitializeSecurityContext_2(
                             ref credHandle,
                             ref prevContextHandle,
                             this.serverPrinc,

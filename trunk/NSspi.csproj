@@ -48,6 +48,7 @@
     <Compile Include="Contexts\ClientContext.cs" />
     <Compile Include="Contexts\Context.cs" />
     <Compile Include="Contexts\ContextAttrib.cs" />
+    <Compile Include="Contexts\ContextNativeMethods.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
