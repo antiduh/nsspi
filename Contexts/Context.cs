@@ -49,5 +49,9 @@ namespace NSspi
 
             this.disposed = true;
         }
+
+        public byte[] Encrypt( byte[] input )
+        {
+        }
     }
 }
