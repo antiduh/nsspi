@@ -29,7 +29,6 @@ namespace NSspi.Contexts
             long newContextHandle = 0;
 
             SecurityStatus status;
-            ContextAttrib outAttribs = ContextAttrib.Zero;
             long expiry = 0;
 
             SecureBufferAdapter clientAdapter;
@@ -50,7 +49,7 @@ namespace NSspi.Contexts
                             SecureBufferDataRep.Network,
                             ref newContextHandle,
                             outAdapter.Handle,
-                            ref outAttribs,
+                            ref this.finalAttribs,
                             ref expiry
                         );
                     }
@@ -64,7 +63,7 @@ namespace NSspi.Contexts
                             SecureBufferDataRep.Network,
                             ref newContextHandle,
                             outAdapter.Handle,
-                            ref outAttribs,
+                            ref this.finalAttribs,
                             ref expiry
                         );
                     }
