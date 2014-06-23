@@ -163,6 +163,21 @@ namespace NSspi.Contexts
             int sequenceNumber
         );
 
+
+        [DllImport(
+            "Secur32.dll",
+            EntryPoint = "DecryptMessage",
+            CallingConvention = CallingConvention.Winapi,
+            CharSet = CharSet.Unicode,
+            SetLastError = true
+        )]
+        public static extern SecurityStatus DecryptMessage(
+            ref long contextHandle,
+            IntPtr bufferDescriptor,
+            int sequenceNumber,
+            int qualityOfProtection
+        );
+
         [DllImport(
             "Secur32.dll",
             EntryPoint = "QueryContextAttributes",
