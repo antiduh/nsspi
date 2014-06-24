@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -116,27 +117,51 @@ namespace NSspi
             }
         }
 
-        public string Name 
+        public string Name
         {
             get
             {
                 QueryNameAttribCarrier carrier = new QueryNameAttribCarrier();
 
-                SecurityStatus status;
+                SecurityStatus status = SecurityStatus.InternalError;
                 string name = null;
+                bool gotRef = false;
 
-                status = CredentialNativeMethods.QueryCredentialsAttribute_Name(
-                    ref this.safeCredHandle.rawHandle,
-                    CredentialQueryAttrib.Names,
-                    ref carrier
-                );
-
-                if ( status == SecurityStatus.OK )
+                RuntimeHelpers.PrepareConstrainedRegions();
+                try
                 {
-                    name = Marshal.PtrToStringUni( carrier.Name );
-                    NativeMethods.FreeContextBuffer( carrier.Name );
+                    this.safeCredHandle.DangerousAddRef( ref gotRef );
                 }
-                else
+                catch( Exception )
+                {
+                    if( gotRef == true )
+                    {
+                        this.safeCredHandle.DangerousRelease();
+                        gotRef = false;
+                    }
+                    throw;
+                }
+                finally
+                {
+                    if( gotRef )
+                    {
+                        status = CredentialNativeMethods.QueryCredentialsAttribute_Name(
+                            ref this.safeCredHandle.rawHandle,
+                            CredentialQueryAttrib.Names,
+                            ref carrier
+                        );
+
+                        this.safeCredHandle.DangerousRelease();
+
+                        if( status == SecurityStatus.OK && carrier.Name != IntPtr.Zero )
+                        {
+                            name = Marshal.PtrToStringUni( carrier.Name );
+                            NativeMethods.FreeContextBuffer( carrier.Name );
+                        }
+                    }
+                }
+
+                if( status.IsError() )
                 {
                     throw new SSPIException( "Failed to query credential name", status );
                 }

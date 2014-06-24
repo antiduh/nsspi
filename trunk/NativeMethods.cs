@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.ConstrainedExecution;
 
 namespace NSspi
 {
@@ -23,13 +24,9 @@ namespace NSspi
           _In_  PVOID pvContextBuffer
         );
         */
-        [DllImport(
-            "Secur32.dll",
-            EntryPoint = "FreeContextBuffer",
-            CallingConvention = CallingConvention.Winapi,
-            CharSet = CharSet.Unicode,
-            SetLastError = true
-        )]
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success)]
+        [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
 
     }
