@@ -6,6 +6,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NSspi.Contexts;
 
 namespace NSspi
 {
@@ -75,6 +76,24 @@ namespace NSspi
         protected override bool ReleaseHandle()
         {
             SecurityStatus status = NativeMethods.FreeCredentialsHandle(
+                ref base.rawHandle
+            );
+
+            base.ReleaseHandle();
+
+            return status == SecurityStatus.OK;
+        }
+    }
+
+    public class SafeContextHandle : SafeSspiHandle
+    {
+        public SafeContextHandle()
+            : base()
+        { }
+
+        protected override bool ReleaseHandle()
+        {
+            SecurityStatus status = ContextNativeMethods.DeleteSecurityContext(
                 ref base.rawHandle
             );
 

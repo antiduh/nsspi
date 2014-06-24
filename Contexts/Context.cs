@@ -16,6 +16,8 @@ namespace NSspi
         {
             this.Credential = cred;
 
+            this.ContextHandle = new SafeContextHandle();
+
             this.disposed = false;
         }
 
@@ -26,7 +28,7 @@ namespace NSspi
 
         protected Credential Credential { get; private set; }
 
-        public long ContextHandle { get; protected set; }
+        public SafeContextHandle ContextHandle { get; protected set; }
 
         public string AuthorityName
         {
@@ -59,10 +61,10 @@ namespace NSspi
                 this.Credential.Dispose();
             }
 
-            long contextHandleCopy = this.ContextHandle;
-            ContextNativeMethods.DeleteSecurityContext( ref contextHandleCopy );
+            // TODO SAFE_CER
+            ContextNativeMethods.DeleteSecurityContext( ref this.ContextHandle.rawHandle );
 
-            this.ContextHandle = 0;
+            this.ContextHandle.Dispose();
 
             this.disposed = true;
         }
@@ -90,8 +92,6 @@ namespace NSspi
             SecureBuffer paddingBuffer;
             SecureBufferAdapter adapter;
 
-            long contextHandle = this.ContextHandle;
-
             SecurityStatus status;
             byte[] result;
 
@@ -103,8 +103,9 @@ namespace NSspi
 
             using( adapter = new SecureBufferAdapter( new[] { trailerBuffer, dataBuffer, paddingBuffer } ) )
             {
+                // TODO SAFE_CER
                 status = ContextNativeMethods.EncryptMessage(
-                    ref contextHandle,
+                    ref this.ContextHandle.rawHandle,
                     0,
                     adapter.Handle,
                     0
@@ -154,9 +155,7 @@ namespace NSspi
             SecureBuffer dataBuffer;
             SecureBuffer paddingBuffer;
             SecureBufferAdapter adapter;
-
-            long contextHandle = this.ContextHandle;
-
+            
             SecurityStatus status;
             byte[] result = null;
             int remaining;
@@ -221,8 +220,9 @@ namespace NSspi
 
             using( adapter = new SecureBufferAdapter( new [] { trailerBuffer, dataBuffer, paddingBuffer } ) )
             {
+                // TODO SAFE_CER
                 status = ContextNativeMethods.DecryptMessage(
-                    ref contextHandle,
+                    ref this.ContextHandle.rawHandle,
                     adapter.Handle,
                     0,
                     0
@@ -243,11 +243,11 @@ namespace NSspi
         internal SecPkgContext_Sizes QueryBufferSizes()
         {
             SecPkgContext_Sizes sizes = new SecPkgContext_Sizes();
-            long contextHandle = this.ContextHandle;
             SecurityStatus status;
 
+            // TODO SAFE_CER
             status = ContextNativeMethods.QueryContextAttributes_Sizes(
-                ref contextHandle,
+                ref this.ContextHandle.rawHandle,
                 ContextQueryAttrib.Sizes,
                 ref sizes 
             );
@@ -263,7 +263,6 @@ namespace NSspi
         internal string QueryContextString(ContextQueryAttrib attrib)
         {
             SecPkgContext_String stringAttrib;
-            long contextHandle;
             SecurityStatus status;
             string result;
 
@@ -274,10 +273,9 @@ namespace NSspi
 
             stringAttrib = new SecPkgContext_String();
 
-            contextHandle = this.ContextHandle;
-
+            // TODO SAFE_CER
             status = ContextNativeMethods.QueryContextAttributes_String(
-                ref contextHandle,
+                ref this.ContextHandle.rawHandle,
                 attrib,
                 ref stringAttrib
             );
