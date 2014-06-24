@@ -35,6 +35,7 @@ namespace NSspi
         );
         */
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail)]
         [DllImport( "Secur32.dll", EntryPoint = "AcquireCredentialsHandle", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus AcquireCredentialsHandle(
             string principleName,
@@ -48,7 +49,7 @@ namespace NSspi
             ref long expiry
         );
 
-        
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "FreeCredentialsHandle", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeCredentialsHandle(
             ref RawSspiHandle credentialHandle
