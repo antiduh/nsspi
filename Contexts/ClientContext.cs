@@ -25,8 +25,6 @@ namespace NSspi.Contexts
 
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
-            long credHandle = base.Credential.CredentialHandle;
-
             long prevContextHandle = base.ContextHandle;
             long newContextHandle = 0;
 
@@ -62,7 +60,7 @@ namespace NSspi.Contexts
                 if ( prevContextHandle == 0 )
                 {
                     status = ContextNativeMethods.InitializeSecurityContext_1(
-                        ref credHandle,
+                        ref this.Credential.Handle.rawHandle,
                         IntPtr.Zero,
                         this.serverPrinc,
                         this.requestedAttribs,
@@ -81,7 +79,7 @@ namespace NSspi.Contexts
                     using ( serverAdapter = new SecureBufferAdapter( serverBuffer ) )
                     {
                         status = ContextNativeMethods.InitializeSecurityContext_2(
-                            ref credHandle,
+                            ref this.Credential.Handle.rawHandle,
                             ref prevContextHandle,
                             this.serverPrinc,
                             this.requestedAttribs,

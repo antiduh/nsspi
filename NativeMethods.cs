@@ -58,7 +58,7 @@ namespace NSspi
             IntPtr packageData,
             IntPtr getKeyFunc,
             IntPtr getKeyData,
-            ref long credentialHandle,
+            ref RawSspiHandle credentialHandle,
             ref long expiry
         );
 
@@ -75,7 +75,7 @@ namespace NSspi
             SetLastError = true
         )]
         public static extern SecurityStatus FreeCredentialsHandle(
-            ref long credentialHandle
+            ref RawSspiHandle credentialHandle
         );
 
         /*
@@ -118,7 +118,7 @@ namespace NSspi
             SetLastError = true
         )]
         public static extern SecurityStatus QueryCredentialsAttribute_Name(
-            ref long credentialHandle,
+            ref RawSspiHandle credentialHandle,
             CredentialQueryAttrib attributeName,
             ref QueryNameAttribCarrier name
         );

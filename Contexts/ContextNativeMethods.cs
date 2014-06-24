@@ -31,7 +31,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus AcceptSecurityContext_1(
-            ref long credHandle,
+            ref RawSspiHandle credHandle,
             IntPtr oldContextHandle,
             IntPtr inputBuffer,
             ContextAttrib requestedAttribs,
@@ -51,7 +51,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus AcceptSecurityContext_2(
-            ref long credHandle,
+            ref RawSspiHandle credHandle,
             ref long oldContextHandle,
             IntPtr inputBuffer,
             ContextAttrib requestedAttribs,
@@ -104,7 +104,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus InitializeSecurityContext_1(
-            ref long credentialHandle,
+            ref RawSspiHandle credentialHandle,
             IntPtr zero,
             string serverPrincipleName,
             ContextAttrib requiredAttribs,
@@ -126,7 +126,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus InitializeSecurityContext_2(
-            ref long credentialHandle,
+            ref RawSspiHandle credentialHandle,
             ref long previousHandle,
             string serverPrincipleName,
             ContextAttrib requiredAttribs,
