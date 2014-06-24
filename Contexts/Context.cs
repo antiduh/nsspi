@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace NSspi
 {
@@ -89,7 +90,7 @@ namespace NSspi
             SecureBuffer paddingBuffer;
             SecureBufferAdapter adapter;
 
-            SecurityStatus status;
+            SecurityStatus status = SecurityStatus.InvalidHandle;
             byte[] result;
 
             trailerBuffer = new SecureBuffer( new byte[sizes.SecurityTrailer], BufferType.Token );
@@ -100,13 +101,37 @@ namespace NSspi
 
             using( adapter = new SecureBufferAdapter( new[] { trailerBuffer, dataBuffer, paddingBuffer } ) )
             {
-                // TODO SAFE_CER
-                status = ContextNativeMethods.EncryptMessage(
-                    ref this.ContextHandle.rawHandle,
-                    0,
-                    adapter.Handle,
-                    0
-                );
+                bool gotRef = false;
+
+                RuntimeHelpers.PrepareConstrainedRegions();
+                try
+                {
+                    this.ContextHandle.DangerousAddRef( ref gotRef );
+                }
+                catch( Exception )
+                {
+                    if( gotRef )
+                    {
+                        this.ContextHandle.DangerousRelease();
+                        gotRef = false;
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    if( gotRef )
+                    {
+                        status = ContextNativeMethods.EncryptMessage(
+                            ref this.ContextHandle.rawHandle,
+                            0,
+                            adapter.Handle,
+                            0
+                        );
+
+                        this.ContextHandle.DangerousRelease();
+                    }
+                }
             }
 
             if( status != SecurityStatus.OK )
@@ -152,8 +177,8 @@ namespace NSspi
             SecureBuffer dataBuffer;
             SecureBuffer paddingBuffer;
             SecureBufferAdapter adapter;
-            
-            SecurityStatus status;
+
+            SecurityStatus status = SecurityStatus.InvalidHandle;
             byte[] result = null;
             int remaining;
             int position;
@@ -217,13 +242,37 @@ namespace NSspi
 
             using( adapter = new SecureBufferAdapter( new [] { trailerBuffer, dataBuffer, paddingBuffer } ) )
             {
-                // TODO SAFE_CER
-                status = ContextNativeMethods.DecryptMessage(
-                    ref this.ContextHandle.rawHandle,
-                    adapter.Handle,
-                    0,
-                    0
-                );
+                bool gotRef = false;
+
+                RuntimeHelpers.PrepareConstrainedRegions();
+                try
+                {
+                    this.ContextHandle.DangerousAddRef( ref gotRef );
+                }
+                catch( Exception )
+                {
+                    if( gotRef )
+                    {
+                        this.ContextHandle.DangerousRelease();
+                        gotRef = false;
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    if( gotRef )
+                    {
+                        status = ContextNativeMethods.DecryptMessage(
+                            ref this.ContextHandle.rawHandle,
+                            adapter.Handle,
+                            0,
+                            0
+                        );
+
+                        this.ContextHandle.DangerousRelease();
+                    }
+                }
             }
 
             if( status != SecurityStatus.OK )

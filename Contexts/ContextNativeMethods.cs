@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,6 +106,7 @@ namespace NSspi
         public static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
 
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "EncryptMessage", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus EncryptMessage(
             ref RawSspiHandle contextHandle,
@@ -113,7 +115,7 @@ namespace NSspi
             int sequenceNumber
         );
 
-
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "DecryptMessage", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus DecryptMessage(
             ref RawSspiHandle contextHandle,
