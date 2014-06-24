@@ -75,7 +75,7 @@ namespace NSspi
 
         protected override bool ReleaseHandle()
         {
-            SecurityStatus status = NativeMethods.FreeCredentialsHandle(
+            SecurityStatus status = CredentialNativeMethods.FreeCredentialsHandle(
                 ref base.rawHandle
             );
 

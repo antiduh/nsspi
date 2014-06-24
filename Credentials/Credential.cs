@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NSspi.Credentials;
 
 namespace NSspi
 {
@@ -78,7 +79,7 @@ namespace NSspi
             try { }
             finally
             {
-                status = NativeMethods.AcquireCredentialsHandle(
+                status = CredentialNativeMethods.AcquireCredentialsHandle(
                    null,
                    packageName,
                    use,
@@ -119,12 +120,12 @@ namespace NSspi
         {
             get
             {
-                NativeMethods.QueryNameAttribCarrier carrier = new NativeMethods.QueryNameAttribCarrier();
+                QueryNameAttribCarrier carrier = new QueryNameAttribCarrier();
 
                 SecurityStatus status;
                 string name = null;
 
-                status = NativeMethods.QueryCredentialsAttribute_Name(
+                status = CredentialNativeMethods.QueryCredentialsAttribute_Name(
                     ref this.safeCredHandle.rawHandle,
                     CredentialQueryAttrib.Names,
                     ref carrier
@@ -170,5 +171,6 @@ namespace NSspi
                 this.disposed = true;
             }
         }
+
     }
 }

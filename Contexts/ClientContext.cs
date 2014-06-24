@@ -106,7 +106,6 @@ namespace NSspi.Contexts
                         );
                     }
                 }
-
             }
 
             if ( status == SecurityStatus.OK )
