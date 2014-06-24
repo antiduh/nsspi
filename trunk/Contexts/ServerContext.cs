@@ -24,21 +24,17 @@ namespace NSspi.Contexts
             SecureBuffer clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
             SecureBuffer outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
 
-            long oldContextHandle = base.ContextHandle;
-            long newContextHandle = 0;
-
             SecurityStatus status;
             long expiry = 0;
 
             SecureBufferAdapter clientAdapter;
             SecureBufferAdapter outAdapter;
 
-
             using ( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
             {
                 using ( outAdapter = new SecureBufferAdapter( outBuffer ) )
                 {
-                    if ( oldContextHandle == 0 )
+                    if( this.ContextHandle.IsInvalid )
                     {
                         status = ContextNativeMethods.AcceptSecurityContext_1(
                             ref this.Credential.Handle.rawHandle,
@@ -46,7 +42,7 @@ namespace NSspi.Contexts
                             clientAdapter.Handle,
                             requestedAttribs,
                             SecureBufferDataRep.Network,
-                            ref newContextHandle,
+                            ref this.ContextHandle.rawHandle,
                             outAdapter.Handle,
                             ref this.finalAttribs,
                             ref expiry
@@ -56,15 +52,17 @@ namespace NSspi.Contexts
                     {
                         status = ContextNativeMethods.AcceptSecurityContext_2(
                             ref this.Credential.Handle.rawHandle,
-                            ref oldContextHandle,
+                            ref this.ContextHandle.rawHandle,
                             clientAdapter.Handle,
                             requestedAttribs,
                             SecureBufferDataRep.Network,
-                            ref newContextHandle,
+                            ref this.ContextHandle.rawHandle,
                             outAdapter.Handle,
                             ref this.finalAttribs,
                             ref expiry
                         );
+
+
                     }
                 }
             }
@@ -95,8 +93,6 @@ namespace NSspi.Contexts
             {
                 throw new SSPIException( "Failed to call AcceptSecurityContext", status );
             }
-
-            base.ContextHandle = newContextHandle;
 
             return status;
         }

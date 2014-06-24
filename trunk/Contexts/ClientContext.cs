@@ -25,9 +25,6 @@ namespace NSspi.Contexts
 
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
-            long prevContextHandle = base.ContextHandle;
-            long newContextHandle = 0;
-
             long expiry = 0;
 
             SecurityStatus status;
@@ -38,11 +35,11 @@ namespace NSspi.Contexts
             SecureBuffer serverBuffer;
             SecureBufferAdapter serverAdapter;
 
-            if ( (serverToken != null) && (prevContextHandle == 0) )
+            if ( (serverToken != null) && ( this.ContextHandle.IsInvalid ) )
             {
                 throw new InvalidOperationException( "Out-of-order usage detected - have a server token, but no previous client token had been created." );
             }
-            else if ( (serverToken == null) && (prevContextHandle != 0) )
+            else if ( (serverToken == null) && ( this.ContextHandle.IsInvalid == false ) )
             {
                 throw new InvalidOperationException( "Must provide the server's response when continuing the init process." );
             }
@@ -55,9 +52,24 @@ namespace NSspi.Contexts
                 serverBuffer = new SecureBuffer( serverToken, BufferType.Token );
             }
 
+            // Some notes on handles and invoking InitializeSecurityContext
+            //  - The first time around, the phContext parameter (the 'old' handle) is a null pointer to what 
+            //    would be an RawSspiHandle, to indicate this is the first time it's being called. 
+            //    The phNewContext is a pointer (reference) to an RawSspiHandle struct of where to write the 
+            //    new handle's values.
+            //  - The next time you invoke ISC, it takes a pointer to the handle it gave you last time in phContext,
+            //    and takes a pointer to where it should write the new handle's values in phNewContext.
+            //  - After the first time, you can provide the same handle to both parameters. From MSDN:
+            //       "On the second call, phNewContext can be the same as the handle specified in the phContext
+            //        parameter."
+            //    It will overwrite the handle you gave it with the new handle value.
+            //  - All handle structures themselves are actually *two* pointer variables, eg, 64 bits on 32-bit 
+            //    Windows, 128 bits on 64-bit Windows.
+            //  - So in the end, on a 64-bit machine, we're passing a 64-bit value (the pointer to the struct) that
+            //    points to 128 bits of memory (the struct itself) for where to write the handle numbers.
             using ( outAdapter = new SecureBufferAdapter( outTokenBuffer ) )
             {
-                if ( prevContextHandle == 0 )
+                if ( this.ContextHandle.IsInvalid )
                 {
                     status = ContextNativeMethods.InitializeSecurityContext_1(
                         ref this.Credential.Handle.rawHandle,
@@ -68,7 +80,7 @@ namespace NSspi.Contexts
                         SecureBufferDataRep.Network,
                         IntPtr.Zero,
                         0,
-                        ref newContextHandle,
+                        ref this.ContextHandle.rawHandle,
                         outAdapter.Handle,
                         ref this.finalAttribs,
                         ref expiry
@@ -80,14 +92,14 @@ namespace NSspi.Contexts
                     {
                         status = ContextNativeMethods.InitializeSecurityContext_2(
                             ref this.Credential.Handle.rawHandle,
-                            ref prevContextHandle,
+                            ref this.ContextHandle.rawHandle,
                             this.serverPrinc,
                             this.requestedAttribs,
                             0,
                             SecureBufferDataRep.Network,
                             serverAdapter.Handle,
                             0,
-                            ref newContextHandle,
+                            ref this.ContextHandle.rawHandle,
                             outAdapter.Handle,
                             ref this.finalAttribs,
                             ref expiry
@@ -113,8 +125,6 @@ namespace NSspi.Contexts
             {
                 throw new SSPIException( "Failed to invoke InitializeSecurityContext for a client", status );
             }
-
-            base.ContextHandle = newContextHandle;
 
             return status;
         }

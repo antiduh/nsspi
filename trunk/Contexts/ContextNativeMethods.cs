@@ -36,7 +36,7 @@ namespace NSspi.Contexts
             IntPtr inputBuffer,
             ContextAttrib requestedAttribs,
             SecureBufferDataRep dataRep,
-            ref long newContextHandle,
+            ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib outputAttribs,
             ref long expiry
@@ -52,11 +52,11 @@ namespace NSspi.Contexts
         )]
         public static extern SecurityStatus AcceptSecurityContext_2(
             ref RawSspiHandle credHandle,
-            ref long oldContextHandle,
+            ref RawSspiHandle oldContextHandle,
             IntPtr inputBuffer,
             ContextAttrib requestedAttribs,
             SecureBufferDataRep dataRep,
-            ref long newContextHandle,
+            ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib outputAttribs,
             ref long expiry
@@ -112,7 +112,7 @@ namespace NSspi.Contexts
             SecureBufferDataRep dataRep,
             IntPtr inputBuffer,
             int reserved2,
-            ref long newContextHandle,
+            ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib contextAttribs,
             ref long expiry
@@ -127,14 +127,14 @@ namespace NSspi.Contexts
         )]
         public static extern SecurityStatus InitializeSecurityContext_2(
             ref RawSspiHandle credentialHandle,
-            ref long previousHandle,
+            ref RawSspiHandle previousHandle,
             string serverPrincipleName,
             ContextAttrib requiredAttribs,
             int reserved1,
             SecureBufferDataRep dataRep,
             IntPtr inputBuffer,
             int reserved2,
-            ref long newContextHandle,
+            ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib contextAttribs,
             ref long expiry
@@ -147,7 +147,7 @@ namespace NSspi.Contexts
             CharSet = CharSet.Unicode,
             SetLastError = true
         )]
-        public static extern SecurityStatus DeleteSecurityContext( ref long contextHandle );
+        public static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
         [DllImport(
             "Secur32.dll",
@@ -157,7 +157,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus EncryptMessage(
-            ref long contextHandle,
+            ref RawSspiHandle contextHandle,
             int qualityOfProtection,
             IntPtr bufferDescriptor,
             int sequenceNumber
@@ -172,7 +172,7 @@ namespace NSspi.Contexts
             SetLastError = true
         )]
         public static extern SecurityStatus DecryptMessage(
-            ref long contextHandle,
+            ref RawSspiHandle contextHandle,
             IntPtr bufferDescriptor,
             int sequenceNumber,
             int qualityOfProtection
@@ -184,7 +184,7 @@ namespace NSspi.Contexts
             CallingConvention = CallingConvention.Winapi,
             CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryContextAttributes_Sizes(
-            ref long contextHandle,
+            ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_Sizes sizes
         );
@@ -195,7 +195,7 @@ namespace NSspi.Contexts
             CallingConvention = CallingConvention.Winapi,
             CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryContextAttributes_String(
-            ref long contextHandle,
+            ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_String names
         );
