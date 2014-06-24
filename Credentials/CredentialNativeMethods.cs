@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,6 +64,7 @@ namespace NSspi
         /// <param name="attributeName"></param>
         /// <param name="name"></param>
         /// <returns></returns>
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QueryCredentialsAttributes", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryCredentialsAttribute_Name(
             ref RawSspiHandle credentialHandle,
