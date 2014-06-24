@@ -24,7 +24,6 @@ namespace NSspi.Contexts
             SecureBuffer clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
             SecureBuffer outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
 
-            long credHandle = this.Credential.CredentialHandle;
             long oldContextHandle = base.ContextHandle;
             long newContextHandle = 0;
 
@@ -42,7 +41,7 @@ namespace NSspi.Contexts
                     if ( oldContextHandle == 0 )
                     {
                         status = ContextNativeMethods.AcceptSecurityContext_1(
-                            ref credHandle,
+                            ref this.Credential.Handle.rawHandle,
                             IntPtr.Zero,
                             clientAdapter.Handle,
                             requestedAttribs,
@@ -56,7 +55,7 @@ namespace NSspi.Contexts
                     else
                     {
                         status = ContextNativeMethods.AcceptSecurityContext_2(
-                            ref credHandle,
+                            ref this.Credential.Handle.rawHandle,
                             ref oldContextHandle,
                             clientAdapter.Handle,
                             requestedAttribs,

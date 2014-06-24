@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace NSspi
 
         private SecurityPackage securityPackage;
 
-        private long credHandle;
+        private SafeCredentialHandle safeCredHandle;
         private long expiry;
 
         public Credential(SecurityPackage package, CredentialType credentialType)
@@ -22,7 +23,6 @@ namespace NSspi
             this.disposed = false;
             this.securityPackage = package;
 
-            this.credHandle = 0;
             this.expiry = 0;
 
             Init( package, credentialType );
@@ -66,17 +66,30 @@ namespace NSspi
             }
 
             // -- Invoke --
-            SecurityStatus status = NativeMethods.AcquireCredentialsHandle(
-                null,
-                packageName,
-                use,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                IntPtr.Zero,
-                ref this.credHandle,
-                ref this.expiry
-            );
+            
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            this.safeCredHandle = new SafeCredentialHandle();
+
+            // The finally clause is the actual constrained region. The VM pre-allocates any stack space,
+            // performs any allocations it needs to prepare methods for execution, and postpones any 
+            // instances of the 'uncatchable' exceptions (ThreadAbort, StackOverflow, OutOfMemory).
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try { }
+            finally
+            {
+                status = NativeMethods.AcquireCredentialsHandle(
+                   null,
+                   packageName,
+                   use,
+                   IntPtr.Zero,
+                   IntPtr.Zero,
+                   IntPtr.Zero,
+                   IntPtr.Zero,
+                   ref this.safeCredHandle.rawHandle,
+                   ref this.expiry
+               );
+            }
 
             if ( status != SecurityStatus.OK )
             {
@@ -112,7 +125,7 @@ namespace NSspi
                 string name = null;
 
                 status = NativeMethods.QueryCredentialsAttribute_Name(
-                    ref this.credHandle,
+                    ref this.safeCredHandle.rawHandle,
                     CredentialQueryAttrib.Names,
                     ref carrier
                 );
@@ -131,11 +144,11 @@ namespace NSspi
             }
         }
 
-        public long CredentialHandle
+        public SafeCredentialHandle Handle
         {
             get
             {
-                return this.credHandle;
+                return this.safeCredHandle;
             }
         }
 
@@ -149,16 +162,12 @@ namespace NSspi
         {
             if ( this.disposed == false )
             {
-                SecurityStatus result;
-
-                result = NativeMethods.FreeCredentialsHandle( ref this.credHandle );
+                if ( disposing )
+                {
+                    this.safeCredHandle.Dispose();
+                }
 
                 this.disposed = true;
-
-                if ( disposing && result != SecurityStatus.OK )
-                {
-                    throw new SSPIException( "Failed to release credentials handle", result );
-                }
             }
         }
     }
