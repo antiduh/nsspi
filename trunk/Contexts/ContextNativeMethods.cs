@@ -4,8 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NSspi.Contexts;
 
-namespace NSspi.Contexts
+namespace NSspi
 {
     public static class ContextNativeMethods
     {

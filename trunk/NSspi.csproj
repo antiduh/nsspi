@@ -56,10 +56,12 @@
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
+    <Compile Include="Credentials\CredentialNativeMethods.cs" />
     <Compile Include="Credentials\CredentialPackage.cs" />
     <Compile Include="Credentials\CredentialQueryAttrib.cs" />
     <Compile Include="Credentials\CredentialType.cs" />
     <Compile Include="Credentials\CredentialUse.cs" />
+    <Compile Include="Credentials\QueryNameSupport.cs" />
     <Compile Include="Credentials\ServerCredential.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PackageNames.cs" />
