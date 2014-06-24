@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -141,5 +142,47 @@ namespace NSspi
 
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr handle );
+
+        public static SecurityStatus SafeDecryptMessage( 
+            SafeContextHandle handle, 
+            int qualityOfProtection, 
+            IntPtr bufferDescriptor, 
+            int sequenceNumber )
+        {
+            SecurityStatus status = SecurityStatus.InvalidHandle;
+            bool gotRef = false;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                handle.DangerousAddRef( ref gotRef );
+            }
+            catch( Exception )
+            {
+                if( gotRef )
+                {
+                    handle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if( gotRef )
+                {
+                    status = ContextNativeMethods.DecryptMessage(
+                        ref handle.rawHandle,
+                        bufferDescriptor,
+                        0,
+                        0
+                    );
+
+                    handle.DangerousRelease();
+                }
+            }
+
+            return status;
+        }
     }
 }

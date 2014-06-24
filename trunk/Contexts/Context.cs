@@ -178,7 +178,7 @@ namespace NSspi
             SecureBuffer paddingBuffer;
             SecureBufferAdapter adapter;
 
-            SecurityStatus status = SecurityStatus.InvalidHandle;
+            SecurityStatus status;
             byte[] result = null;
             int remaining;
             int position;
@@ -242,37 +242,12 @@ namespace NSspi
 
             using( adapter = new SecureBufferAdapter( new [] { trailerBuffer, dataBuffer, paddingBuffer } ) )
             {
-                bool gotRef = false;
-
-                RuntimeHelpers.PrepareConstrainedRegions();
-                try
-                {
-                    this.ContextHandle.DangerousAddRef( ref gotRef );
-                }
-                catch( Exception )
-                {
-                    if( gotRef )
-                    {
-                        this.ContextHandle.DangerousRelease();
-                        gotRef = false;
-                    }
-
-                    throw;
-                }
-                finally
-                {
-                    if( gotRef )
-                    {
-                        status = ContextNativeMethods.DecryptMessage(
-                            ref this.ContextHandle.rawHandle,
-                            adapter.Handle,
-                            0,
-                            0
-                        );
-
-                        this.ContextHandle.DangerousRelease();
-                    }
-                }
+                status = ContextNativeMethods.SafeDecryptMessage(
+                    this.ContextHandle,
+                    0,
+                    adapter.Handle,
+                    0
+                );
             }
 
             if( status != SecurityStatus.OK )
