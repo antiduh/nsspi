@@ -10,40 +10,31 @@ namespace NSspi
 {
     public static class CredentialNativeMethods
     {
-
         /*
- SECURITY_STATUS sResult = AcquireCredentialsHandle(
-         NULL,											// [in] name of principal. NULL = principal of current security context
-         pszPackageName,									// [in] name of package
-         fCredentialUse,									// [in] flags indicating use.
-         NULL,											// [in] pointer to logon identifier.  NULL = we're not specifying the id of another logon session
-         NULL,											// [in] package-specific data.  NULL = default credentials for security package
-         NULL,											// [in] pointer to GetKey function.  NULL = we're not using a callback to retrieve the credentials
-         NULL,											// [in] value to pass to GetKey
-         this->credentialHandle,							// [out] credential handle (this must be already allocated)
-         &tsExpiry										// [out] lifetime of the returned credentials
- );
-        
- SECURITY_STATUS SEC_Entry AcquireCredentialsHandle(
-       _In_   SEC_CHAR *pszPrincipal,
-       _In_   SEC_CHAR *pszPackage,
-       _In_   ULONG fCredentialUse,
-       _In_   PLUID pvLogonID,
-       _In_   PVOID pAuthData,
-       _In_   SEC_GET_KEY_FN pGetKeyFn,
-       _In_   PVOID pvGetKeyArgument,
-       _Out_  PCredHandle phCredential,
-       _Out_  PTimeStamp ptsExpiry
-     );
- */
+        SECURITY_STATUS SEC_Entry AcquireCredentialsHandle(
+           _In_   SEC_CHAR *pszPrincipal,                   // [in] name of principal. NULL = principal of current security context
+           _In_   SEC_CHAR *pszPackage,                     // [in] name of security package - "Kerberos", "Negotiate", "NTLM", etc
+           _In_   ULONG fCredentialUse,                     // [in] flags indicating use.
+           _In_   PLUID pvLogonID,                          // [in] pointer to logon identifier.  NULL = we're not specifying the id of another logon session
+           _In_   PVOID pAuthData,                          // [in] package-specific data.  NULL = default credentials for security package
+           _In_   SEC_GET_KEY_FN pGetKeyFn,                 // [in] pointer to GetKey function.  NULL = we're not using a callback to retrieve the credentials
+           _In_   PVOID pvGetKeyArgument,                   // [in] value to pass to GetKey
+           _Out_  PCredHandle phCredential,                 // [out] credential handle (this must be already allocated)
+           _Out_  PTimeStamp ptsExpiry                      // [out] lifetime of the returned credentials
+        );
+          
+        SECURITY_STATUS SEC_Entry FreeCredentialsHandle(
+            _In_  PCredHandle phCredential
+        );
+          
+        SECURITY_STATUS SEC_Entry QueryCredentialsAttributes(
+          _In_   PCredHandle phCredential,
+          _In_   ULONG ulAttribute,
+          _Out_  PVOID pBuffer
+        );
+        */
 
-        [DllImport(
-            "Secur32.dll",
-            EntryPoint = "AcquireCredentialsHandle",
-            CallingConvention = CallingConvention.Winapi,
-            CharSet = CharSet.Unicode,
-            SetLastError = true
-        )]
+        [DllImport( "Secur32.dll", EntryPoint = "AcquireCredentialsHandle", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus AcquireCredentialsHandle(
             string principleName,
             string packageName,
@@ -56,29 +47,12 @@ namespace NSspi
             ref long expiry
         );
 
-        /*
-        SECURITY_STATUS SEC_Entry FreeCredentialsHandle(
-            _In_  PCredHandle phCredential
-        );
-        */
-        [DllImport(
-            "Secur32.dll",
-            EntryPoint = "FreeCredentialsHandle",
-            CallingConvention = CallingConvention.Winapi,
-            CharSet = CharSet.Unicode,
-            SetLastError = true
-        )]
+        
+        [DllImport( "Secur32.dll", EntryPoint = "FreeCredentialsHandle", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeCredentialsHandle(
             ref RawSspiHandle credentialHandle
         );
 
-        /*
-        SECURITY_STATUS SEC_Entry QueryCredentialsAttributes(
-          _In_   PCredHandle phCredential,
-          _In_   ULONG ulAttribute,
-          _Out_  PVOID pBuffer
-        );
-        */
 
         /// <summary>
         /// The overload of the QueryCredentialsAttribute method that is used for querying the name attribute.
@@ -89,19 +63,11 @@ namespace NSspi
         /// <param name="attributeName"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        [DllImport(
-            "Secur32.dll",
-            EntryPoint = "QueryCredentialsAttributes",
-            CallingConvention = CallingConvention.Winapi,
-            CharSet = CharSet.Unicode,
-            SetLastError = true
-        )]
+        [DllImport( "Secur32.dll", EntryPoint = "QueryCredentialsAttributes", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryCredentialsAttribute_Name(
             ref RawSspiHandle credentialHandle,
             CredentialQueryAttrib attributeName,
             ref QueryNameAttribCarrier name
         );
-
-
     }
 }
