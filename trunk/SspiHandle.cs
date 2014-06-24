@@ -66,40 +66,4 @@ namespace NSspi
             return true;
         }
     }
-
-    public class SafeCredentialHandle : SafeSspiHandle
-    {
-        public SafeCredentialHandle()
-            : base()
-        { }
-
-        protected override bool ReleaseHandle()
-        {
-            SecurityStatus status = CredentialNativeMethods.FreeCredentialsHandle(
-                ref base.rawHandle
-            );
-
-            base.ReleaseHandle();
-
-            return status == SecurityStatus.OK;
-        }
-    }
-
-    public class SafeContextHandle : SafeSspiHandle
-    {
-        public SafeContextHandle()
-            : base()
-        { }
-
-        protected override bool ReleaseHandle()
-        {
-            SecurityStatus status = ContextNativeMethods.DeleteSecurityContext(
-                ref base.rawHandle
-            );
-
-            base.ReleaseHandle();
-
-            return status == SecurityStatus.OK;
-        }
-    }
 }

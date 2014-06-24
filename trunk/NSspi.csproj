@@ -53,6 +53,7 @@
     <Compile Include="Contexts\ContextNativeMethods.cs" />
     <Compile Include="Contexts\ContextQueries.cs" />
     <Compile Include="Contexts\ContextQueryAttrib.cs" />
+    <Compile Include="Contexts\SafeContextHandle.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Credentials\CredentialType.cs" />
     <Compile Include="Credentials\CredentialUse.cs" />
     <Compile Include="Credentials\QueryNameSupport.cs" />
+    <Compile Include="Credentials\SafeCredentialHandle.cs" />
     <Compile Include="Credentials\ServerCredential.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="PackageNames.cs" />
