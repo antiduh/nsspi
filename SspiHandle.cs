@@ -58,6 +58,12 @@ namespace NSspi
         {
             get { return IsClosed || this.rawHandle.IsZero();  }
         }
+
+        protected override bool ReleaseHandle()
+        {
+            this.rawHandle.SetInvalid();
+            return true;
+        }
     }
 
     public class SafeCredentialHandle : SafeSspiHandle
@@ -72,8 +78,9 @@ namespace NSspi
                 ref base.rawHandle
             );
 
+            base.ReleaseHandle();
+
             return status == SecurityStatus.OK;
         }
     }
-
 }
