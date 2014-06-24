@@ -59,12 +59,9 @@ namespace NSspi
             if( disposing )
             {
                 this.Credential.Dispose();
+                this.ContextHandle.Dispose();
             }
 
-            // TODO SAFE_CER
-            ContextNativeMethods.DeleteSecurityContext( ref this.ContextHandle.rawHandle );
-
-            this.ContextHandle.Dispose();
 
             this.disposed = true;
         }
