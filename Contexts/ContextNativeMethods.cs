@@ -10,7 +10,7 @@ using NSspi.Contexts;
 
 namespace NSspi
 {
-    public static class ContextNativeMethods
+    internal static class ContextNativeMethods
     {
         /*
         SECURITY_STATUS SEC_Entry AcceptSecurityContext(
@@ -42,7 +42,7 @@ namespace NSspi
         */
 
         [DllImport( "Secur32.dll", EntryPoint = "AcceptSecurityContext",CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus AcceptSecurityContext_1(
+        internal static extern SecurityStatus AcceptSecurityContext_1(
             ref RawSspiHandle credHandle,
             IntPtr oldContextHandle,
             IntPtr inputBuffer,
@@ -56,7 +56,7 @@ namespace NSspi
 
 
         [DllImport( "Secur32.dll", EntryPoint = "AcceptSecurityContext", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus AcceptSecurityContext_2(
+        internal static extern SecurityStatus AcceptSecurityContext_2(
             ref RawSspiHandle credHandle,
             ref RawSspiHandle oldContextHandle,
             IntPtr inputBuffer,
@@ -70,7 +70,7 @@ namespace NSspi
 
 
         [DllImport( "Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus InitializeSecurityContext_1(
+        internal static extern SecurityStatus InitializeSecurityContext_1(
             ref RawSspiHandle credentialHandle,
             IntPtr zero,
             string serverPrincipleName,
@@ -87,7 +87,7 @@ namespace NSspi
 
 
         [DllImport( "Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus InitializeSecurityContext_2(
+        internal static extern SecurityStatus InitializeSecurityContext_2(
             ref RawSspiHandle credentialHandle,
             ref RawSspiHandle previousHandle,
             string serverPrincipleName,
@@ -104,12 +104,12 @@ namespace NSspi
 
 
         [DllImport( "Secur32.dll", EntryPoint = "DeleteSecurityContext", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
+        internal static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
 
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "EncryptMessage", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus EncryptMessage(
+        internal static extern SecurityStatus EncryptMessage(
             ref RawSspiHandle contextHandle,
             int qualityOfProtection,
             IntPtr bufferDescriptor,
@@ -118,7 +118,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "DecryptMessage", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus DecryptMessage(
+        internal static extern SecurityStatus DecryptMessage(
             ref RawSspiHandle contextHandle,
             IntPtr bufferDescriptor,
             int sequenceNumber,
@@ -127,7 +127,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus QueryContextAttributes_Sizes(
+        internal static extern SecurityStatus QueryContextAttributes_Sizes(
             ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_Sizes sizes
@@ -135,7 +135,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus QueryContextAttributes_String(
+        internal static extern SecurityStatus QueryContextAttributes_String(
             ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_String names
@@ -143,9 +143,9 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus FreeContextBuffer( IntPtr handle );
+        internal static extern SecurityStatus FreeContextBuffer( IntPtr handle );
 
-        public static SecurityStatus SafeEncryptMessage(
+        internal static SecurityStatus SafeEncryptMessage(
             SafeContextHandle handle,
             int qualityOfProtection,
             SecureBufferAdapter bufferAdapter,
@@ -187,7 +187,7 @@ namespace NSspi
             return status;
         }
 
-        public static SecurityStatus SafeDecryptMessage( 
+        internal static SecurityStatus SafeDecryptMessage( 
             SafeContextHandle handle, 
             int qualityOfProtection, 
             SecureBufferAdapter bufferAdapter, 
