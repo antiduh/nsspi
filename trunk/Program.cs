@@ -1,5 +1,4 @@
-﻿using NSspi.Contexts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +7,8 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using NSspi.Contexts;
+using NSspi.Credentials;
 
 namespace NSspi
 {

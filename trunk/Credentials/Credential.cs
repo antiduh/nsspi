@@ -8,8 +8,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using NSspi.Credentials;
+using NSspi.Credentials.Credentials;
 
-namespace NSspi
+namespace NSspi.Credentials
 {
     public class Credential : IDisposable
     {
@@ -40,11 +41,11 @@ namespace NSspi
             {
                 packageName = PackageNames.Kerberos;
             }
-            else if ( package == NSspi.SecurityPackage.Negotiate )
+            else if ( package == SecurityPackage.Negotiate )
             {
                 packageName = PackageNames.Negotiate;
             }
-            else if ( package == NSspi.SecurityPackage.NTLM )
+            else if ( package == SecurityPackage.NTLM )
             {
                 packageName = PackageNames.Ntlm;
             }

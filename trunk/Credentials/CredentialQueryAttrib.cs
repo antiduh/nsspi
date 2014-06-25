@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSspi
+namespace NSspi.Credentials
 {
     /*
      #define SECPKG_CRED_ATTR_NAMES        1

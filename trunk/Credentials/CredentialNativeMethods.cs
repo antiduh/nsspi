@@ -6,8 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using NSspi.Credentials;
+using NSspi.Credentials.Credentials;
 
-namespace NSspi
+namespace NSspi.Credentials
 {
     internal static class CredentialNativeMethods
     {

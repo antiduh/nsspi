@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSspi.Credentials
+namespace NSspi.Credentials.Credentials
 {
     [StructLayout( LayoutKind.Sequential )]
     public struct QueryNameAttribCarrier

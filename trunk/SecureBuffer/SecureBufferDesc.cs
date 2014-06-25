@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSspi.Contexts
+namespace NSspi.Buffers
 {
     [StructLayout( LayoutKind.Sequential)]
     public struct SecureBufferDescInternal
