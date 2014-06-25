@@ -29,5 +29,9 @@ namespace NSspi
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
 
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "QuerySecurityPackageInfo", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus QuerySecurityPackageInfo( string packageName, ref IntPtr pkgInof );
     }
 }

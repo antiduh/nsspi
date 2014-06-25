@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -55,6 +55,7 @@
     <Compile Include="Contexts\ContextQueryAttrib.cs" />
     <Compile Include="Contexts\ImpersonationHandle.cs" />
     <Compile Include="Contexts\SafeContextHandle.cs" />
+    <Compile Include="SecPkgInfo.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />
     <Compile Include="Credentials\Credential.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Credentials\SafeCredentialHandle.cs" />
     <Compile Include="Credentials\ServerCredential.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="PackageSupport.cs" />
     <Compile Include="PackageNames.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
