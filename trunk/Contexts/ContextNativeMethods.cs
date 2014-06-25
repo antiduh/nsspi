@@ -125,6 +125,7 @@ namespace NSspi
             int qualityOfProtection
         );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryContextAttributes_Sizes(
             ref RawSspiHandle contextHandle,
@@ -132,6 +133,7 @@ namespace NSspi
             ref SecPkgContext_Sizes sizes
         );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus QueryContextAttributes_String(
             ref RawSspiHandle contextHandle,
@@ -139,7 +141,7 @@ namespace NSspi
             ref SecPkgContext_String names
         );
 
-
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr handle );
 
