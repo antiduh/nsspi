@@ -16,7 +16,9 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            CredTest();
+            SecPkgInfo pkgInfo = PackageSupport.GetPackageCapabilities( "Negotiate" );
+
+            //CredTest();
         }
 
         private static void IdentTest()
@@ -63,7 +65,9 @@ namespace NSspi
                     ContextAttrib.InitIdentify |
                     ContextAttrib.Confidentiality |
                     ContextAttrib.ReplayDetect |
-                    ContextAttrib.SequenceDetect
+                    ContextAttrib.SequenceDetect | 
+                    ContextAttrib.Connection |
+                    ContextAttrib.Delegate
                 );
 
                 serverCred = new ServerCredential( SecurityPackage.Negotiate );
@@ -74,7 +78,9 @@ namespace NSspi
                     ContextAttrib.AcceptIdentify |
                     ContextAttrib.Confidentiality |
                     ContextAttrib.ReplayDetect |
-                    ContextAttrib.SequenceDetect
+                    ContextAttrib.SequenceDetect |
+                    ContextAttrib.Connection |
+                    ContextAttrib.Delegate
                 );
 
                 clientToken = null;
@@ -133,6 +139,12 @@ namespace NSspi
                 if( rtMessage.Equals( message ) == false )
                 {
                     throw new Exception();
+                }
+
+
+                using( server.ImpersonateClient() )
+                {
+
                 }
 
                 Console.Out.Flush();
