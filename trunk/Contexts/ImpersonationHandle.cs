@@ -39,7 +39,10 @@ namespace NSspi.Contexts
 
         protected virtual void Dispose( bool disposing )
         {
-
+            if( disposing && this.server != null && this.server.Disposed == false )
+            {
+                this.server.RevertImpersonate();
+            }
         }
 
     }
