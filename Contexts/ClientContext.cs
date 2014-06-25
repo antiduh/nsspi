@@ -11,7 +11,6 @@ namespace NSspi.Contexts
 {
     public class ClientContext : Context
     {
-        private bool complete;
         private ContextAttrib requestedAttribs;
         private ContextAttrib finalAttribs;
         private string serverPrinc;
@@ -19,8 +18,6 @@ namespace NSspi.Contexts
         public ClientContext( ClientCredential cred, string serverPrinc, ContextAttrib requestedAttribs )
             : base( cred )
         {
-            this.complete = false;
-
             this.serverPrinc = serverPrinc;
             this.requestedAttribs = requestedAttribs;
         }
@@ -112,12 +109,12 @@ namespace NSspi.Contexts
 
             if ( status == SecurityStatus.OK )
             {
-                this.complete = true;
+                this.Initialized = true;
                 outToken = null;
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
-                this.complete = false;
+                this.Initialized = false;
 
                 outToken = new byte[outTokenBuffer.Length];
                 Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );

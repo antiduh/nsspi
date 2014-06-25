@@ -12,13 +12,11 @@ namespace NSspi.Contexts
     {
         private ContextAttrib requestedAttribs;
         private ContextAttrib finalAttribs;
-        private bool complete;
-
+        
         public ServerContext(ServerCredential cred, ContextAttrib requestedAttribs) : base ( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;
-
         }
 
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
@@ -72,7 +70,7 @@ namespace NSspi.Contexts
             if ( status == SecurityStatus.OK )
             {
                 nextToken = null;
-                this.complete = true;
+                this.Initialized = true;
 
                 if ( outBuffer.Length != 0 )
                 {
@@ -86,7 +84,7 @@ namespace NSspi.Contexts
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
-                this.complete = false;
+                this.Initialized = false;
 
                 nextToken = new byte[outBuffer.Length];
                 Array.Copy( outBuffer.Buffer, nextToken, nextToken.Length );

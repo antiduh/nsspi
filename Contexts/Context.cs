@@ -22,12 +22,18 @@ namespace NSspi.Contexts
             this.ContextHandle = new SafeContextHandle();
 
             this.disposed = false;
+            this.Initialized = false;
         }
 
         ~Context()
         {
             Dispose( false );
         }
+        
+        /// <summary>
+        /// Whether or not the context is fully formed.
+        /// </summary>
+        public bool Initialized { get; protected set; }
 
         protected Credential Credential { get; private set; }
 
@@ -85,7 +91,7 @@ namespace NSspi.Contexts
         public byte[] Encrypt( byte[] input )
         {
             // The message is encrypted in place in the buffer we provide to Win32 EncryptMessage
-            SecPkgContext_Sizes sizes = QueryBufferSizes();
+            SecPkgContext_Sizes sizes;
 
             SecureBuffer trailerBuffer;
             SecureBuffer dataBuffer;
@@ -94,6 +100,13 @@ namespace NSspi.Contexts
 
             SecurityStatus status = SecurityStatus.InvalidHandle;
             byte[] result;
+
+            if ( this.Initialized == false )
+            {
+                throw new InvalidOperationException( "The context is not fully formed." );
+            }
+
+            sizes = QueryBufferSizes();
 
             trailerBuffer = new SecureBuffer( new byte[sizes.SecurityTrailer], BufferType.Token );
             dataBuffer = new SecureBuffer( new byte[input.Length], BufferType.Data );
@@ -148,7 +161,7 @@ namespace NSspi.Contexts
 
         public byte[] Decrypt( byte[] input )
         {
-            SecPkgContext_Sizes sizes = QueryBufferSizes();
+            SecPkgContext_Sizes sizes;
 
             SecureBuffer trailerBuffer;
             SecureBuffer dataBuffer;
@@ -163,6 +176,13 @@ namespace NSspi.Contexts
             int trailerLength;
             int dataLength;
             int paddingLength;
+
+            if ( this.Initialized == false )
+            {
+                throw new InvalidOperationException( "The context is not fully formed." );
+            }
+
+            sizes = QueryBufferSizes();
 
             // This check is required, but not sufficient. We could be stricter.
             if( input.Length < 2 + 4 + 2 + sizes.SecurityTrailer )
@@ -238,7 +258,7 @@ namespace NSspi.Contexts
             return result;
         }
 
-        internal SecPkgContext_Sizes QueryBufferSizes()
+        private SecPkgContext_Sizes QueryBufferSizes()
         {
             SecPkgContext_Sizes sizes = new SecPkgContext_Sizes();
             SecurityStatus status = SecurityStatus.InternalError;
@@ -280,7 +300,7 @@ namespace NSspi.Contexts
             return sizes;
         }
 
-        internal string QueryContextString(ContextQueryAttrib attrib)
+        private string QueryContextString(ContextQueryAttrib attrib)
         {
             SecPkgContext_String stringAttrib;
             SecurityStatus status = SecurityStatus.InternalError;
