@@ -9,7 +9,7 @@ using NSspi.Credentials;
 
 namespace NSspi
 {
-    public static class CredentialNativeMethods
+    internal static class CredentialNativeMethods
     {
         /*
         SECURITY_STATUS SEC_Entry AcquireCredentialsHandle(
@@ -37,7 +37,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail)]
         [DllImport( "Secur32.dll", EntryPoint = "AcquireCredentialsHandle", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus AcquireCredentialsHandle(
+        internal static extern SecurityStatus AcquireCredentialsHandle(
             string principleName,
             string packageName,
             CredentialUse credentialUse,
@@ -51,7 +51,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "FreeCredentialsHandle", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus FreeCredentialsHandle(
+        internal static extern SecurityStatus FreeCredentialsHandle(
             ref RawSspiHandle credentialHandle
         );
 
@@ -67,7 +67,7 @@ namespace NSspi
         /// <returns></returns>
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QueryCredentialsAttributes", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus QueryCredentialsAttribute_Name(
+        internal static extern SecurityStatus QueryCredentialsAttribute_Name(
             ref RawSspiHandle credentialHandle,
             CredentialQueryAttrib attributeName,
             ref QueryNameAttribCarrier name
