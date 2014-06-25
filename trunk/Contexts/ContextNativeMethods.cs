@@ -146,6 +146,16 @@ namespace NSspi.Contexts
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus FreeContextBuffer( IntPtr handle );
 
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "ImpersonateSecurityContext ", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus ImpersonateSecurityContext( ref RawSspiHandle contextHandle );
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "RevertSecurityContext ", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus RevertSecurityContext( ref RawSspiHandle contextHandle );
+
+
         internal static SecurityStatus SafeEncryptMessage(
             SafeContextHandle handle,
             int qualityOfProtection,
