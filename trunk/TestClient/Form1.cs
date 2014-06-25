@@ -11,9 +11,12 @@ using System.Windows.Forms;
 using NSspi;
 using NSspi.Contexts;
 using NSspi.Credentials;
+using TestProtocol;
 
 namespace TestClient
 {
+    using Message = TestProtocol.Message;
+
     public partial class Form1 : Form
     {
         private ClientContext context;

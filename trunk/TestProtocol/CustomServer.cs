@@ -1,47 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NSspi;
 
 namespace TestProtocol
 {
-    public class CustomConnection
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using NSspi;
+
+    public class CustomServer
     {
         private Thread receiveThread;
-        
-        private Socket socket;
+
+        private Socket serverSocket;
+
+        private Socket readSocket;
 
         private bool running;
 
-        public CustomConnection()
+        public CustomServer()
         {
             this.running = false;
         }
 
         public delegate void ReceivedAction( Message message );
-        
+
         public event ReceivedAction Received;
 
-        public void StartClient( string server, int port )
+        public void StartServer( int port )
         {
             if( this.running )
             {
-                throw new InvalidOperationException("Already running");
+                throw new InvalidOperationException( "Already running" );
             }
 
-            this.socket = new Socket( SocketType.Stream, ProtocolType.Tcp );
-
-            this.socket.Connect( server, port );
+            this.serverSocket = new Socket( SocketType.Stream, ProtocolType.Tcp );
 
             this.running = true;
 
             this.receiveThread = new Thread( ReceiveThreadEntry );
-            this.receiveThread.Name = "SSPI Client Receive Thread";
+            this.receiveThread.Name = "SSPI Server Receive Thread";
             this.receiveThread.Start();
         }
 
@@ -52,7 +58,13 @@ namespace TestProtocol
                 throw new InvalidOperationException( "Already stopped" );
             }
 
-            this.socket.Close();
+            this.serverSocket.Close();
+
+            if( this.readSocket != null )
+            {
+                this.readSocket.Close();
+            }
+
             this.receiveThread.Join();
         }
 
@@ -63,21 +75,45 @@ namespace TestProtocol
                 throw new InvalidOperationException( "Not connected" );
             }
 
-            byte[] outBuffer = new byte[ message.Data.Length + 8 ];
+            byte[] outBuffer = new byte[message.Data.Length + 8];
 
             ByteWriter.WriteInt32_BE( (int)message.Operation, outBuffer, 0 );
             ByteWriter.WriteInt32_BE( message.Data.Length, outBuffer, 4 );
 
             Array.Copy( message.Data, 0, outBuffer, 8, message.Data.Length );
 
-            this.socket.Send( outBuffer, 0, outBuffer.Length, SocketFlags.None );
+            this.serverSocket.Send( outBuffer, 0, outBuffer.Length, SocketFlags.None );
         }
 
         private void ReceiveThreadEntry()
         {
             try
             {
-                ReadLoop();
+                while( this.running )
+                {
+                    try
+                    {
+                        this.readSocket = this.serverSocket.Accept();
+                    }
+                    catch( SocketException e )
+                    {
+                        if( e.SocketErrorCode == SocketError.ConnectionAborted ||
+                           e.SocketErrorCode == SocketError.Interrupted ||
+                           e.SocketErrorCode == SocketError.OperationAborted ||
+                           e.SocketErrorCode == SocketError.Shutdown )
+                        {
+                            // Shutting down.
+                            break;
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    ReadLoop();
+
+                }
             }
             catch( Exception e )
             {
@@ -102,19 +138,19 @@ namespace TestProtocol
 
 
                     // Read the operation.
-                    this.socket.Receive( readBuffer, 4, SocketFlags.None );
+                    this.serverSocket.Receive( readBuffer, 4, SocketFlags.None );
 
                     // Check if we popped out of a receive call after we were shut down.
                     if( this.running == false ) { break; }
-                    
+
                     operation = (ProtocolOp)ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
                     // Read the length 
-                    this.socket.Receive( readBuffer, 4, SocketFlags.None );
+                    this.serverSocket.Receive( readBuffer, 4, SocketFlags.None );
                     length = ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
                     // Read the data
-                    this.socket.Receive( readBuffer, length, SocketFlags.None );
+                    this.serverSocket.Receive( readBuffer, length, SocketFlags.None );
 
                 }
                 catch( SocketException e )
@@ -139,7 +175,7 @@ namespace TestProtocol
                     byte[] dataCopy = new byte[length];
                     Array.Copy( readBuffer, 0, dataCopy, 0, length );
                     Message message = new Message( operation, dataCopy );
-                 
+
                     try
                     {
                         this.Received( message );
@@ -147,8 +183,9 @@ namespace TestProtocol
                     catch( Exception e )
                     { }
                 }
-                
+
             }
         }
     }
+
 }

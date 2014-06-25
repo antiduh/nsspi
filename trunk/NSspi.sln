@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProtocol", "TestProtocol\TestProtocol.csproj", "{9BFD94E1-D9FB-44D7-A6E7-8BAC2620E535}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServer", "TestServer\TestServer.csproj", "{35B8280A-8EB1-4FB5-B448-B4E9F132317F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{9BFD94E1-D9FB-44D7-A6E7-8BAC2620E535}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BFD94E1-D9FB-44D7-A6E7-8BAC2620E535}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BFD94E1-D9FB-44D7-A6E7-8BAC2620E535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B8280A-8EB1-4FB5-B448-B4E9F132317F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B8280A-8EB1-4FB5-B448-B4E9F132317F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B8280A-8EB1-4FB5-B448-B4E9F132317F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B8280A-8EB1-4FB5-B448-B4E9F132317F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
