@@ -143,10 +143,52 @@ namespace NSspi
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         public static extern SecurityStatus FreeContextBuffer( IntPtr handle );
 
+        public static SecurityStatus SafeEncryptMessage(
+            SafeContextHandle handle,
+            int qualityOfProtection,
+            SecureBufferAdapter bufferAdapter,
+            int sequenceNumber )
+        {
+            SecurityStatus status = SecurityStatus.InternalError;
+            bool gotRef = false;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                handle.DangerousAddRef( ref gotRef );
+            }
+            catch ( Exception )
+            {
+                if ( gotRef )
+                {
+                    handle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if ( gotRef )
+                {
+                    status = ContextNativeMethods.EncryptMessage(
+                        ref handle.rawHandle,
+                        0,
+                        bufferAdapter.Handle,
+                        0
+                    );
+
+                    handle.DangerousRelease();
+                }
+            }
+
+            return status;
+        }
+
         public static SecurityStatus SafeDecryptMessage( 
             SafeContextHandle handle, 
             int qualityOfProtection, 
-            IntPtr bufferDescriptor, 
+            SecureBufferAdapter bufferAdapter, 
             int sequenceNumber )
         {
             SecurityStatus status = SecurityStatus.InvalidHandle;
@@ -173,7 +215,7 @@ namespace NSspi
                 {
                     status = ContextNativeMethods.DecryptMessage(
                         ref handle.rawHandle,
-                        bufferDescriptor,
+                        bufferAdapter.Handle,
                         0,
                         0
                     );
