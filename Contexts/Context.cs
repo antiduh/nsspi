@@ -13,15 +13,13 @@ namespace NSspi.Contexts
 {
     public class Context : IDisposable
     {
-        private bool disposed;
-
         public Context( Credential cred )
         {
             this.Credential = cred;
 
             this.ContextHandle = new SafeContextHandle();
 
-            this.disposed = false;
+            this.Disposed = false;
             this.Initialized = false;
         }
 
@@ -55,6 +53,8 @@ namespace NSspi.Contexts
             }
         }
 
+        public bool Disposed { get; private set; }
+
         public void Dispose()
         {
             Dispose( true );
@@ -63,7 +63,7 @@ namespace NSspi.Contexts
 
         protected virtual void Dispose( bool disposing )
         {
-            if( this.disposed ) { return; }
+            if( this.Disposed ) { return; }
 
             if( disposing )
             {
@@ -72,7 +72,7 @@ namespace NSspi.Contexts
             }
 
 
-            this.disposed = true;
+            this.Disposed = true;
         }
 
         /// <summary>
@@ -359,6 +359,10 @@ namespace NSspi.Contexts
 
             return result;
         }
-        
+
+        private void InitSecPkgInfo()
+        {
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using NSspi.Buffers;
@@ -12,11 +13,15 @@ namespace NSspi.Contexts
     {
         private ContextAttrib requestedAttribs;
         private ContextAttrib finalAttribs;
-        
+
+        private bool impersonating;
+
         public ServerContext(ServerCredential cred, ContextAttrib requestedAttribs) : base ( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;
+
+            this.impersonating = false;
         }
 
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
@@ -81,6 +86,8 @@ namespace NSspi.Contexts
                 {
                     nextToken = null;
                 }
+
+                InitProviderCapabilities();
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
@@ -95,6 +102,106 @@ namespace NSspi.Contexts
             }
 
             return status;
+        }
+
+        public ImpersonationHandle ImpersonateClient()
+        {
+            ImpersonationHandle handle = new ImpersonationHandle( this );
+            SecurityStatus status = SecurityStatus.InternalError;
+            bool gotRef = false;
+
+            if( impersonating )
+            {
+                throw new InvalidOperationException( "Cannot impersonate again while already impersonating." );
+            }
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                this.ContextHandle.DangerousAddRef( ref gotRef );
+            }
+            catch( Exception )
+            {
+                if( gotRef )
+                {
+                    this.ContextHandle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if( gotRef )
+                {
+                    status = ContextNativeMethods.ImpersonateSecurityContext(
+                        ref this.ContextHandle.rawHandle
+                    );
+
+                    this.ContextHandle.DangerousRelease();
+
+                    this.impersonating = true;
+                }
+            }
+
+            if( status == SecurityStatus.NoImpersonation )
+            {
+                throw new SSPIException( "Impersonation could not be performed.", status );
+            }
+            else if( status == SecurityStatus.Unsupported )
+            {
+                throw new SSPIException( "Impersonation is not supported by the security context's Security Support Provider.", status );
+            }
+            else if( status != SecurityStatus.OK )
+            {
+                throw new SSPIException( "Failed to impersonate the client", status );
+            }
+            
+            return handle;
+        }
+
+        internal void RevertImpersonate()
+        {
+            bool gotRef = false;
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            if( impersonating == false || this.Disposed )
+            {
+                return;
+            }
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                this.ContextHandle.DangerousAddRef( ref gotRef );
+            }
+            catch( Exception )
+            {
+                if( gotRef )
+                {
+                    this.ContextHandle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if( gotRef )
+                {
+                    status = ContextNativeMethods.RevertSecurityContext(
+                        ref this.ContextHandle.rawHandle
+                    );
+
+                    this.ContextHandle.DangerousRelease();
+
+                    this.impersonating = false;
+                }
+            }
+        }
+
+        private void InitProviderCapabilities()
+        {
         }
     }
 }
