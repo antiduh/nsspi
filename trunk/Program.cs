@@ -16,9 +16,7 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            SecPkgInfo pkgInfo = PackageSupport.GetPackageCapabilities( "Negotiate" );
-
-            //CredTest();
+            CredTest();
         }
 
         private static void IdentTest()
