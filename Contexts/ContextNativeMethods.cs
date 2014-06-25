@@ -102,7 +102,7 @@ namespace NSspi
             ref long expiry
         );
 
-
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "DeleteSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
