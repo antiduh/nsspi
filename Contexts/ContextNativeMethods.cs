@@ -6,9 +6,10 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NSspi.Buffers;
 using NSspi.Contexts;
 
-namespace NSspi
+namespace NSspi.Contexts
 {
     internal static class ContextNativeMethods
     {
