@@ -239,14 +239,36 @@ namespace NSspi
         internal SecPkgContext_Sizes QueryBufferSizes()
         {
             SecPkgContext_Sizes sizes = new SecPkgContext_Sizes();
-            SecurityStatus status;
+            SecurityStatus status = SecurityStatus.InternalError;
+            bool gotRef = false;
 
-            // TODO SAFE_CER
-            status = ContextNativeMethods.QueryContextAttributes_Sizes(
-                ref this.ContextHandle.rawHandle,
-                ContextQueryAttrib.Sizes,
-                ref sizes 
-            );
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                this.ContextHandle.DangerousAddRef( ref gotRef );
+            }
+            catch ( Exception )
+            {
+                if ( gotRef )
+                {
+                    this.ContextHandle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if ( gotRef )
+                {
+                    status = ContextNativeMethods.QueryContextAttributes_Sizes(
+                        ref this.ContextHandle.rawHandle,
+                        ContextQueryAttrib.Sizes,
+                        ref sizes
+                    );
+                    this.ContextHandle.DangerousRelease();
+                }
+            }
 
             if( status != SecurityStatus.OK )
             {
@@ -259,8 +281,9 @@ namespace NSspi
         internal string QueryContextString(ContextQueryAttrib attrib)
         {
             SecPkgContext_String stringAttrib;
-            SecurityStatus status;
-            string result;
+            SecurityStatus status = SecurityStatus.InternalError;
+            string result = null;
+            bool gotRef = false;
 
             if( attrib != ContextQueryAttrib.Names && attrib != ContextQueryAttrib.Authority )
             {
@@ -269,25 +292,45 @@ namespace NSspi
 
             stringAttrib = new SecPkgContext_String();
 
-            // TODO SAFE_CER
-            status = ContextNativeMethods.QueryContextAttributes_String(
-                ref this.ContextHandle.rawHandle,
-                attrib,
-                ref stringAttrib
-            );
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                this.ContextHandle.DangerousAddRef( ref gotRef );
+            }
+            catch ( Exception )
+            {
+                if ( gotRef )
+                {
+                    this.ContextHandle.DangerousRelease();
+                    gotRef = false;
+                }
+                throw;
+            }
+            finally
+            {
+                if ( gotRef )
+                {
+                    status = ContextNativeMethods.QueryContextAttributes_String(
+                        ref this.ContextHandle.rawHandle,
+                        attrib,
+                        ref stringAttrib
+                    );
 
+                    this.ContextHandle.DangerousRelease();
+
+                    if ( status == SecurityStatus.OK )
+                    {
+                        result = Marshal.PtrToStringUni( stringAttrib.StringResult );
+                        ContextNativeMethods.FreeContextBuffer( stringAttrib.StringResult );
+                    }
+                }
+            }
             
             if( status == SecurityStatus.Unsupported )
             {
                 return null;
             }
-            else if( status == SecurityStatus.OK )
-            {
-                // TODO handle this safely.
-                result = Marshal.PtrToStringUni( stringAttrib.StringResult );
-                ContextNativeMethods.FreeContextBuffer( stringAttrib.StringResult );
-            }
-            else
+            else if( status != SecurityStatus.OK )
             {
                 throw new SSPIException( "Failed to query the context's associated user name", status );
             }
