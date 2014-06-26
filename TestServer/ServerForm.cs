@@ -144,7 +144,7 @@ namespace TestServer
         private void server_Disconnected()
         {
             this.running = false;
-            this.initializing = false;
+            this.initializing = true;
             this.connected = false;
 
             UpdateButtons();
