@@ -27,6 +27,8 @@ namespace TestProtocol
         
         public event ReceivedAction Received;
 
+        public event Action Disconnected;
+
         public void StartClient( string server, int port )
         {
             if( this.running )
@@ -49,7 +51,7 @@ namespace TestProtocol
         {
             if( this.running == false )
             {
-                throw new InvalidOperationException( "Already stopped" );
+                return;
             }
 
             this.socket.Close();
@@ -64,13 +66,19 @@ namespace TestProtocol
             }
 
             byte[] outBuffer = new byte[ message.Data.Length + 8 ];
+            int position = 0;
 
-            ByteWriter.WriteInt32_BE( (int)message.Operation, outBuffer, 0 );
-            ByteWriter.WriteInt32_BE( message.Data.Length, outBuffer, 4 );
+            ByteWriter.WriteInt32_BE( (int)message.Operation, outBuffer, position );
+            position += 4;
 
-            Array.Copy( message.Data, 0, outBuffer, 8, message.Data.Length );
+            ByteWriter.WriteInt32_BE( message.Data.Length, outBuffer, position );
+            position += 4;
+
+            Array.Copy( message.Data, 0, outBuffer, position, message.Data.Length );
 
             this.socket.Send( outBuffer, 0, outBuffer.Length, SocketFlags.None );
+
+            Console.Out.WriteLine( "Client: Sent " + message.Operation );
         }
 
         private void ReceiveThreadEntry()
@@ -82,7 +90,20 @@ namespace TestProtocol
             catch( Exception e )
             {
                 MessageBox.Show( "The SspiConnection receive thread crashed:\r\n\r\n" + e.ToString() );
+            }
+            finally
+            {
                 this.running = false;
+
+                try
+                {
+                    if( this.Disconnected != null )
+                    {
+                        this.Disconnected();
+                    }
+                }
+                catch
+                { }
             }
         }
 
@@ -133,6 +154,7 @@ namespace TestProtocol
                     }
                 }
 
+                Console.Out.WriteLine( "Client: Received " + operation );
 
                 if( this.Received != null )
                 {

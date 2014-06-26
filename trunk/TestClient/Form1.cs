@@ -40,13 +40,12 @@ namespace TestClient
             InitializeComponent();
 
             this.connectButton.Click += connectButton_Click;
-
             this.disconnectButton.Click += disconnectButton_Click;
 
-
             this.encryptButton.Click += encryptButton_Click;
-
             this.signButton.Click += signButton_Click;
+
+            this.FormClosing += Form1_FormClosing;
 
             // --- SSPI ---
             this.cred = new ClientCredential( SecurityPackage.Negotiate );
@@ -64,11 +63,17 @@ namespace TestClient
 
             this.connection = new CustomConnection();
             this.connection.Received += connection_Received;
+            this.connection.Disconnected += connection_Disconnected;
 
             // --- UI Fillout ---
             this.usernameTextbox.Text = this.cred.Name;
 
             UpdateButtons();
+        }
+
+        private void Form1_FormClosing( object sender, FormClosingEventArgs e )
+        {
+            this.connection.Stop();
         }
 
         private void connectButton_Click( object sender, EventArgs e )
@@ -82,6 +87,8 @@ namespace TestClient
                 try
                 {
                     this.connection.StartClient( this.serverTextBox.Text, (int)this.portNumeric.Value );
+                    this.initializing = true;
+                    DoInit();
                 }
                 catch( SocketException socketExcept )
                 {
@@ -101,7 +108,6 @@ namespace TestClient
                     }
                 }
 
-                this.initializing = true;
             }
         }
 
@@ -174,6 +180,18 @@ namespace TestClient
             } );
         }
 
+        private void connection_Disconnected()
+        {
+            this.connected = false;
+            this.initializing = false;
+            this.lastServerToken = null;
+
+            this.Invoke( (Action)delegate()
+            {
+                UpdateButtons();
+            });
+        }
+        
         private void DoInit()
         {
             SecurityStatus status;
