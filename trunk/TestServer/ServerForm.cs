@@ -16,7 +16,7 @@ namespace TestServer
     using NSspi.Credentials;
     using Message = TestProtocol.Message;
 
-    public partial class Form1 : Form
+    public partial class ServerForm : Form
     {
         private ServerCredential serverCred;
 
@@ -30,7 +30,7 @@ namespace TestServer
 
         private bool connected;
 
-        public Form1()
+        public ServerForm()
         {
             InitializeComponent();
 
