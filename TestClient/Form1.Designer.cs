@@ -75,6 +75,7 @@
             this.serverTextBox.Name = "serverTextBox";
             this.serverTextBox.Size = new System.Drawing.Size(137, 20);
             this.serverTextBox.TabIndex = 2;
+            this.serverTextBox.Text = "localhost";
             // 
             // portNumeric
             // 
