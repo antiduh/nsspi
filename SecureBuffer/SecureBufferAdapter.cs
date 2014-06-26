@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
-    public class SecureBufferAdapter : IDisposable
+    internal class SecureBufferAdapter : IDisposable
     {
         private bool disposed;
 

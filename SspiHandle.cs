@@ -25,7 +25,7 @@ namespace NSspi
     /// a second class SafeSspiHandleReference so that reference counting is properly executed.
     /// </remarks>
     [StructLayout( LayoutKind.Sequential, Pack = 1 ) ]
-    public struct RawSspiHandle
+    internal struct RawSspiHandle
     {
         private IntPtr lowPart;
         private IntPtr highPart;

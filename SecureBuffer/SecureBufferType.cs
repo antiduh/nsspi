@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
-    public enum BufferType : int
+    internal enum BufferType : int
     {
         Empty = 0x00,
         Data = 0x01,

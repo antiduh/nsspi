@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace NSspi
 {
-    public static class PackageSupport
+    internal static class PackageSupport
     {
-        public static SecPkgInfo GetPackageCapabilities( string packageName )
+        internal static SecPkgInfo GetPackageCapabilities( string packageName )
         {
             SecPkgInfo info;
             SecurityStatus status;
