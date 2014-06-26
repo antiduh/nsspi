@@ -63,6 +63,8 @@ namespace TestServer
             this.connected = false;
 
             UpdateButtons();
+
+            this.usernameTextbox.Text = this.serverCred.Name;
         }
 
         private void Form1_FormClosing( object sender, FormClosingEventArgs e )

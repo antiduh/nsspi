@@ -186,8 +186,20 @@ namespace TestClient
             this.initializing = false;
             this.lastServerToken = null;
 
-            this.Invoke( (Action)delegate()
+            this.BeginInvoke( (Action)delegate()
             {
+                this.context.Dispose();
+                this.context = new ClientContext( 
+                    this.cred, 
+                    "",
+                    ContextAttrib.InitIntegrity |
+                    ContextAttrib.ReplayDetect |
+                    ContextAttrib.SequenceDetect |
+                    ContextAttrib.MutualAuth |
+                    ContextAttrib.Delegate |
+                    ContextAttrib.Confidentiality
+                );
+
                 UpdateButtons();
             });
         }
