@@ -67,10 +67,8 @@ namespace NSspi.Contexts
 
             if( disposing )
             {
-                this.Credential.Dispose();
                 this.ContextHandle.Dispose();
             }
-
 
             this.Disposed = true;
         }
