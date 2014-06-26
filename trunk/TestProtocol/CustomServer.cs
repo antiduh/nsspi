@@ -63,6 +63,8 @@ namespace TestProtocol
                 return;
             }
 
+            this.running = false;
+
             this.serverSocket.Close();
 
             if( this.readSocket != null )
