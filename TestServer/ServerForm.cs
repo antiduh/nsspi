@@ -147,7 +147,19 @@ namespace TestServer
             this.initializing = true;
             this.connected = false;
 
-            UpdateButtons();
+
+            this.serverContext.Dispose();
+            this.serverContext = new ServerContext(
+                serverCred,
+                ContextAttrib.AcceptIntegrity |
+                ContextAttrib.ReplayDetect |
+                ContextAttrib.SequenceDetect |
+                ContextAttrib.MutualAuth |
+                ContextAttrib.Delegate |
+                ContextAttrib.Confidentiality
+            );
+
+            this.BeginInvoke( (Action) UpdateButtons );
         }
 
 
