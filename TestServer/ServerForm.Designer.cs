@@ -1,6 +1,6 @@
 ﻿namespace TestServer
 {
-    partial class Form1
+    partial class ServerForm
     {
         /// <summary>
         /// Required designer variable.

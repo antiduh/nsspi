@@ -17,7 +17,7 @@ namespace TestClient
 {
     using Message = TestProtocol.Message;
 
-    public partial class Form1 : Form
+    public partial class ClientForm : Form
     {
         private ClientContext context;
         private ClientCredential cred;
@@ -30,7 +30,7 @@ namespace TestClient
 
         private byte[] lastServerToken;
 
-        public Form1()
+        public ClientForm()
         {
             this.connected = false;
             this.initializing = false;
