@@ -30,8 +30,15 @@ namespace NSspi
 
                 if( status == SecurityStatus.OK && rawInfoPtr != IntPtr.Zero )
                 {
-                    Marshal.PtrToStructure( rawInfoPtr, info );
-                    freeStatus = NativeMethods.FreeContextBuffer( rawInfoPtr );
+                    try
+                    {
+                        // This performs allocations as it makes room for the strings contained in the SecPkgInfo class.
+                        Marshal.PtrToStructure( rawInfoPtr, info );
+                    }
+                    finally
+                    {
+                        freeStatus = NativeMethods.FreeContextBuffer( rawInfoPtr );
+                    }
                 }
             }
 
