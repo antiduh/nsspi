@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NSspi.Buffers
 {
     [StructLayout( LayoutKind.Sequential )]
-    public struct SecureBufferInternal
+    internal struct SecureBufferInternal
     {
         public int Count;
 
@@ -18,7 +18,7 @@ namespace NSspi.Buffers
         public IntPtr Buffer;
     }
 
-    public class SecureBuffer
+    internal class SecureBuffer
     {
         public SecureBuffer( byte[] buffer, BufferType type )
         {

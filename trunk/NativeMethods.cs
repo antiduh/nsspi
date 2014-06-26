@@ -9,7 +9,7 @@ using NSspi.Contexts;
 
 namespace NSspi
 {
-    public class NativeMethods
+    internal class NativeMethods
     {
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374713(v=vs.85).aspx
 
@@ -27,7 +27,7 @@ namespace NSspi
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
-        public static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
+        internal static extern SecurityStatus FreeContextBuffer( IntPtr buffer );
 
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]

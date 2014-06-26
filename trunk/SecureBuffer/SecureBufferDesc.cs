@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace NSspi.Buffers
 {
     [StructLayout( LayoutKind.Sequential)]
-    public struct SecureBufferDescInternal
+    internal struct SecureBufferDescInternal
     {
         public int Version;
         public int NumBuffers;

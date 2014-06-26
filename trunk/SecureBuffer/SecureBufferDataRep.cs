@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
-    public enum SecureBufferDataRep : int
+    internal enum SecureBufferDataRep : int
     {
         /*
         #define SECURITY_NATIVE_DREP        0x00000010
