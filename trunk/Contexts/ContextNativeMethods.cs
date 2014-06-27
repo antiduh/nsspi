@@ -126,6 +126,24 @@ namespace NSspi.Contexts
             int qualityOfProtection
         );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "MakeSignature", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus MakeSignature(
+            ref RawSspiHandle contextHandle,
+            int qualityOfProtection,
+            IntPtr bufferDescriptor,
+            int sequenceNumber
+        );
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "VerifySignature", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus VerifySignature(
+            ref RawSspiHandle contextHandle,
+            IntPtr bufferDescriptor,
+            int sequenceNumber,
+            int qualityOfProtection
+        );
+
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus QueryContextAttributes_Sizes(

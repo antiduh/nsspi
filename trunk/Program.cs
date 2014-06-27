@@ -145,6 +145,24 @@ namespace NSspi
 
                 }
 
+                cipherText = client.MakeSignature( plainText );
+
+                bool goodSig = server.VerifySignature( cipherText, out roundTripPlaintext );
+
+                if ( goodSig == false ||
+                     roundTripPlaintext.Length != plainText.Length )
+                {
+                    throw new Exception();
+                }
+                
+                for ( int i = 0; i < plainText.Length; i++ )
+                {
+                    if ( plainText[i] != roundTripPlaintext[i] )
+                    {
+                        throw new Exception();
+                    }
+                }
+
                 Console.Out.Flush();
             }
             finally
