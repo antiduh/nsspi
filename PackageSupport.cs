@@ -28,12 +28,15 @@ namespace NSspi
             {
                 status = NativeMethods.QuerySecurityPackageInfo( packageName, ref rawInfoPtr );
 
-                if( status == SecurityStatus.OK && rawInfoPtr != IntPtr.Zero )
+                if ( rawInfoPtr != IntPtr.Zero )
                 {
                     try
                     {
-                        // This performs allocations as it makes room for the strings contained in the SecPkgInfo class.
-                        Marshal.PtrToStructure( rawInfoPtr, info );
+                        if ( status == SecurityStatus.OK )
+                        {
+                            // This performs allocations as it makes room for the strings contained in the SecPkgInfo class.
+                            Marshal.PtrToStructure( rawInfoPtr, info );
+                        }
                     }
                     finally
                     {
