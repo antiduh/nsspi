@@ -108,7 +108,15 @@ namespace TestServer
 
         private void signButton_Click( object sender, EventArgs e )
         {
-            // Not implemented.
+            byte[] plainText = Encoding.UTF8.GetBytes( this.sendTextbox.Text );
+            byte[] signedData;
+            Message message;
+
+            signedData = this.serverContext.MakeSignature( plainText );
+
+            message = new Message( ProtocolOp.SignedMessage, signedData );
+
+            this.server.Send( message );
         }
         
         private void UpdateButtons()
@@ -211,16 +219,21 @@ namespace TestServer
 
         private void HandleSigned( Message message )
         {
-            // Not implemented yet.
-            /*
             this.Invoke( (Action)delegate()
             {
-                byte[] plainText = this.serverContext.Decrypt( message.Data );
-                string text = Encoding.UTF8.GetString( plainText );
+                byte[] plainText;
 
-                this.receivedTextbox.Text += "Received encrypted message from client:\r\n" + text + "\r\n";
+                if( this.serverContext.VerifySignature( message.Data, out plainText ) )
+                {
+                    string text = Encoding.UTF8.GetString( plainText );
+
+                    this.receivedTextbox.Text += "Received valid signed message from client:\r\n" + text + "\r\n";
+                }
+                else
+                {
+                    this.receivedTextbox.Text += "Received *** invalid *** signed message from client.\r\n";
+                }
             } );
-             */
         }
 
         private void HandleUnknown( Message message )
