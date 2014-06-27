@@ -134,23 +134,17 @@ namespace TestClient
 
         private void signButton_Click( object sender, EventArgs e )
         {
-            // Signing not yet supported in the NSspi library;
-            MessageBox.Show( "Signing not yet supported" );
-            return;
-
-            /*
             byte[] plaintext;
             byte[] cipherText;
             Message message;
 
             plaintext = Encoding.UTF8.GetBytes( this.sendTextbox.Text );
 
-            cipherText = this.context.Sign( plaintext );
+            cipherText = this.context.MakeSignature( plaintext );
 
             message = new Message( ProtocolOp.SignedMessage, cipherText );
 
             this.connection.Send( message );
-            */
         }
 
         private void connection_Received( Message message )
@@ -175,7 +169,7 @@ namespace TestClient
                 }
                 else if( message.Operation == ProtocolOp.SignedMessage )
                 {
-                    // Not yet supported
+                    HandleSigned( message );
                 }
             } );
         }
@@ -234,6 +228,21 @@ namespace TestClient
             this.receiveTextbox.Text += "Received encrypted message from server:\r\n" + text + "\r\n";
         }
 
+        private void HandleSigned( Message message )
+        {
+            byte[] plaintext;
+            string text;
+
+            if( this.context.VerifySignature( message.Data, out plaintext ) )
+            {
+                text = Encoding.UTF8.GetString( plaintext );
+                this.receiveTextbox.Text += "Received valid signed message from server:\r\n" + text + "\r\n";
+            }
+            else
+            {
+                this.receiveTextbox.Text += "Received *** invalid *** signed message from server.\r\n";
+            }
+        }
 
         private void UpdateButtons()
         {
