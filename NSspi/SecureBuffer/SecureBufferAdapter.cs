@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
-    internal class SecureBufferAdapter : IDisposable
+    internal sealed class SecureBufferAdapter : CriticalFinalizerObject, IDisposable
     {
         private bool disposed;
 
@@ -27,8 +28,7 @@ namespace NSspi.Buffers
 
         }
 
-        //[ReliabilityContract( Consistency.MayCorruptAppDomain, Cer.None)]
-        public SecureBufferAdapter( IList<SecureBuffer> buffers )
+        public SecureBufferAdapter( IList<SecureBuffer> buffers ) : base()
         {
             this.buffers = buffers;
 
@@ -57,8 +57,12 @@ namespace NSspi.Buffers
             this.descriptorHandle = GCHandle.Alloc( descriptor, GCHandleType.Pinned );
         }
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         ~SecureBufferAdapter()
         {
+            // We bend the typical Dispose pattern here. This finalizer runs in a Constrained Execution Region,
+            // and so we shouldn't call virtual methods. There's no need to extend this class, so we prevent it
+            // and mark the protected Dispose method as non-virtual.
             Dispose( false );
         }
 
@@ -81,25 +85,36 @@ namespace NSspi.Buffers
             GC.SuppressFinalize( this );
         }
 
-        protected virtual void Dispose( bool disposing )
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        private void Dispose( bool disposing )
         {
             if ( this.disposed == true ) { return; }
 
             if ( disposing )
             {
-                for ( int i = 0; i < this.buffers.Count; i++ )
+                for( int i = 0; i < this.buffers.Count; i++ )
                 {
                     this.buffers[i].Length = this.bufferCarrier[i].Count;
                 }
             }
 
-            for ( int i = 0; i < this.bufferHandles.Length; i++ )
+            for( int i = 0; i < this.bufferHandles.Length; i++ )
             {
-                this.bufferHandles[i].Free();
+                if( this.bufferHandles[i].IsAllocated )
+                {
+                    this.bufferHandles[i].Free();
+                }
             }
 
-            this.bufferCarrierHandle.Free();
-            this.descriptorHandle.Free();
+            if( this.bufferCarrierHandle.IsAllocated )
+            {
+                this.bufferCarrierHandle.Free();
+            }
+
+            if( this.descriptorHandle.IsAllocated )
+            {
+                this.descriptorHandle.Free();
+            }
 
             this.disposed = true;
         }
