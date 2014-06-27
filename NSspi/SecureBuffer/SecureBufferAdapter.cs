@@ -92,6 +92,9 @@ namespace NSspi.Buffers
 
             if ( disposing )
             {
+                // When this class is actually being used for its original purpose - to convey buffers 
+                // back and forth to SSPI calls - we need to copy the potentially modified structure members
+                // back to our caller's buffer.
                 for( int i = 0; i < this.buffers.Count; i++ )
                 {
                     this.buffers[i].Length = this.bufferCarrier[i].Count;
