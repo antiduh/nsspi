@@ -75,7 +75,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NSspi.csproj">
+    <ProjectReference Include="..\NSspi\NSspi.csproj">
       <Project>{4b4cd933-bf62-4f92-b8fa-6771758c5197}</Project>
       <Name>NSspi</Name>
     </ProjectReference>
