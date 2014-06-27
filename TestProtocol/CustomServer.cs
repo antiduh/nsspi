@@ -38,6 +38,8 @@ namespace TestProtocol
 
         public event Action Disconnected;
 
+        public event Action Stopped;
+
         public void StartServer( int port )
         {
             if( this.running )
@@ -133,13 +135,12 @@ namespace TestProtocol
 
                 try
                 {
-                    if( this.Disconnected != null )
+                    if( this.Stopped != null )
                     {
-                        this.Disconnected();
+                        this.Stopped();
                     }
                 }
-                catch
-                { }
+                finally { }
             }
         }
 
@@ -208,6 +209,15 @@ namespace TestProtocol
                 }
 
             }
+
+            try
+            {
+                if( this.Disconnected != null )
+                {
+                    this.Disconnected();
+                }
+            }
+            catch { }
         }
     }
 
