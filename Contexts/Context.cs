@@ -279,37 +279,12 @@ namespace NSspi.Contexts
 
             using ( adapter = new SecureBufferAdapter( new[] { dataBuffer, signatureBuffer } ) )
             {
-                bool gotRef = false;
-                
-                RuntimeHelpers.PrepareConstrainedRegions();
-                try
-                {
-                    this.ContextHandle.DangerousAddRef( ref gotRef );
-                }
-                catch ( Exception )
-                {
-                    if ( gotRef )
-                    {
-                        this.ContextHandle.DangerousRelease();
-                        gotRef = false;
-                    }
-
-                    throw;
-                }
-                finally
-                {
-                    if ( gotRef )
-                    {
-                        status = ContextNativeMethods.MakeSignature(
-                            ref this.ContextHandle.rawHandle,
-                            0,
-                            adapter.Handle,
-                            0
-                        );
-
-                        this.ContextHandle.DangerousRelease();
-                    }
-                }
+                status = ContextNativeMethods.SafeMakeSignature(
+                    this.ContextHandle,
+                    0,
+                    adapter,
+                    0
+                );
             }
 
             if ( status != SecurityStatus.OK )
@@ -384,37 +359,12 @@ namespace NSspi.Contexts
 
             using ( adapter = new SecureBufferAdapter( new[] { dataBuffer, signatureBuffer } ) )
             {
-                bool gotRef = false;
-
-                RuntimeHelpers.PrepareConstrainedRegions();
-                try
-                {
-                    this.ContextHandle.DangerousAddRef( ref gotRef );
-                }
-                catch ( Exception )
-                {
-                    if ( gotRef )
-                    {
-                        this.ContextHandle.DangerousRelease();
-                        gotRef = false;
-                    }
-
-                    throw;
-                }
-                finally
-                {
-                    if ( gotRef )
-                    {
-                        status = ContextNativeMethods.VerifySignature(
-                            ref this.ContextHandle.rawHandle,
-                            adapter.Handle,
-                            0,
-                            0
-                        );
-
-                        this.ContextHandle.DangerousRelease();
-                    }
-                }
+                status = ContextNativeMethods.SafeVerifySignature(
+                    this.ContextHandle,
+                    0,
+                    adapter,
+                    0
+                );
             }
 
             if ( status == SecurityStatus.OK )
