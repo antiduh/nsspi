@@ -257,5 +257,89 @@ namespace NSspi.Contexts
 
             return status;
         }
+
+        internal static SecurityStatus SafeMakeSignature(
+            SafeContextHandle handle,
+            int qualityOfProtection,
+            SecureBufferAdapter adapter,
+            int sequenceNumber )
+        {
+            bool gotRef = false;
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                handle.DangerousAddRef( ref gotRef );
+            }
+            catch ( Exception )
+            {
+                if ( gotRef )
+                {
+                    handle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if ( gotRef )
+                {
+                    status = ContextNativeMethods.MakeSignature(
+                        ref handle.rawHandle,
+                        0,
+                        adapter.Handle,
+                        0
+                    );
+
+                    handle.DangerousRelease();
+                }
+            }
+
+            return status;
+        }
+
+        internal static SecurityStatus SafeVerifySignature(
+            SafeContextHandle handle,
+            int qualityOfProtection,
+            SecureBufferAdapter adapter,
+            int sequenceNumber )
+        {
+            bool gotRef = false;
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                handle.DangerousAddRef( ref gotRef );
+            }
+            catch ( Exception )
+            {
+                if ( gotRef )
+                {
+                    handle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if ( gotRef )
+                {
+                    status = ContextNativeMethods.VerifySignature(
+                        ref handle.rawHandle,
+                        adapter.Handle,
+                        0,
+                        0
+                    );
+
+                    handle.DangerousRelease();
+                }
+            }
+
+            return status;
+        }
     }
 }
