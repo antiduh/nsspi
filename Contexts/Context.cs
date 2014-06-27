@@ -256,6 +256,135 @@ namespace NSspi.Contexts
             return result;
         }
 
+        public byte[] MakeSignature( byte[] message )
+        {
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            SecPkgContext_Sizes sizes;
+            SecureBuffer dataBuffer;
+            SecureBuffer signatureBuffer;
+            SecureBufferAdapter adapter;
+
+            if ( this.Initialized == false )
+            {
+                throw new InvalidOperationException( "The context is not fully formed" );
+            }
+
+            sizes = QueryBufferSizes();
+
+            dataBuffer = new SecureBuffer( new byte[message.Length], BufferType.Data );
+            signatureBuffer = new SecureBuffer( new byte[sizes.MaxSignature], BufferType.Token );
+
+            Array.Copy( message, dataBuffer.Buffer, message.Length );
+
+            using ( adapter = new SecureBufferAdapter( new[] { dataBuffer, signatureBuffer } ) )
+            {
+                // TODO CER
+                status = ContextNativeMethods.MakeSignature(
+                    ref this.ContextHandle.rawHandle,
+                    0,
+                    adapter.Handle,
+                    0
+                );
+            }
+
+            if ( status != SecurityStatus.OK )
+            {
+                throw new SSPIException( "Failed to create message signature.", status );
+            }
+
+            byte[] outMessage;
+            int position = 0;
+
+            // Enough room for 
+            //  - original message length (4 bytes)
+            //  - signature length        (2 bytes)
+            //  - original message
+            //  - signature
+
+            outMessage = new byte[4 + 2 + dataBuffer.Length + signatureBuffer.Length];
+
+            ByteWriter.WriteInt32_BE( dataBuffer.Length, outMessage, position );
+            position += 4;
+
+            ByteWriter.WriteInt16_BE( (Int16)signatureBuffer.Length, outMessage, position );
+            position += 2;
+
+            Array.Copy( dataBuffer.Buffer, 0, outMessage, position, dataBuffer.Length );
+            position += dataBuffer.Length;
+
+            Array.Copy( signatureBuffer.Buffer, 0, outMessage, position, signatureBuffer.Length );
+            position += signatureBuffer.Length;
+
+            return outMessage;
+        }
+
+        public bool VerifySignature( byte[] signedMessage, out byte[] origMessage )
+        {
+            SecurityStatus status = SecurityStatus.InternalError;
+
+            SecPkgContext_Sizes sizes;
+            SecureBuffer dataBuffer;
+            SecureBuffer signatureBuffer;
+            SecureBufferAdapter adapter;
+
+            if ( this.Initialized == false )
+            {
+                throw new InvalidOperationException( "The context is not fully formed." );
+            }
+
+            sizes = QueryBufferSizes();
+            
+            if ( signedMessage.Length < 2 + 4 + sizes.MaxSignature )
+            {
+                throw new ArgumentException( "Input message is too small to possibly fit a valid message" );
+            }
+
+            int position = 0;
+            int messageLen;
+            int sigLen;
+
+            messageLen = ByteWriter.ReadInt32_BE( signedMessage, 0 );
+            position += 4;
+
+            sigLen = ByteWriter.ReadInt16_BE( signedMessage, position );
+            position += 2;
+
+            dataBuffer = new SecureBuffer( new byte[messageLen], BufferType.Data );
+            Array.Copy( signedMessage, position, dataBuffer.Buffer, 0, messageLen );
+            position += messageLen;
+
+            signatureBuffer = new SecureBuffer( new byte[sigLen], BufferType.Token );
+            Array.Copy( signedMessage, position, signatureBuffer.Buffer, 0, sigLen );
+            position += sigLen;
+
+            using ( adapter = new SecureBufferAdapter( new[] { dataBuffer, signatureBuffer } ) )
+            {
+                status = ContextNativeMethods.VerifySignature(
+                    ref this.ContextHandle.rawHandle,
+                    adapter.Handle,
+                    0,
+                    0
+                );
+            }
+
+            if ( status == SecurityStatus.OK )
+            {
+                origMessage = dataBuffer.Buffer;
+                return true;
+            }
+            else if ( status == SecurityStatus.MessageAltered ||
+                      status == SecurityStatus.OutOfSequence )
+            {
+                origMessage = null;
+                return false;
+            }
+            else
+            {
+                throw new SSPIException( "Failed to determine the veracity of a signed message.", status );
+            }
+        }
+
         private SecPkgContext_Sizes QueryBufferSizes()
         {
             SecPkgContext_Sizes sizes = new SecPkgContext_Sizes();
