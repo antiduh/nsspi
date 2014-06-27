@@ -33,5 +33,10 @@ namespace NSspi
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "QuerySecurityPackageInfo", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus QuerySecurityPackageInfo( string packageName, ref IntPtr pkgInfo );
+
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "EnumerateSecurityPackages", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus EnumerateSecurityPackages( ref int numPackages, ref IntPtr pkgInfoArry );
+
     }
 }
