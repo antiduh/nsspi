@@ -156,8 +156,14 @@ namespace NSspi.Credentials
 
                         if( status == SecurityStatus.OK && carrier.Name != IntPtr.Zero )
                         {
-                            name = Marshal.PtrToStringUni( carrier.Name );
-                            NativeMethods.FreeContextBuffer( carrier.Name );
+                            try
+                            {
+                                name = Marshal.PtrToStringUni( carrier.Name );
+                            }
+                            finally
+                            {
+                                NativeMethods.FreeContextBuffer( carrier.Name );
+                            }
                         }
                     }
                 }
