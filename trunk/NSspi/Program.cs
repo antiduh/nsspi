@@ -19,24 +19,6 @@ namespace NSspi
             CredTest();
         }
 
-        private static void IdentTest()
-        {
-            WindowsIdentity current = WindowsIdentity.GetCurrent( TokenAccessLevels.MaximumAllowed );
-            Stream stream = new MemoryStream();
-            StringWriter writer = new StringWriter();
-
-            ISerializable serializable = current;
-            SerializationInfo info = new SerializationInfo( current.GetType(), new FormatterConverter() );
-            StreamingContext streamingContext = new StreamingContext();
-
-            serializable.GetObjectData( info, streamingContext );
-
-
-            WindowsIdentity newId = new WindowsIdentity( info, streamingContext );
-        }
-
-
-
         private static void CredTest()
         {
             ClientCredential clientCred = null;
