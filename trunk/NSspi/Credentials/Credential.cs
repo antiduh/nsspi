@@ -36,7 +36,7 @@ namespace NSspi.Credentials
         {
             string packageName;
             CredentialUse use;
-            long rawExpiry = 0;
+            TimeStamp rawExpiry = new TimeStamp();
 
             // -- Package --
             if ( package == SecurityPackage.Kerberos )
@@ -101,7 +101,7 @@ namespace NSspi.Credentials
                 throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
             }
 
-            this.expiry = TimeStamp.Calc( rawExpiry );
+            this.expiry = rawExpiry.ToDateTime();
         }
 
         ~Credential()

@@ -52,7 +52,7 @@ namespace NSspi.Contexts
             ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib outputAttribs,
-            ref long expiry
+            ref TimeStamp expiry
         );
 
 
@@ -66,7 +66,7 @@ namespace NSspi.Contexts
             ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib outputAttribs,
-            ref long expiry
+            ref TimeStamp expiry
         );
 
 
@@ -83,7 +83,7 @@ namespace NSspi.Contexts
             ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib contextAttribs,
-            ref long expiry
+            ref TimeStamp expiry
         );
 
 
@@ -100,7 +100,7 @@ namespace NSspi.Contexts
             ref RawSspiHandle newContextHandle,
             IntPtr outputBuffer,
             ref ContextAttrib contextAttribs,
-            ref long expiry
+            ref TimeStamp expiry
         );
 
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success )]

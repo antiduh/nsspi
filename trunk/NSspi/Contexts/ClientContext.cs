@@ -24,7 +24,7 @@ namespace NSspi.Contexts
 
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
-            long rawExpiry = 0;
+            TimeStamp rawExpiry = new TimeStamp();
 
             SecurityStatus status;
 
@@ -112,7 +112,7 @@ namespace NSspi.Contexts
                 this.Initialized = true;
                 outToken = null;
 
-                this.Expiry = TimeStamp.Calc( rawExpiry );
+                this.Expiry = rawExpiry.ToDateTime();
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
