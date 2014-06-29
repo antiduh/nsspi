@@ -19,14 +19,15 @@ namespace NSspi.Credentials
         private SecurityPackage securityPackage;
 
         private SafeCredentialHandle safeCredHandle;
-        private long expiry;
+
+        private DateTime expiry;
 
         public Credential(SecurityPackage package, CredentialType credentialType)
         {
             this.disposed = false;
             this.securityPackage = package;
 
-            this.expiry = 0;
+            this.expiry = DateTime.MinValue;
 
             Init( package, credentialType );
         }
@@ -35,6 +36,7 @@ namespace NSspi.Credentials
         {
             string packageName;
             CredentialUse use;
+            long rawExpiry = 0;
 
             // -- Package --
             if ( package == SecurityPackage.Kerberos )
@@ -90,7 +92,7 @@ namespace NSspi.Credentials
                    IntPtr.Zero,
                    IntPtr.Zero,
                    ref this.safeCredHandle.rawHandle,
-                   ref this.expiry
+                   ref rawExpiry
                );
             }
 
@@ -98,6 +100,8 @@ namespace NSspi.Credentials
             {
                 throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
             }
+
+            this.expiry = TimeStamp.Calc( rawExpiry );
         }
 
         ~Credential()
@@ -177,6 +181,14 @@ namespace NSspi.Credentials
             }
         }
 
+        public DateTime Expiry
+        {
+            get
+            {
+                return this.expiry;
+            }
+        }
+
         public SafeCredentialHandle Handle
         {
             get
@@ -203,6 +215,5 @@ namespace NSspi.Credentials
                 this.disposed = true;
             }
         }
-
     }
 }
