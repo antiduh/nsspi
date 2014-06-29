@@ -47,7 +47,7 @@ namespace NSspi.Credentials
             IntPtr getKeyFunc,
             IntPtr getKeyData,
             ref RawSspiHandle credentialHandle,
-            ref long expiry
+            ref TimeStamp expiry
         );
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]

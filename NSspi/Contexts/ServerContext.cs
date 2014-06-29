@@ -30,7 +30,7 @@ namespace NSspi.Contexts
             SecureBuffer outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
 
             SecurityStatus status;
-            long rawExpiry = 0;
+            TimeStamp rawExpiry = new TimeStamp();
 
             SecureBufferAdapter clientAdapter;
             SecureBufferAdapter outAdapter;
@@ -87,7 +87,7 @@ namespace NSspi.Contexts
                     nextToken = null;
                 }
 
-                this.Expiry = TimeStamp.Calc( rawExpiry );
+                this.Expiry = rawExpiry.ToDateTime();
 
                 InitProviderCapabilities();
             }
