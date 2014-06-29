@@ -80,6 +80,7 @@
     <Compile Include="SecurityStatus.cs" />
     <Compile Include="SSPIException.cs" />
     <Compile Include="SspiHandle.cs" />
+    <Compile Include="TimeStamp.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

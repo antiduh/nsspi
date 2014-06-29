@@ -24,7 +24,7 @@ namespace NSspi.Contexts
 
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
-            long expiry = 0;
+            long rawExpiry = 0;
 
             SecurityStatus status;
 
@@ -82,7 +82,7 @@ namespace NSspi.Contexts
                         ref this.ContextHandle.rawHandle,
                         outAdapter.Handle,
                         ref this.finalAttribs,
-                        ref expiry
+                        ref rawExpiry
                     );
                 }
                 else
@@ -101,7 +101,7 @@ namespace NSspi.Contexts
                             ref this.ContextHandle.rawHandle,
                             outAdapter.Handle,
                             ref this.finalAttribs,
-                            ref expiry
+                            ref rawExpiry
                         );
                     }
                 }
@@ -111,6 +111,8 @@ namespace NSspi.Contexts
             {
                 this.Initialized = true;
                 outToken = null;
+
+                this.Expiry = TimeStamp.Calc( rawExpiry );
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {

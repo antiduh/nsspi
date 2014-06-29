@@ -53,6 +53,8 @@ namespace NSspi.Contexts
             }
         }
 
+        public DateTime Expiry { get; protected set; }
+
         public bool Disposed { get; private set; }
 
         public void Dispose()
