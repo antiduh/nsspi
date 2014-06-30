@@ -11,6 +11,7 @@ using TestProtocol;
 
 namespace TestServer
 {
+    using System.IO;
     using NSspi;
     using NSspi.Contexts;
     using NSspi.Credentials;
@@ -57,6 +58,7 @@ namespace TestServer
 
             this.encryptButton.Click += encryptButton_Click;
             this.signButton.Click += signButton_Click;
+            this.impersonateButton.Click += impersonateButton_Click;
 
             this.running = false;
             this.initializing = false;
@@ -118,7 +120,27 @@ namespace TestServer
 
             this.server.Send( message );
         }
-        
+
+        private void impersonateButton_Click( object sender, EventArgs e )
+        {
+            ImpersonationHandle handle;
+
+            using( handle = this.serverContext.ImpersonateClient() )
+            {
+                MessageBox.Show( "Starting impersonation: " + Environment.UserName );
+
+                FileStream stream = File.Create( Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory) + @"\test.txt" );
+                StreamWriter writer = new StreamWriter( stream, Encoding.UTF8 );
+
+                writer.WriteLine( "Hello world." );
+                
+                writer.Close();
+                stream.Close();
+            }
+
+            MessageBox.Show( "Impersonation complete: " + Environment.UserName );
+        }
+
         private void UpdateButtons()
         {
             this.startButton.Enabled = this.running == false;
