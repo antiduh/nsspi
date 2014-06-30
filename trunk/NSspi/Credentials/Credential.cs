@@ -212,6 +212,16 @@ namespace NSspi.Credentials
 
                 return this.safeCredHandle;
             }
+
+            protected set
+            {
+                if( this.disposed )
+                {
+                    throw new ObjectDisposedException( "Credential" );
+                }
+
+                this.safeCredHandle = value;
+            }
         }
 
         public void Dispose()
