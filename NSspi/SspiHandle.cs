@@ -60,6 +60,7 @@ namespace NSspi
             get { return IsClosed || this.rawHandle.IsZero();  }
         }
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         protected override bool ReleaseHandle()
         {
             this.rawHandle.SetInvalid();
