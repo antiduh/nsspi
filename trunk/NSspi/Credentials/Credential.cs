@@ -199,6 +199,15 @@ namespace NSspi.Credentials
 
                 return this.expiry;
             }
+            protected set
+            {
+                if( this.disposed )
+                {
+                    throw new ObjectDisposedException( "Credential" );
+                } 
+                
+                this.expiry = value;
+            }
         }
 
         public SafeCredentialHandle Handle
