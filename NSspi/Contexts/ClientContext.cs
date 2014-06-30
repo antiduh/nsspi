@@ -33,15 +33,20 @@ namespace NSspi.Contexts
 
             SecureBuffer serverBuffer;
             SecureBufferAdapter serverAdapter;
-
-            if ( (serverToken != null) && ( this.ContextHandle.IsInvalid ) )
+            
+            if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "ClientContext" );
+            }
+            else if( ( serverToken != null ) && ( this.ContextHandle.IsInvalid ) )
             {
                 throw new InvalidOperationException( "Out-of-order usage detected - have a server token, but no previous client token had been created." );
             }
-            else if ( (serverToken == null) && ( this.ContextHandle.IsInvalid == false ) )
+            else if( ( serverToken == null ) && ( this.ContextHandle.IsInvalid == false ) )
             {
                 throw new InvalidOperationException( "Must provide the server's response when continuing the init process." );
             }
+            
 
             outTokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
 

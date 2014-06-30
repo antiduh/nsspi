@@ -35,6 +35,11 @@ namespace NSspi.Contexts
             SecureBufferAdapter clientAdapter;
             SecureBufferAdapter outAdapter;
 
+            if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "ServerContext" );
+            }
+
             using ( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
             {
                 using ( outAdapter = new SecureBufferAdapter( outBuffer ) )
@@ -112,7 +117,11 @@ namespace NSspi.Contexts
             SecurityStatus status = SecurityStatus.InternalError;
             bool gotRef = false;
 
-            if( impersonating )
+            if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "ServerContext" );
+            }
+            else if( impersonating )
             {
                 throw new InvalidOperationException( "Cannot impersonate again while already impersonating." );
             }
