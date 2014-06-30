@@ -126,11 +126,18 @@ namespace NSspi.Credentials
         {
             get
             {
-                QueryNameAttribCarrier carrier = new QueryNameAttribCarrier();
-
-                SecurityStatus status = SecurityStatus.InternalError;
+                QueryNameAttribCarrier carrier;
+                SecurityStatus status;
                 string name = null;
                 bool gotRef = false;
+
+                if( this.disposed )
+                {
+                    throw new ObjectDisposedException( "Credential" );
+                }
+
+                status = SecurityStatus.InternalError;
+                carrier = new QueryNameAttribCarrier();
 
                 RuntimeHelpers.PrepareConstrainedRegions();
                 try
@@ -185,6 +192,11 @@ namespace NSspi.Credentials
         {
             get
             {
+                if( this.disposed )
+                {
+                    throw new ObjectDisposedException( "Credential" );
+                }
+
                 return this.expiry;
             }
         }
@@ -193,6 +205,11 @@ namespace NSspi.Credentials
         {
             get
             {
+                if( this.disposed )
+                {
+                    throw new ObjectDisposedException( "Credential" );
+                }
+
                 return this.safeCredHandle;
             }
         }
