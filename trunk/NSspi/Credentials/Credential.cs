@@ -22,88 +22,14 @@ namespace NSspi.Credentials
 
         private DateTime expiry;
 
-        public Credential(SecurityPackage package, CredentialType credentialType)
+        public Credential( SecurityPackage package )
         {
             this.disposed = false;
             this.securityPackage = package;
 
             this.expiry = DateTime.MinValue;
-
-            Init( package, credentialType );
         }
-
-        private void Init( SecurityPackage package, CredentialType credentialType )
-        {
-            string packageName;
-            CredentialUse use;
-            TimeStamp rawExpiry = new TimeStamp();
-
-            // -- Package --
-            if ( package == SecurityPackage.Kerberos )
-            {
-                packageName = PackageNames.Kerberos;
-            }
-            else if ( package == SecurityPackage.Negotiate )
-            {
-                packageName = PackageNames.Negotiate;
-            }
-            else if ( package == SecurityPackage.NTLM )
-            {
-                packageName = PackageNames.Ntlm;
-            }
-            else
-            {
-                throw new ArgumentException( "Invalid value provided for the 'package' parameter." );
-            }
-
-            // -- Credential --
-            if ( credentialType == CredentialType.Client )
-            {
-                use = CredentialUse.Outbound;
-            }
-            else if ( credentialType == CredentialType.Server )
-            {
-                use = CredentialUse.Inbound;
-            }
-            else
-            {
-                throw new ArgumentException( "Invalid value provided for the 'credentialType' parameter." );
-            }
-
-            // -- Invoke --
-            
-            SecurityStatus status = SecurityStatus.InternalError;
-
-            this.safeCredHandle = new SafeCredentialHandle();
-
-            // The finally clause is the actual constrained region. The VM pre-allocates any stack space,
-            // performs any allocations it needs to prepare methods for execution, and postpones any 
-            // instances of the 'uncatchable' exceptions (ThreadAbort, StackOverflow, OutOfMemory).
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try { }
-            finally
-            {
-                status = CredentialNativeMethods.AcquireCredentialsHandle(
-                   null,
-                   packageName,
-                   use,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   ref this.safeCredHandle.rawHandle,
-                   ref rawExpiry
-               );
-            }
-
-            if ( status != SecurityStatus.OK )
-            {
-                throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
-            }
-
-            this.expiry = rawExpiry.ToDateTime();
-        }
-
+      
         ~Credential()
         {
             Dispose( false );
@@ -199,6 +125,7 @@ namespace NSspi.Credentials
 
                 return this.expiry;
             }
+
             protected set
             {
                 if( this.disposed )
