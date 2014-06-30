@@ -48,7 +48,7 @@ namespace TestClient
             this.FormClosing += Form1_FormClosing;
 
             // --- SSPI ---
-            this.cred = new ClientCredential( SecurityPackage.Negotiate );
+            this.cred = new ClientCredential( PackageNames.Negotiate );
 
             this.context = new ClientContext(
                 cred,

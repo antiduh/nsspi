@@ -16,13 +16,13 @@ namespace NSspi.Credentials
     {
         private bool disposed;
 
-        private SecurityPackage securityPackage;
+        private string securityPackage;
 
         private SafeCredentialHandle safeCredHandle;
 
         private DateTime expiry;
 
-        public Credential( SecurityPackage package )
+        public Credential( string package )
         {
             this.disposed = false;
             this.securityPackage = package;
@@ -35,7 +35,7 @@ namespace NSspi.Credentials
             Dispose( false );
         }
 
-        public SecurityPackage SecurityPackage
+        public string SecurityPackage
         {
             get
             {

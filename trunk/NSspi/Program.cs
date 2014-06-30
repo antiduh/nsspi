@@ -35,7 +35,7 @@ namespace NSspi
 
             try
             {
-                clientCred = new ClientCredential( SecurityPackage.Negotiate );
+                clientCred = new ClientCredential( PackageNames.Negotiate );
                 Console.Out.WriteLine( clientCred.Name );
 
                 client = new ClientContext( 
@@ -50,7 +50,7 @@ namespace NSspi
                     ContextAttrib.Delegate
                 );
 
-                serverCred = new ServerCredential( SecurityPackage.Negotiate );
+                serverCred = new ServerCredential( PackageNames.Negotiate );
 
                 server = new ServerContext(
                     serverCred,

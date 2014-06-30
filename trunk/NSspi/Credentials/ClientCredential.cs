@@ -9,7 +9,7 @@ namespace NSspi.Credentials
 {
     public class ClientCredential : Credential
     {
-        public ClientCredential( SecurityPackage package )
+        public ClientCredential( string package )
             : base( package )
         {
             Init();
@@ -22,29 +22,14 @@ namespace NSspi.Credentials
             TimeStamp rawExpiry = new TimeStamp();
 
             // -- Package --
-            if( this.SecurityPackage == SecurityPackage.Kerberos )
-            {
-                packageName = PackageNames.Kerberos;
-            }
-            else if( this.SecurityPackage == SecurityPackage.Negotiate )
-            {
-                packageName = PackageNames.Negotiate;
-            }
-            else if( this.SecurityPackage == SecurityPackage.NTLM )
-            {
-                packageName = PackageNames.Ntlm;
-            }
-            else
-            {
-                throw new ArgumentException( "Invalid value provided for the 'package' parameter." );
-            }
+            // Copy off for the call, since this.SecurityPackage is a property.
+            packageName = this.SecurityPackage;
 
             // -- Credential --
             // Client uses outbound credentials.
             use = CredentialUse.Outbound;
 
             // -- Invoke --
-
             SecurityStatus status = SecurityStatus.InternalError;
 
             this.Handle = new SafeCredentialHandle();

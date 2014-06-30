@@ -34,7 +34,7 @@ namespace TestServer
         {
             InitializeComponent();
 
-            this.serverCred = new ServerCredential( SecurityPackage.Negotiate );
+            this.serverCred = new ServerCredential( PackageNames.Negotiate );
 
             this.serverContext = new ServerContext( 
                 serverCred,
