@@ -62,7 +62,6 @@
     <Compile Include="Credentials\CredentialNativeMethods.cs" />
     <Compile Include="Credentials\CredentialPackage.cs" />
     <Compile Include="Credentials\CredentialQueryAttrib.cs" />
-    <Compile Include="Credentials\CredentialType.cs" />
     <Compile Include="Credentials\CredentialUse.cs" />
     <Compile Include="Credentials\QueryNameSupport.cs" />
     <Compile Include="Credentials\SafeCredentialHandle.cs" />
