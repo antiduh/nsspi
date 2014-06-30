@@ -64,7 +64,7 @@ namespace TestServer
 
             UpdateButtons();
 
-            this.usernameTextbox.Text = this.serverCred.Name;
+            this.serverUsernameTextbox.Text = this.serverCred.Name;
         }
 
         private void Form1_FormClosing( object sender, FormClosingEventArgs e )
@@ -167,7 +167,11 @@ namespace TestServer
                 ContextAttrib.Confidentiality
             );
 
-            this.BeginInvoke( (Action) UpdateButtons );
+            this.BeginInvoke( (Action)delegate() 
+            {
+                UpdateButtons();
+                this.clientUsernameTextBox.Text = "";
+            });
         }
 
 
@@ -192,7 +196,11 @@ namespace TestServer
                         this.initializing = false;
                         this.connected = true;
 
-                        this.Invoke( (Action)delegate() { UpdateButtons(); } );
+                        this.Invoke( (Action)delegate() 
+                        { 
+                            UpdateButtons();
+                            this.clientUsernameTextBox.Text = serverContext.ContextUserName;
+                        } );
                     }
                 }
                 else
