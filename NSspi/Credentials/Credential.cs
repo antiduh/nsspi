@@ -31,11 +31,6 @@ namespace NSspi.Credentials
 
             this.PackageInfo = PackageSupport.GetPackageCapabilities( this.SecurityPackage );
         }
-      
-        ~Credential()
-        {
-            Dispose( false );
-        }
 
         public SecPkgInfo PackageInfo { get; private set; }
 
