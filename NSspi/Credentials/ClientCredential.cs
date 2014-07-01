@@ -7,60 +7,11 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
-    public class ClientCredential : Credential
+    public class ClientCredential : CurrentCredential
     {
         public ClientCredential( string package )
-            : base( package )
+            : base( package, CredentialUse.Outbound )
         {
-            Init();
         }
-
-        private void Init( )
-        {
-            string packageName;
-            CredentialUse use;
-            TimeStamp rawExpiry = new TimeStamp();
-
-            // -- Package --
-            // Copy off for the call, since this.SecurityPackage is a property.
-            packageName = this.SecurityPackage;
-
-            // -- Credential --
-            // Client uses outbound credentials.
-            use = CredentialUse.Outbound;
-
-            // -- Invoke --
-            SecurityStatus status = SecurityStatus.InternalError;
-
-            this.Handle = new SafeCredentialHandle();
-
-            // The finally clause is the actual constrained region. The VM pre-allocates any stack space,
-            // performs any allocations it needs to prepare methods for execution, and postpones any 
-            // instances of the 'uncatchable' exceptions (ThreadAbort, StackOverflow, OutOfMemory).
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try { }
-            finally
-            {
-                status = CredentialNativeMethods.AcquireCredentialsHandle(
-                   null,
-                   packageName,
-                   use,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   IntPtr.Zero,
-                   ref this.Handle.rawHandle,
-                   ref rawExpiry
-               );
-            }
-
-            if( status != SecurityStatus.OK )
-            {
-                throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
-            }
-
-            this.Expiry = rawExpiry.ToDateTime();
-        }
-
     }
 }
