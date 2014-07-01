@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials.Credentials
 {
+    /// <summary>
+    /// Stores the result from a query of a credential's principle name.
+    /// </summary>
     [StructLayout( LayoutKind.Sequential )]
-    public struct QueryNameAttribCarrier
+    internal struct QueryNameAttribCarrier
     {
+        /// <summary>
+        /// A pointer to a null-terminated ascii c-string containing the principle name 
+        /// associated with a credential
+        /// </summary>
         public IntPtr Name;
     }
 }

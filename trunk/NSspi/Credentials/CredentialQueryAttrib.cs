@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
-    /*
-     #define SECPKG_CRED_ATTR_NAMES        1
-     #define SECPKG_CRED_ATTR_SSI_PROVIDER 2
-     #define SECPKG_CRED_ATTR_KDC_PROXY_SETTINGS 3
-     #define SECPKG_CRED_ATTR_CERT         4
-     */
-
+    /// <summary>
+    /// Identifies credential query types.
+    /// </summary>
     public enum CredentialQueryAttrib : uint
     {
+        /// <summary>
+        /// Queries the credential's principle name.
+        /// </summary>
         Names = 1,
-        SsiProvider = 2,
-        KdcProxySettings = 3,
-        Cert = 4
     }
 }
