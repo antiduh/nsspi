@@ -201,6 +201,10 @@ namespace NSspi.Contexts
             paddingLength = ByteWriter.ReadInt16_BE( input, position );
             position += 2;
 
+            if ( trailerLength + dataLength + paddingLength + 2 + 4 + 2 > input.Length )
+            {
+                throw new ArgumentException( "The buffer contains invalid data - the embedded length data does not add up." );
+            }
 
             trailerBuffer = new SecureBuffer( new byte[trailerLength], BufferType.Token );
             dataBuffer = new SecureBuffer( new byte[dataLength], BufferType.Data );
@@ -350,6 +354,11 @@ namespace NSspi.Contexts
 
             sigLen = ByteWriter.ReadInt16_BE( signedMessage, position );
             position += 2;
+
+            if ( messageLen + sigLen + 2 + 4 > signedMessage.Length )
+            {
+                throw new ArgumentException( "The buffer contains invalid data - the embedded length data does not add up." );
+            }
 
             dataBuffer = new SecureBuffer( new byte[messageLen], BufferType.Data );
             Array.Copy( signedMessage, position, dataBuffer.Buffer, 0, messageLen );
