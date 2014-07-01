@@ -110,6 +110,10 @@ namespace NSspi.Contexts
             {
                 throw new InvalidOperationException( "The context is not fully formed." );
             }
+            else if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "Context" );
+            }
 
             sizes = QueryBufferSizes();
 
@@ -185,6 +189,10 @@ namespace NSspi.Contexts
             if ( this.Initialized == false )
             {
                 throw new InvalidOperationException( "The context is not fully formed." );
+            }
+            else if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "Context" );
             }
 
             sizes = QueryBufferSizes();
