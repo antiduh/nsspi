@@ -36,8 +36,8 @@ namespace NSspi.Contexts
 
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
         {
-            SecureBuffer clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
-            SecureBuffer outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
+            SecureBuffer clientBuffer;
+            SecureBuffer outBuffer;
 
             SecurityStatus status;
             TimeStamp rawExpiry = new TimeStamp();
@@ -49,6 +49,15 @@ namespace NSspi.Contexts
             {
                 throw new ObjectDisposedException( "ServerContext" );
             }
+            else if( this.Initialized )
+            {
+                throw new InvalidOperationException( 
+                    "Attempted to continue initialization of a ServerContext after initialization had completed."
+                );
+            }
+
+            clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
+            outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
 
             using ( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
             {
@@ -90,7 +99,8 @@ namespace NSspi.Contexts
             if ( status == SecurityStatus.OK )
             {
                 nextToken = null;
-                this.Initialized = true;
+
+                base.Initialize( rawExpiry.ToDateTime() );
 
                 if ( outBuffer.Length != 0 )
                 {
@@ -101,13 +111,9 @@ namespace NSspi.Contexts
                 {
                     nextToken = null;
                 }
-
-                this.Expiry = rawExpiry.ToDateTime();
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
-                this.Initialized = false;
-
                 nextToken = new byte[outBuffer.Length];
                 Array.Copy( outBuffer.Buffer, nextToken, nextToken.Length );
             }

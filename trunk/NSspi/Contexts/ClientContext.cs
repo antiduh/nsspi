@@ -114,15 +114,11 @@ namespace NSspi.Contexts
 
             if ( status == SecurityStatus.OK )
             {
-                this.Initialized = true;
+                base.Initialize( rawExpiry.ToDateTime() );
                 outToken = null;
-
-                this.Expiry = rawExpiry.ToDateTime();
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
-                this.Initialized = false;
-
                 outToken = new byte[outTokenBuffer.Length];
                 Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );
             }
