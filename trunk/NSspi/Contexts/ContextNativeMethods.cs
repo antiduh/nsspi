@@ -204,9 +204,9 @@ namespace NSspi.Contexts
                 {
                     status = ContextNativeMethods.EncryptMessage(
                         ref handle.rawHandle,
-                        0,
+                        qualityOfProtection,
                         bufferAdapter.Handle,
-                        0
+                        sequenceNumber
                     );
 
                     handle.DangerousRelease();
@@ -247,8 +247,8 @@ namespace NSspi.Contexts
                     status = ContextNativeMethods.DecryptMessage(
                         ref handle.rawHandle,
                         bufferAdapter.Handle,
-                        0,
-                        0
+                        sequenceNumber,
+                        qualityOfProtection
                     );
 
                     handle.DangerousRelease();
@@ -288,9 +288,9 @@ namespace NSspi.Contexts
                 {
                     status = ContextNativeMethods.MakeSignature(
                         ref handle.rawHandle,
-                        0,
+                        qualityOfProtection,
                         adapter.Handle,
-                        0
+                        sequenceNumber
                     );
 
                     handle.DangerousRelease();
@@ -331,8 +331,8 @@ namespace NSspi.Contexts
                     status = ContextNativeMethods.VerifySignature(
                         ref handle.rawHandle,
                         adapter.Handle,
-                        0,
-                        0
+                        sequenceNumber,
+                        qualityOfProtection
                     );
 
                     handle.DangerousRelease();
