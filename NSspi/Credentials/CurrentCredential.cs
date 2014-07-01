@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
+    /// <summary>
+    /// Acquires a handle to the credentials of the user associated with the current process.
+    /// </summary>
     public class CurrentCredential : Credential
     {
+        /// <summary>
+        /// Initializes a new instance of the CurrentCredential class.
+        /// </summary>
+        /// <param name="securityPackage">The security package to acquire the credential handle
+        /// from.</param>
+        /// <param name="use">The manner in which the credentials will be used - Inbound typically
+        /// represents servers, outbound typically represent clients.</param>
         public CurrentCredential( string securityPackage, CredentialUse use ) :
             base( securityPackage )
         {

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
+    /// <summary>
+    /// Represents the credentials of the user running the current process, for use as an SSPI server.
+    /// </summary>
     public class ServerCredential : CurrentCredential
     {
         public ServerCredential( string package )

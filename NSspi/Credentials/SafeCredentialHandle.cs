@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
-
+    /// <summary>
+    /// Provides a managed handle to an SSPI credential.
+    /// </summary>
     public class SafeCredentialHandle : SafeSspiHandle
     {
         public SafeCredentialHandle()

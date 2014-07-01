@@ -12,16 +12,35 @@ using NSspi.Credentials.Credentials;
 
 namespace NSspi.Credentials
 {
+    /// <summary>
+    /// Provides access to the pre-existing credentials of a security principle.
+    /// </summary>
     public class Credential : IDisposable
     {
+        /// <summary>
+        /// Whether the Credential has been disposed.
+        /// </summary>
         private bool disposed;
 
+        /// <summary>
+        /// The name of the security package that controls the credential.
+        /// </summary>
         private string securityPackage;
 
+        /// <summary>
+        /// A safe handle to the credential's handle.
+        /// </summary>
         private SafeCredentialHandle safeCredHandle;
 
+        /// <summary>
+        /// The UTC time the credentials expire.
+        /// </summary>
         private DateTime expiry;
 
+        /// <summary>
+        /// Initializes a new instance of the Credential class.
+        /// </summary>
+        /// <param name="package">The security package to acquire the credential from.</param>
         public Credential( string package )
         {
             this.disposed = false;
@@ -31,9 +50,15 @@ namespace NSspi.Credentials
 
             this.PackageInfo = PackageSupport.GetPackageCapabilities( this.SecurityPackage );
         }
-
+        
+        /// <summary>
+        /// Gets metadata for the security package associated with the credential.
+        /// </summary>
         public SecPkgInfo PackageInfo { get; private set; }
 
+        /// <summary>
+        /// Gets the name of the security package that owns the credential.
+        /// </summary>
         public string SecurityPackage
         {
             get
@@ -44,6 +69,9 @@ namespace NSspi.Credentials
             }
         }
 
+        /// <summary>
+        /// Returns the name of the principle of the credential.
+        /// </summary>
         public string Name
         {
             get
@@ -107,6 +135,9 @@ namespace NSspi.Credentials
             }
         }
 
+        /// <summary>
+        /// Gets the UTC time the credentials expire.
+        /// </summary>
         public DateTime Expiry
         {
             get
@@ -124,6 +155,9 @@ namespace NSspi.Credentials
             }
         }
 
+        /// <summary>
+        /// Gets a handle to the credential.
+        /// </summary>
         public SafeCredentialHandle Handle
         {
             get
@@ -141,6 +175,9 @@ namespace NSspi.Credentials
             }
         }
 
+        /// <summary>
+        /// Releases all resources associated with the credential.
+        /// </summary>
         public void Dispose()
         {
             Dispose( true );
