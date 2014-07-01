@@ -22,11 +22,34 @@ namespace NSspi
 
     public enum SecurityStatus : uint
     {
-        // Success / Informational
+        // --- Success / Informational ---
+
+        /// <summary>
+        /// The request completed successfully
+        /// </summary>
         OK                  = 0x00000000,
+        
+        /// <summary>
+        /// The token returned by the context needs to be provided to the cooperating party
+        /// to continue construction of the context.
+        /// </summary>
         ContinueNeeded      = 0x00090312,
+
+        /// <summary>
+        /// Occurs after a client calls InitializeSecurityContext to indicate that the client
+        /// must call CompleteAuthToken.
+        /// </summary>
         CompleteNeeded      = 0x00090313,
+
+        /// <summary>
+        /// Occurs after a client calls InitializeSecurityContext to indicate that the client
+        /// must call CompleteAuthToken and pass the result to the server.
+        /// </summary>
         CompAndContinue     = 0x00090314,
+
+        /// <summary>
+        /// An attempt to use the context was performed after the context's expiration time elapsed.
+        /// </summary>
         ContextExpired      = 0x00090317,
         CredentialsNeeded   = 0x00090320,
         Renegotiate         = 0x00090321,
