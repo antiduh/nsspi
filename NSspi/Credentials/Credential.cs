@@ -38,10 +38,7 @@ namespace NSspi.Credentials
         {
             get
             {
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( base.GetType().Name );
-                }
+                CheckLifecycle();
 
                 return this.securityPackage;
             }
@@ -56,10 +53,7 @@ namespace NSspi.Credentials
                 string name = null;
                 bool gotRef = false;
 
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( "Credential" );
-                }
+                CheckLifecycle();
 
                 status = SecurityStatus.InternalError;
                 carrier = new QueryNameAttribCarrier();
@@ -117,21 +111,15 @@ namespace NSspi.Credentials
         {
             get
             {
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( "Credential" );
-                }
+                CheckLifecycle();
 
                 return this.expiry;
             }
 
             protected set
             {
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( "Credential" );
-                } 
-                
+                CheckLifecycle();
+                                
                 this.expiry = value;
             }
         }
@@ -140,20 +128,14 @@ namespace NSspi.Credentials
         {
             get
             {
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( "Credential" );
-                }
+                CheckLifecycle();
 
                 return this.safeCredHandle;
             }
 
             protected set
             {
-                if( this.disposed )
-                {
-                    throw new ObjectDisposedException( "Credential" );
-                }
+                CheckLifecycle();
 
                 this.safeCredHandle = value;
             }
@@ -175,6 +157,14 @@ namespace NSspi.Credentials
                 }
 
                 this.disposed = true;
+            }
+        }
+
+        private void CheckLifecycle()
+        {
+            if( this.disposed )
+            {
+                throw new ObjectDisposedException( "Credential" );
             }
         }
     }
