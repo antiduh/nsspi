@@ -14,7 +14,6 @@ namespace NSspi
         {
             SecPkgInfo info;
             SecurityStatus status = SecurityStatus.InternalError;
-            SecurityStatus freeStatus;
 
             IntPtr rawInfoPtr;
             
@@ -40,7 +39,7 @@ namespace NSspi
                     }
                     finally
                     {
-                        freeStatus = NativeMethods.FreeContextBuffer( rawInfoPtr );
+                        NativeMethods.FreeContextBuffer( rawInfoPtr );
                     }
                 }
             }
