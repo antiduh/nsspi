@@ -24,7 +24,7 @@ namespace NSspi.Contexts
         /// <summary>
         /// The server can use the context to authenticate to other servers as the client. The
         /// MutualAuth flag must be set for this flag to work. Valid for Kerberos. Ignore this flag for 
-        /// constrained delegation, (TODO)(which is handled through a separate mechanism?).
+        /// constrained delegation.
         /// </summary>
         Delegate = 0x00000001,
 
