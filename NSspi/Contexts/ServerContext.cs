@@ -22,7 +22,17 @@ namespace NSspi.Contexts
             this.finalAttribs = ContextAttrib.Zero;
 
             this.impersonating = false;
+
+            this.SupportsImpersonate = this.Credential.PackageInfo.Capabilities.HasFlag( SecPkgCapability.Impersonation );
         }
+
+        /// <summary>
+        /// Whether or not the server can impersonate an authenticated client.
+        /// </summary>
+        /// <remarks>
+        /// This depends on the security package that was used to create the server and client's credentials.
+        /// </remarks>
+        public bool SupportsImpersonate { get; private set; }
 
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
         {
@@ -93,8 +103,6 @@ namespace NSspi.Contexts
                 }
 
                 this.Expiry = rawExpiry.ToDateTime();
-
-                InitProviderCapabilities();
             }
             else if ( status == SecurityStatus.ContinueNeeded )
             {
@@ -113,7 +121,7 @@ namespace NSspi.Contexts
 
         public ImpersonationHandle ImpersonateClient()
         {
-            ImpersonationHandle handle = new ImpersonationHandle( this );
+            ImpersonationHandle handle;
             SecurityStatus status = SecurityStatus.InternalError;
             bool gotRef = false;
 
@@ -125,7 +133,14 @@ namespace NSspi.Contexts
             {
                 throw new InvalidOperationException( "Cannot impersonate again while already impersonating." );
             }
+            else if( this.SupportsImpersonate == false )
+            {
+                throw new InvalidOperationException( 
+                    "The ServerContext is using a security package that does not support impersonation." 
+                );
+            }
 
+            handle = new ImpersonationHandle( this );
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
@@ -211,8 +226,22 @@ namespace NSspi.Contexts
             }
         }
 
-        private void InitProviderCapabilities()
+        protected override void Dispose( bool disposing )
         {
+            // We were disposed while impersonating. This means that the consumer that is currently holding
+            // the impersonation handle allowed the context to be disposed or finalized while an impersonation handle
+            // was held. We have to revert impersonation to restore the thread's behavior, since once the context
+            // goes away, there's nothing left.
+            //
+            // When and if the impersonation handle is diposed/finalized, it'll see that the context has already been
+            // disposed, will assume that we already reverted, and so will do nothing.
+
+            if( this.impersonating )
+            {
+                RevertImpersonate();
+            }
+
+            base.Dispose( disposing );
         }
     }
 }
