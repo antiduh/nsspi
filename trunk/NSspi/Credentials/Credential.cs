@@ -28,12 +28,16 @@ namespace NSspi.Credentials
             this.securityPackage = package;
 
             this.expiry = DateTime.MinValue;
+
+            this.PackageInfo = PackageSupport.GetPackageCapabilities( this.SecurityPackage );
         }
       
         ~Credential()
         {
             Dispose( false );
         }
+
+        public SecPkgInfo PackageInfo { get; private set; }
 
         public string SecurityPackage
         {
