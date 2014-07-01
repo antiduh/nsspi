@@ -195,7 +195,6 @@ namespace NSspi.Contexts
         internal void RevertImpersonate()
         {
             bool gotRef = false;
-            SecurityStatus status = SecurityStatus.InternalError;
 
             if( impersonating == false || this.Disposed )
             {
@@ -221,7 +220,7 @@ namespace NSspi.Contexts
             {
                 if( gotRef )
                 {
-                    status = ContextNativeMethods.RevertSecurityContext(
+                    ContextNativeMethods.RevertSecurityContext(
                         ref this.ContextHandle.rawHandle
                     );
 
