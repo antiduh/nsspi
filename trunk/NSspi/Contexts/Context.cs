@@ -36,6 +36,7 @@ namespace NSspi.Contexts
         {
             get
             {
+                CheckLifecycle();
                 return QueryContextString( ContextQueryAttrib.Authority );
             }
         }
@@ -44,6 +45,7 @@ namespace NSspi.Contexts
         {
             get
             {
+                CheckLifecycle();
                 return QueryContextString( ContextQueryAttrib.Names );
             }
         }
@@ -106,14 +108,7 @@ namespace NSspi.Contexts
             SecurityStatus status = SecurityStatus.InvalidHandle;
             byte[] result;
 
-            if ( this.Initialized == false )
-            {
-                throw new InvalidOperationException( "The context is not fully formed." );
-            }
-            else if( this.Disposed )
-            {
-                throw new ObjectDisposedException( "Context" );
-            }
+            CheckLifecycle();
 
             sizes = QueryBufferSizes();
 
@@ -186,14 +181,7 @@ namespace NSspi.Contexts
             int dataLength;
             int paddingLength;
 
-            if ( this.Initialized == false )
-            {
-                throw new InvalidOperationException( "The context is not fully formed." );
-            }
-            else if( this.Disposed )
-            {
-                throw new ObjectDisposedException( "Context" );
-            }
+            CheckLifecycle();
 
             sizes = QueryBufferSizes();
 
@@ -284,10 +272,7 @@ namespace NSspi.Contexts
             SecureBuffer signatureBuffer;
             SecureBufferAdapter adapter;
 
-            if ( this.Initialized == false )
-            {
-                throw new InvalidOperationException( "The context is not fully formed" );
-            }
+            CheckLifecycle();
 
             sizes = QueryBufferSizes();
 
@@ -346,10 +331,7 @@ namespace NSspi.Contexts
             SecureBuffer signatureBuffer;
             SecureBufferAdapter adapter;
 
-            if ( this.Initialized == false )
-            {
-                throw new InvalidOperationException( "The context is not fully formed." );
-            }
+            CheckLifecycle();
 
             sizes = QueryBufferSizes();
             
@@ -508,6 +490,18 @@ namespace NSspi.Contexts
             }
 
             return result;
+        }
+
+        private void CheckLifecycle()
+        {
+            if( this.Initialized == false )
+            {
+                throw new InvalidOperationException( "The context is not yet fully formed." );
+            }
+            else if( this.Disposed )
+            {
+                throw new ObjectDisposedException( "Context" );
+            }
         }
     }
 }
