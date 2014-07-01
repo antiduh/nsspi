@@ -26,11 +26,11 @@ namespace NSspi.Contexts
         /// <summary>
         /// Whether or not the context is fully formed.
         /// </summary>
-        public bool Initialized { get; protected set; }
+        public bool Initialized { get; private set; }
 
         protected Credential Credential { get; private set; }
 
-        public SafeContextHandle ContextHandle { get; protected set; }
+        public SafeContextHandle ContextHandle { get; private set; }
 
         public string AuthorityName
         {
@@ -48,9 +48,19 @@ namespace NSspi.Contexts
             }
         }
 
-        public DateTime Expiry { get; protected set; }
+        public DateTime Expiry { get; private set; }
 
         public bool Disposed { get; private set; }
+
+        /// <summary>
+        /// Marks the context as having completed the initialization process, ie, exchanging of authentication tokens.
+        /// </summary>
+        /// <param name="expiry">The date and time that the context will expire.</param>
+        protected void Initialize( DateTime expiry )
+        {
+            this.Expiry = expiry;
+            this.Initialized = true;
+        }
 
         public void Dispose()
         {
