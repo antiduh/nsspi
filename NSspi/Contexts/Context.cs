@@ -23,11 +23,6 @@ namespace NSspi.Contexts
             this.Initialized = false;
         }
 
-        ~Context()
-        {
-            Dispose( false );
-        }
-        
         /// <summary>
         /// Whether or not the context is fully formed.
         /// </summary>
@@ -495,11 +490,6 @@ namespace NSspi.Contexts
             }
 
             return result;
-        }
-
-        private void InitSecPkgInfo()
-        {
-
         }
     }
 }
