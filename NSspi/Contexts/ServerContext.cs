@@ -34,6 +34,28 @@ namespace NSspi.Contexts
         /// </remarks>
         public bool SupportsImpersonate { get; private set; }
 
+        /// <summary>
+        /// Performs and continues the authentication cycle.
+        /// </summary>
+        /// <remarks>
+        /// This method is performed iteratively to continue and end the authentication cycle with the
+        /// client. Each stage works by acquiring a token from one side, presenting it to the other side
+        /// which in turn may generate a new token.
+        /// 
+        /// The cycle typically starts and ends with the client. On the first invocation on the client,
+        /// no server token exists, and null is provided in its place. The client returns its status, providing
+        /// its output token for the server. The server accepts the clients token as input and provides a 
+        /// token as output to send back to the client. This cycle continues until the server and client 
+        /// both indicate, typically, a SecurityStatus of 'OK'.
+        /// </remarks>
+        /// <param name="clientToken">The most recently received token from the client.</param>
+        /// <param name="nextToken">The servers next authentication token in the cycle, that must
+        /// be sent to the client.</param>
+        /// <returns>A status message indicating the progression of the authentication cycle.
+        /// A status of 'OK' indicates that the cycle is complete, from the servers's perspective. If the nextToken
+        /// is not null, it must be sent to the client.
+        /// A status of 'Continue' indicates that the output token should be sent to the client and 
+        /// a response should be anticipated.</returns>
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
         {
             SecureBuffer clientBuffer;
@@ -125,6 +147,19 @@ namespace NSspi.Contexts
             return status;
         }
 
+        /// <summary>
+        /// Changes the current thread's security context to impersonate the user of the client. 
+        /// </summary>
+        /// <remarks>
+        /// Requires that the security package provided with the server's credentials, as well as the 
+        /// client's credentials, support impersonation.
+        /// 
+        /// Currently, only one thread may initiate impersonation per security context. Impersonation may 
+        /// follow threads created by the initial impersonation thread, however.
+        /// </remarks>
+        /// <returns>A handle to capture the lifetime of the impersonation. Dispose the handle to revert
+        /// impersonation. If the handle is leaked, the impersonation will automatically revert at a 
+        /// non-deterministic time when the handle is finalized by the Garbage Collector.</returns>
         public ImpersonationHandle ImpersonateClient()
         {
             ImpersonationHandle handle;
@@ -192,6 +227,9 @@ namespace NSspi.Contexts
             return handle;
         }
 
+        /// <summary>
+        /// Called by the ImpersonationHandle when it is released, either by disposale or finalization.
+        /// </summary>
         internal void RevertImpersonate()
         {
             bool gotRef = false;

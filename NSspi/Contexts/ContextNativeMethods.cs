@@ -11,6 +11,9 @@ using NSspi.Contexts;
 
 namespace NSspi.Contexts
 {
+    /// <summary>
+    /// Declares native methods calls for security context-related win32 functions.
+    /// </summary>
     internal static class ContextNativeMethods
     {
         /*
@@ -173,7 +176,15 @@ namespace NSspi.Contexts
         [DllImport( "Secur32.dll", EntryPoint = "RevertSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus RevertSecurityContext( ref RawSspiHandle contextHandle );
 
-
+        /// <summary>
+        /// Safely invokes the native EncryptMessage function, making sure that handle ref counting is 
+        /// performed in a proper CER.
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="qualityOfProtection"></param>
+        /// <param name="bufferAdapter"></param>
+        /// <param name="sequenceNumber"></param>
+        /// <returns></returns>
         internal static SecurityStatus SafeEncryptMessage(
             SafeContextHandle handle,
             int qualityOfProtection,
@@ -216,6 +227,15 @@ namespace NSspi.Contexts
             return status;
         }
 
+        /// <summary>
+        /// Safely invokes the native DecryptMessage function, making sure that handle ref counting is 
+        /// performed in a proper CER.
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="qualityOfProtection"></param>
+        /// <param name="bufferAdapter"></param>
+        /// <param name="sequenceNumber"></param>
+        /// <returns></returns>
         internal static SecurityStatus SafeDecryptMessage( 
             SafeContextHandle handle, 
             int qualityOfProtection, 
@@ -258,6 +278,15 @@ namespace NSspi.Contexts
             return status;
         }
 
+        /// <summary>
+        /// Safely invokes the native MakeSignature function, making sure that handle ref counting is 
+        /// performed in a proper CER.
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="qualityOfProtection"></param>
+        /// <param name="adapter"></param>
+        /// <param name="sequenceNumber"></param>
+        /// <returns></returns>
         internal static SecurityStatus SafeMakeSignature(
             SafeContextHandle handle,
             int qualityOfProtection,
@@ -300,6 +329,15 @@ namespace NSspi.Contexts
             return status;
         }
 
+        /// <summary>
+        /// Safely invokes the native VerifySignature function, making sure that handle ref counting is 
+        /// performed in a proper CER.
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="qualityOfProtection"></param>
+        /// <param name="adapter"></param>
+        /// <param name="sequenceNumber"></param>
+        /// <returns></returns>
         internal static SecurityStatus SafeVerifySignature(
             SafeContextHandle handle,
             int qualityOfProtection,

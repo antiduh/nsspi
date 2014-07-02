@@ -9,12 +9,30 @@ using NSspi.Credentials;
 
 namespace NSspi.Contexts
 {
+    /// <summary>
+    /// Represents a client security context. Provides the means to establish a shared security context
+    /// with the server and to encrypt, decrypt, sign and verify messages to and from the server.
+    /// </summary>
+    /// <remarks>
+    /// A client and server establish a shared security context by exchanging authentication tokens. Once 
+    /// the shared context is established, the client and server can pass messages to each other, encrypted,
+    /// signed, etc, using the established parameters of the shared context.
+    /// </remarks>
     public class ClientContext : Context
     {
         private ContextAttrib requestedAttribs;
         private ContextAttrib finalAttribs;
         private string serverPrinc;
 
+        /// <summary>
+        /// Initializes a new instance of the ClientContext class. The context is not fully initialized and usable
+        /// until the authentication cycle has been completed.
+        /// </summary>
+        /// <param name="cred">The security credential to authenticate as.</param>
+        /// <param name="serverPrinc">The principle name of the server to connect to, or null for any.</param>
+        /// <param name="requestedAttribs">Requested attributes that describe the desired properties of the
+        /// context once it is established. If a context cannot be established that satisfies the indicated
+        /// properties, the context initialization is aborted.</param>
         public ClientContext( ClientCredential cred, string serverPrinc, ContextAttrib requestedAttribs )
             : base( cred )
         {
@@ -22,6 +40,28 @@ namespace NSspi.Contexts
             this.requestedAttribs = requestedAttribs;
         }
 
+        /// <summary>
+        /// Performs and continues the authentication cycle.
+        /// </summary>
+        /// <remarks>
+        /// This method is performed iteratively to start, continue, and end the authentication cycle with the
+        /// server. Each stage works by acquiring a token from one side, presenting it to the other side
+        /// which in turn may generate a new token.
+        /// 
+        /// The cycle typically starts and ends with the client. On the first invocation on the client,
+        /// no server token exists, and null is provided in its place. The client returns its status, providing
+        /// its output token for the server. The server accepts the clients token as input and provides a 
+        /// token as output to send back to the client. This cycle continues until the server and client 
+        /// both indicate, typically, a SecurityStatus of 'OK'.
+        /// </remarks>
+        /// <param name="serverToken">The most recently received token from the server, or null if beginning
+        /// the authentication cycle.</param>
+        /// <param name="outToken">The clients next authentication token in the authentication cycle.</param>
+        /// <returns>A status message indicating the progression of the authentication cycle.
+        /// A status of 'OK' indicates that the cycle is complete, from the client's perspective. If the outToken
+        /// is not null, it must be sent to the server.
+        /// A status of 'Continue' indicates that the output token should be sent to the server and 
+        /// a response should be anticipated.</returns>
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
             TimeStamp rawExpiry = new TimeStamp();
