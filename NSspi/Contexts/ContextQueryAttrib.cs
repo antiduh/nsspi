@@ -10,7 +10,7 @@ namespace NSspi.Contexts
     /// Defines the types of queries that can be performed with QueryContextAttribute.
     /// Each query has a different result buffer.
     /// </summary>
-    public enum ContextQueryAttrib : int
+    internal enum ContextQueryAttrib : int
     {
         /// <summary>
         /// Queries the buffer size parameters when performing message functions, such
