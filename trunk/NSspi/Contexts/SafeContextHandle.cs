@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace NSspi.Contexts
 {
-
+    /// <summary>
+    /// Captures an unmanaged security context handle.
+    /// </summary>
     public class SafeContextHandle : SafeSspiHandle
     {
         public SafeContextHandle()
