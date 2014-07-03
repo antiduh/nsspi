@@ -60,7 +60,12 @@ namespace NSspi
         Unsupported         = 0x80090302,
         TargetUnknown       = 0x80090303,
         InternalError       = 0x80090304,
+
+        /// <summary>
+        /// No security provider package was found with the given name.
+        /// </summary>
         PackageNotFound     = 0x80090305,
+
         NotOwner            = 0x80090306,
         CannotInstall       = 0x80090307,
         InvalidToken        = 0x80090308,
@@ -73,6 +78,18 @@ namespace NSspi
         MessageAltered      = 0x8009030F,
         OutOfSequence       = 0x80090310,
         NoAuthenticatingAuthority = 0x80090311,
+
+        /// <summary>
+        /// The buffer provided to an SSPI API call contained a message that was not complete.
+        /// </summary>
+        /// <remarks>
+        /// This occurs regularly with SSPI contexts that exchange data using a streaming context,
+        /// where the data returned from the streaming communications channel, such as a TCP socket,
+        /// did not contain the complete message. 
+        /// Similarly, a streaming channel may return too much data, in which case the API function
+        /// will indicate success, but will save off the extra, unrelated data in a buffer of
+        /// type 'extra'.
+        /// </remarks>
         IncompleteMessage   = 0x80090318,
         IncompleteCredentials = 0x80090320,
         BufferNotEnough     = 0x80090321,
@@ -89,8 +106,16 @@ namespace NSspi
         BadBinding          = 0x80090346
     }
 
+    /// <summary>
+    /// Provides extension methods for the SecurityStatus enumeration.
+    /// </summary>
     public static class SecurityStatusExtensions
     {
+        /// <summary>
+        /// Returns whether or not the status represents an error.
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns>True if the status represents an error condition.</returns>
         public static bool IsError( this SecurityStatus status )
         {
             return (uint)status > 0x80000000u;

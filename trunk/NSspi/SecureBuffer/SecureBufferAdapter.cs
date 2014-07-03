@@ -8,26 +8,109 @@ using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
+    /// <summary>
+    /// Prepares SecureBuffers for providing them to native API calls.
+    /// </summary>
+    /// <remarks>
+    /// The native APIs consume lists of buffers, with each buffer indicating its type or purpose.
+    /// 
+    /// The buffers themselves are simple byte arrays, and the native APIs consume arrays of buffers.
+    /// 
+    /// Since winapi calling convention, perhaps as an extension of C calling convention, does not
+    /// provide a standard convention means of communicating the length of any array, custom structures
+    /// must be created to carry the buffer length and usage.
+    /// 
+    /// Not only does the API need to know how long each buffer is, and how long the array of buffers is,
+    /// it needs to communicate back how much of each buffer was filled; we may provide it a token buffer
+    /// that is 12288 bytes long, but it might only use 125 bytes of that, which we need a way of knowing.
+    /// 
+    /// As a result of this, the API requires byte arrays to be carried in structs that are natively known as 
+    /// SecureBuffers (known as SecureBufferInternal in this project), and then arrays of SecureBuffers are
+    /// carried in a SecureBufferDescriptor structure.
+    /// 
+    /// As such, this class has to do a significant amount of marshaling work just to get the buffers back and
+    /// forth to the native APIs.
+    ///   * We have to pin all buffers
+    ///   * We have to pin the array of buffers
+    ///   * We have to obtain IntPtr handles to each of the buffers and to the array of buffers.
+    ///   * Since we provide EasyToUse SecureBuffer classes from the rest of the project, but we 
+    ///     provide SecureBufferInternal structures from the native API, we have to copy back values
+    ///     from the SecureBufferInternal structs to our SecureBuffer class.
+    ///     
+    /// To make this class easy to use, it accepts either one or many buffers as its constructor; and
+    /// implements IDisposable to know when to marshal values back from the unmanaged structures and to 
+    /// release pinned handles. 
+    /// 
+    /// Additionally, in case the adapter is leaked without disposing, the adapter implements a Critical
+    /// Finalizer, to ensure that the GCHandles are released, else we will permanently pin handles.
+    /// 
+    /// The typical flow is to take one or many buffers; create and fill the neccessary unmanaged structures;
+    /// pin memory; acquire the IntPtr handles; let the caller access the top-level IntPtr representing
+    /// the SecureBufferDescriptor, to provide to the native APIs; wait for the caller to invoke the native
+    /// API; wait for the caller to invoke our Dispose; marshal back any data from the native structures
+    /// (buffer write counts); release all GCHandles to unpin memory.
+    /// 
+    /// The total descriptor structure is as follows:
+    /// |-- Descriptor handle 
+    ///     |-- Array of buffers
+    ///         |-- Buffer 1
+    ///         |-- Buffer 2
+    ///         ...
+    ///         |-- Buffer N.
+    ///         
+    /// Each object in that structure must be pinned and passed as an IntPtr to the native APIs. 
+    /// All this to pass what boils down to a List of byte arrays..
+    /// </remarks>
     internal sealed class SecureBufferAdapter : CriticalFinalizerObject, IDisposable
     {
+        /// <summary>
+        /// Whether the adapter has already been disposed.
+        /// </summary>
         private bool disposed;
 
+        /// <summary>
+        /// The list of mananged SecureBuffers the caller provided to us.
+        /// </summary>
         private IList<SecureBuffer> buffers;
 
+        /// <summary>
+        /// The top level handle representing the entire descriptor.
+        /// </summary>
         private GCHandle descriptorHandle;
 
-        private GCHandle[] bufferHandles;
-
-        private SecureBufferDescInternal descriptor;
-        private SecureBufferInternal[] bufferCarrier;
+        /// <summary>
+        /// The handle representing the array of buffers.
+        /// </summary>
         private GCHandle bufferCarrierHandle;
 
+        /// <summary>
+        /// The handles representing each actual buffer.
+        /// </summary>
+        private GCHandle[] bufferHandles;
+
+        /// <summary>
+        /// The native buffer descriptor
+        /// </summary>
+        private SecureBufferDescInternal descriptor;
+
+        /// <summary>
+        /// An array of the native buffers.
+        /// </summary>
+        private SecureBufferInternal[] bufferCarrier;
+
+        /// <summary>
+        /// Initializes a SecureBufferAdapter to carry a single buffer to the native api.
+        /// </summary>
+        /// <param name="buffer"></param>
         public SecureBufferAdapter( SecureBuffer buffer )
             : this( new[] { buffer } )
         {
-
         }
 
+        /// <summary>
+        /// Initializes the SecureBufferAdapter to carry a list of buffers to the native api.
+        /// </summary>
+        /// <param name="buffers"></param>
         public SecureBufferAdapter( IList<SecureBuffer> buffers ) : base()
         {
             this.buffers = buffers;
@@ -66,6 +149,9 @@ namespace NSspi.Buffers
             Dispose( false );
         }
 
+        /// <summary>
+        /// Gets the top-level pointer to the secure buffer descriptor to pass to the native API.
+        /// </summary>
         public IntPtr Handle
         {
             get
@@ -79,12 +165,22 @@ namespace NSspi.Buffers
             }
         }
 
+        /// <summary>
+        /// Completes any buffer passing marshaling and releases all resources associated with the adapter.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose( true );
             GC.SuppressFinalize( this );
         }
 
+        /// <summary>
+        /// Completes any buffer passing marshaling and releases all resources associated with the adapter.
+        /// This may be called by the finalizer, or by the regular Dispose method. In the case of the finalizer,
+        /// we've been leaked and there's no point in attempting to marshal back data from the native structures,
+        /// nor should we anyway since they may be gone.
+        /// </summary>
+        /// <param name="disposing">Whether Dispose is being called.</param>
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         private void Dispose( bool disposing )
         {
@@ -121,6 +217,5 @@ namespace NSspi.Buffers
 
             this.disposed = true;
         }
-
     }
 }

@@ -14,7 +14,7 @@ namespace NSspi.Credentials.Credentials
     internal struct QueryNameAttribCarrier
     {
         /// <summary>
-        /// A pointer to a null-terminated ascii c-string containing the principle name 
+        /// A pointer to a null-terminated ascii-encoded containing the principle name 
         /// associated with a credential
         /// </summary>
         public IntPtr Name;

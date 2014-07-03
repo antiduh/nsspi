@@ -12,6 +12,11 @@ namespace NSspi.Credentials
     /// </summary>
     public class ServerCredential : CurrentCredential
     {
+        /// <summary>
+        /// Initializes a new instance of the ServerCredential class, acquiring credentials from 
+        /// the current thread's security context.
+        /// </summary>
+        /// <param name="package">The name of the security package to obtain credentials from.</param>
         public ServerCredential( string package )
             : base( package, CredentialUse.Inbound )
         {
