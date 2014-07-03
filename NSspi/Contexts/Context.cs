@@ -11,9 +11,24 @@ using NSspi.Credentials;
 
 namespace NSspi.Contexts
 {
-    public class Context : IDisposable
+    /// <summary>
+    /// Represents a security context and provides common functionality required for all security 
+    /// contexts.
+    /// </summary>
+    /// <remarks>
+    /// This class is abstract and has a protected constructor and Initialize method. The exact 
+    /// initialization implementation is provided by a subclasses, which may perform initialization 
+    /// in a variety of manners.
+    /// </remarks>
+    public abstract class Context : IDisposable
     {
-        public Context( Credential cred )
+        /// <summary>
+        /// Performs basic initialization of a new instance of the Context class.
+        /// Initialization is not complete until the ContextHandle property has been set
+        /// and the Initialize method has been called.
+        /// </summary>
+        /// <param name="cred"></param>
+        protected Context( Credential cred )
         {
             this.Credential = cred;
 
@@ -28,10 +43,19 @@ namespace NSspi.Contexts
         /// </summary>
         public bool Initialized { get; private set; }
 
+        /// <summary>
+        /// The credential being used by the context to authenticate itself to other actors.
+        /// </summary>
         protected Credential Credential { get; private set; }
 
+        /// <summary>
+        /// A reference to the security context's handle.
+        /// </summary>
         public SafeContextHandle ContextHandle { get; private set; }
 
+        /// <summary>
+        /// The name of the authenticating authority for the context.
+        /// </summary>
         public string AuthorityName
         {
             get
@@ -41,6 +65,9 @@ namespace NSspi.Contexts
             }
         }
 
+        /// <summary>
+        /// The logon username that the context represents.
+        /// </summary>
         public string ContextUserName
         {
             get
@@ -50,8 +77,14 @@ namespace NSspi.Contexts
             }
         }
 
+        /// <summary>
+        /// The UTC time when the context expires.
+        /// </summary>
         public DateTime Expiry { get; private set; }
 
+        /// <summary>
+        /// Whether the context has been disposed.
+        /// </summary>
         public bool Disposed { get; private set; }
 
         /// <summary>
@@ -64,12 +97,19 @@ namespace NSspi.Contexts
             this.Initialized = true;
         }
 
+        /// <summary>
+        /// Releases all resources associated with the context.
+        /// </summary>
         public void Dispose()
         {
             Dispose( true );
             GC.SuppressFinalize( this );
         }
 
+        /// <summary>
+        /// Releases resources associated with the context.
+        /// </summary>
+        /// <param name="disposing">If true, release managed resources, else release only unmanaged resources.</param>
         protected virtual void Dispose( bool disposing )
         {
             if( this.Disposed ) { return; }
@@ -83,18 +123,19 @@ namespace NSspi.Contexts
         }
 
         /// <summary>
-        /// Encrypts the byte array using the context's session key. The encrypted data is stored in a new
-        /// byte array, which is formatted such that the first four bytes are the original message length 
-        /// as an unsigned integer and the remaining bytes are the encrypted bytes of the original message.
+        /// Encrypts the byte array using the context's session key.
         /// </summary>
         /// <remarks>
-        /// The resulting byte array stores the SSPI buffer data in the following buffer format:
-        ///  - Token
-        ///  - Data
-        ///  - Padding
+        /// The structure of the returned data is as follows:
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the trailer buffer size
+        ///  - 4 bytes, an unsigned big-endian integer indicating the length of the message buffer size.
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the encryption padding buffer size.
+        ///  - The trailer buffer
+        ///  - The message buffer
+        ///  - The padding buffer.
         /// </remarks>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">The raw message to encrypt.</param>
+        /// <returns>The packed and encrypted message.</returns>
         public byte[] Encrypt( byte[] input )
         {
             // The message is encrypted in place in the buffer we provide to Win32 EncryptMessage
@@ -163,6 +204,20 @@ namespace NSspi.Contexts
             return result;
         }
 
+        /// <summary>
+        /// Decrypts a previously encrypted message.
+        /// </summary>
+        /// <remarks>
+        /// The expected format of the buffer is as follows:
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the trailer buffer size
+        ///  - 4 bytes, an unsigned big-endian integer indicating the length of the message buffer size.
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the encryption padding buffer size.
+        ///  - The trailer buffer
+        ///  - The message buffer
+        ///  - The padding buffer.
+        /// </remarks>
+        /// <param name="input">The packed and encrypted data.</param>
+        /// <returns>The original plaintext message.</returns>
         public byte[] Decrypt( byte[] input )
         {
             SecPkgContext_Sizes sizes;
@@ -263,6 +318,18 @@ namespace NSspi.Contexts
             return result;
         }
 
+        /// <summary>
+        /// Signs the message using the context's session key.
+        /// </summary>
+        /// <remarks>
+        /// The structure of the returned buffer is as follows:
+        ///  - 4 bytes, unsigned big-endian integer indicating the length of the plaintext message
+        ///  - 2 bytes, unsigned big-endian integer indicating the length of the signture
+        ///  - The plaintext message
+        ///  - The message's signature.
+        /// </remarks>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public byte[] MakeSignature( byte[] message )
         {
             SecurityStatus status = SecurityStatus.InternalError;
@@ -322,6 +389,19 @@ namespace NSspi.Contexts
             return outMessage;
         }
 
+        /// <summary>
+        /// Verifies the signature of a signed message
+        /// </summary>
+        /// <remarks>
+        /// The expected structure of the signed message buffer is as follows:
+        ///  - 4 bytes, unsigned integer in big endian format indicating the length of the plaintext message
+        ///  - 2 bytes, unsigned integer in big endian format indicating the length of the signture
+        ///  - The plaintext message
+        ///  - The message's signature.
+        /// </remarks>
+        /// <param name="signedMessage">The packed signed message.</param>
+        /// <param name="origMessage">The extracted original message.</param>
+        /// <returns>True if the message has a valid signature, false otherwise.</returns>
         public bool VerifySignature( byte[] signedMessage, out byte[] origMessage )
         {
             SecurityStatus status = SecurityStatus.InternalError;
@@ -390,6 +470,10 @@ namespace NSspi.Contexts
             }
         }
 
+        /// <summary>
+        /// Queries the security package's expections regarding message/token/signature/padding buffer sizes.
+        /// </summary>
+        /// <returns></returns>
         private SecPkgContext_Sizes QueryBufferSizes()
         {
             SecPkgContext_Sizes sizes = new SecPkgContext_Sizes();
@@ -432,6 +516,11 @@ namespace NSspi.Contexts
             return sizes;
         }
 
+        /// <summary>
+        /// Queries a string-valued context attribute by the named attribute.
+        /// </summary>
+        /// <param name="attrib">The string-valued attribute to query.</param>
+        /// <returns></returns>
         private string QueryContextString(ContextQueryAttrib attrib)
         {
             SecPkgContext_String stringAttrib;
@@ -492,6 +581,10 @@ namespace NSspi.Contexts
             return result;
         }
 
+        /// <summary>
+        /// Verifies that the object's lifecycle (initialization / disposition) state is suitable for using the 
+        /// object.
+        /// </summary>
         private void CheckLifecycle()
         {
             if( this.Initialized == false )
