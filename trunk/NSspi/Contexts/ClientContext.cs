@@ -156,15 +156,20 @@ namespace NSspi.Contexts
                 }
             }
 
-            if ( status == SecurityStatus.OK )
+            if( status.IsError() == false )
             {
-                base.Initialize( rawExpiry.ToDateTime() );
+                if( status == SecurityStatus.OK )
+                {
+                    base.Initialize( rawExpiry.ToDateTime() );
+                }
+
                 outToken = null;
-            }
-            else if ( status == SecurityStatus.ContinueNeeded )
-            {
-                outToken = new byte[outTokenBuffer.Length];
-                Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );
+
+                if( outTokenBuffer.Length != 0 )
+                {
+                    outToken = new byte[outTokenBuffer.Length];
+                    Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );
+                }
             }
             else
             {
