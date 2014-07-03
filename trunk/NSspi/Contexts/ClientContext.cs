@@ -87,8 +87,12 @@ namespace NSspi.Contexts
                 throw new InvalidOperationException( "Must provide the server's response when continuing the init process." );
             }
             
-
-            outTokenBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
+            // The security package tells us how big its biggest token will be. We'll allocate a buffer
+            // that size, and it'll tell us how much it used.
+            outTokenBuffer = new SecureBuffer( 
+                new byte[ this.Credential.PackageInfo.MaxTokenLength ], 
+                BufferType.Token 
+            );
 
             serverBuffer = null;
             if ( serverToken != null )
