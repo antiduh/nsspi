@@ -9,6 +9,9 @@ using NSspi.Credentials;
 
 namespace NSspi.Contexts
 {
+    /// <summary>
+    /// Represents a security context used in a server role.
+    /// </summary>
     public class ServerContext : Context
     {
         private ContextAttrib requestedAttribs;
@@ -16,6 +19,12 @@ namespace NSspi.Contexts
 
         private bool impersonating;
 
+        /// <summary>
+        /// Performs basic initialization of a new instance of the ServerContext class. The ServerContext
+        /// is not ready for message manipulation until a security context has been established with a client.
+        /// </summary>
+        /// <param name="cred"></param>
+        /// <param name="requestedAttribs"></param>
         public ServerContext(ServerCredential cred, ContextAttrib requestedAttribs) : base ( cred )
         {
             this.requestedAttribs = requestedAttribs;
