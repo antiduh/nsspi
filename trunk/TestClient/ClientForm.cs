@@ -66,7 +66,7 @@ namespace TestClient
             this.connection.Disconnected += connection_Disconnected;
 
             // --- UI Fillout ---
-            this.usernameTextbox.Text = this.cred.Name;
+            this.usernameTextbox.Text = this.cred.PrincipleName;
 
             UpdateButtons();
         }

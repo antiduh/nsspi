@@ -33,11 +33,11 @@ namespace NSspi
                 clientCred = new ClientCredential( packageName );
                 serverCred = new ServerCredential( packageName );
 
-                Console.Out.WriteLine( clientCred.Name );
+                Console.Out.WriteLine( clientCred.PrincipleName );
 
                 client = new ClientContext( 
                     clientCred, 
-                    serverCred.Name, 
+                    serverCred.PrincipleName, 
                     ContextAttrib.MutualAuth | 
                     ContextAttrib.InitIdentify |
                     ContextAttrib.Confidentiality |
