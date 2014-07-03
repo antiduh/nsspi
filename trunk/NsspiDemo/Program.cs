@@ -9,10 +9,12 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            CredTest();
+            CredTest( PackageNames.Negotiate );
+            CredTest( PackageNames.Kerberos );
+            CredTest( PackageNames.Ntlm );
         }
 
-        private static void CredTest()
+        private static void CredTest( string packageName )
         {
             ClientCredential clientCred = null;
             ClientContext client = null;
@@ -28,12 +30,14 @@ namespace NSspi
 
             try
             {
-                clientCred = new ClientCredential( PackageNames.Negotiate );
+                clientCred = new ClientCredential( packageName );
+                serverCred = new ServerCredential( packageName );
+
                 Console.Out.WriteLine( clientCred.Name );
 
                 client = new ClientContext( 
                     clientCred, 
-                    "", 
+                    serverCred.Name, 
                     ContextAttrib.MutualAuth | 
                     ContextAttrib.InitIdentify |
                     ContextAttrib.Confidentiality |
@@ -43,7 +47,6 @@ namespace NSspi
                     ContextAttrib.Delegate
                 );
 
-                serverCred = new ServerCredential( PackageNames.Negotiate );
 
                 server = new ServerContext(
                     serverCred,
