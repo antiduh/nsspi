@@ -72,7 +72,7 @@ namespace NSspi.Credentials
         /// <summary>
         /// Returns the name of the principle of the credential.
         /// </summary>
-        public string Name
+        public string PrincipleName
         {
             get
             {

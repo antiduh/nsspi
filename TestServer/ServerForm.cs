@@ -66,7 +66,7 @@ namespace TestServer
 
             UpdateButtons();
 
-            this.serverUsernameTextbox.Text = this.serverCred.Name;
+            this.serverUsernameTextbox.Text = this.serverCred.PrincipleName;
         }
 
         private void Form1_FormClosing( object sender, FormClosingEventArgs e )
