@@ -79,7 +79,11 @@ namespace NSspi.Contexts
             }
 
             clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
-            outBuffer = new SecureBuffer( new byte[12288], BufferType.Token );
+
+            outBuffer = new SecureBuffer( 
+                new byte[ this.Credential.PackageInfo.MaxTokenLength ], 
+                BufferType.Token 
+            );
 
             using ( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
             {
