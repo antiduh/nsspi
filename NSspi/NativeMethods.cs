@@ -11,20 +11,6 @@ namespace NSspi
 {
     internal static class NativeMethods
     {
-        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa374713(v=vs.85).aspx
-
-        // The REMSSPI sample:
-
-        // A C++ pure client/server example:
-        // http://msdn.microsoft.com/en-us/library/windows/desktop/aa380536(v=vs.85).aspx
-
- 
-        /*
-        SECURITY_STATUS SEC_Entry FreeContextBuffer(
-          _In_  PVOID pvContextBuffer
-        );
-        */
-
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus FreeContextBuffer( IntPtr buffer );

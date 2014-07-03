@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace NSspi
 {
+    /// <summary>
+    /// Queries information about security packages.
+    /// </summary>
     public static class PackageSupport
     {
+        /// <summary>
+        /// Returns the properties of the named package.
+        /// </summary>
+        /// <param name="packageName">The name of the package.</param>
+        /// <returns></returns>
         public static SecPkgInfo GetPackageCapabilities( string packageName )
         {
             SecPkgInfo info;
@@ -52,6 +60,10 @@ namespace NSspi
             return info;
         }
 
+        /// <summary>
+        /// Returns a list of all known security package providers and their properties.
+        /// </summary>
+        /// <returns></returns>
         public static SecPkgInfo[] EnumeratePackages()
         {
             SecurityStatus status = SecurityStatus.InternalError;
