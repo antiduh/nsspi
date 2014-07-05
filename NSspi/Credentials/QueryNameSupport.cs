@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NSspi.Credentials.Credentials
+namespace NSspi.Credentials
 {
     /// <summary>
     /// Stores the result from a query of a credential's principle name.
