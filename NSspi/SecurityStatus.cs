@@ -20,6 +20,9 @@ namespace NSspi
     #define SEC_E_NO_CREDENTIALS             _HRESULT_TYPEDEF_(0x8009030EL)
     */
 
+    /// <summary>
+    /// Defines the results of invoking the SSPI api.
+    /// </summary>
     public enum SecurityStatus : uint
     {
         // --- Success / Informational ---

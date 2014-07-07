@@ -69,7 +69,9 @@ namespace NSspi.Credentials
         }
 
         /// <summary>
-        /// Returns the name of the principle of the credential.
+        /// Returns the User Principle Name of the credential. Depending on the underlying security
+        /// package used by the credential, this may not be the same as the Down-Level Logon Name
+        /// for the user.
         /// </summary>
         public string PrincipleName
         {
