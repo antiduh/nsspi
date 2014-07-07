@@ -36,7 +36,7 @@ namespace TestProtocol
                 throw new InvalidOperationException("Already running");
             }
 
-            this.socket = new Socket( SocketType.Stream, ProtocolType.Tcp );
+            this.socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
 
             this.socket.Connect( server, port );
 

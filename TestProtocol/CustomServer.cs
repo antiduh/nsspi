@@ -47,7 +47,7 @@ namespace TestProtocol
                 throw new InvalidOperationException( "Already running" );
             }
 
-            this.serverSocket = new Socket( SocketType.Stream, ProtocolType.Tcp );
+            this.serverSocket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
             this.serverSocket.Bind( new IPEndPoint( IPAddress.Any, port ) );
             this.serverSocket.Listen( 1 );
 
