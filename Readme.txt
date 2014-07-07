@@ -1,8 +1,9 @@
 This projects provides a C# / .Net interface to the Windows Integrated Authentication API, 
 better known as SSPI (Security Service Provider Interface).
 
-The project is provided as a .Net 4.0 assembly. The solution file can be opened by 
-Visual Studio 2010 SP1, Visual Studio 2012, or later Visual Studio editions.
+The project is provided as a .Net 4.0 assembly, but can just as easily be upgraded to .Net 4.5 
+or later. The solution file can be opened by Visual Studio 2010 SP1, Visual Studio 2012, or 
+later Visual Studio editions.
 
 The SSPI API provides an interface for real authentication protocols, such as Kerberos or 
 NTLM, to be invoked transparently by client and server code in order to perform authentication
