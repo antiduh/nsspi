@@ -112,7 +112,10 @@ namespace TestProtocol
             byte[] readBuffer = new byte[65536];
 
             ProtocolOp operation;
-            int length;
+            int messageLength;
+            int remaining;
+            int chunkLength;
+            int position;
 
             while( this.running )
             {
@@ -132,10 +135,24 @@ namespace TestProtocol
 
                     // Read the length 
                     this.socket.Receive( readBuffer, 4, SocketFlags.None );
-                    length = ByteWriter.ReadInt32_BE( readBuffer, 0 );
+                    messageLength = ByteWriter.ReadInt32_BE( readBuffer, 0 );
+
+                    if( readBuffer.Length < messageLength )
+                    {
+                        readBuffer = new byte[messageLength];
+                    }
 
                     // Read the data
-                    this.socket.Receive( readBuffer, length, SocketFlags.None );
+                    // Keep in mind that Socket.Receive may return less data than asked for.
+                    remaining = messageLength;
+                    chunkLength = 0;
+                    position = 0;
+                    while( remaining > 0 )
+                    {
+                        chunkLength = this.socket.Receive( readBuffer, position, remaining, SocketFlags.None );
+                        remaining -= chunkLength;
+                        position += chunkLength;
+                    }
 
                 }
                 catch( SocketException e )
@@ -159,8 +176,8 @@ namespace TestProtocol
 
                 if( this.Received != null )
                 {
-                    byte[] dataCopy = new byte[length];
-                    Array.Copy( readBuffer, 0, dataCopy, 0, length );
+                    byte[] dataCopy = new byte[messageLength];
+                    Array.Copy( readBuffer, 0, dataCopy, 0, messageLength );
                     Message message = new Message( operation, dataCopy );
                  
                     try
