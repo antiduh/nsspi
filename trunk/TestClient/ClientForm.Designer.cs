@@ -148,6 +148,7 @@
             this.sendTextbox.Location = new System.Drawing.Point(6, 19);
             this.sendTextbox.Multiline = true;
             this.sendTextbox.Name = "sendTextbox";
+            this.sendTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.sendTextbox.Size = new System.Drawing.Size(302, 298);
             this.sendTextbox.TabIndex = 7;
             // 
@@ -190,6 +191,7 @@
             this.receiveTextbox.Location = new System.Drawing.Point(3, 16);
             this.receiveTextbox.Multiline = true;
             this.receiveTextbox.Name = "receiveTextbox";
+            this.receiveTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.receiveTextbox.Size = new System.Drawing.Size(308, 338);
             this.receiveTextbox.TabIndex = 10;
             // 
