@@ -112,10 +112,7 @@ namespace TestProtocol
             byte[] readBuffer = new byte[65536];
 
             ProtocolOp operation;
-            int messageLength;
-            int remaining;
-            int chunkLength;
-            int position;
+            int length;
 
             while( this.running )
             {
@@ -135,24 +132,10 @@ namespace TestProtocol
 
                     // Read the length 
                     this.socket.Receive( readBuffer, 4, SocketFlags.None );
-                    messageLength = ByteWriter.ReadInt32_BE( readBuffer, 0 );
-
-                    if( readBuffer.Length < messageLength )
-                    {
-                        readBuffer = new byte[messageLength];
-                    }
+                    length = ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
                     // Read the data
-                    // Keep in mind that Socket.Receive may return less data than asked for.
-                    remaining = messageLength;
-                    chunkLength = 0;
-                    position = 0;
-                    while( remaining > 0 )
-                    {
-                        chunkLength = this.socket.Receive( readBuffer, position, remaining, SocketFlags.None );
-                        remaining -= chunkLength;
-                        position += chunkLength;
-                    }
+                    this.socket.Receive( readBuffer, length, SocketFlags.None );
 
                 }
                 catch( SocketException e )
@@ -160,8 +143,7 @@ namespace TestProtocol
                     if( e.SocketErrorCode == SocketError.ConnectionAborted ||
                         e.SocketErrorCode == SocketError.Interrupted ||
                         e.SocketErrorCode == SocketError.OperationAborted ||
-                        e.SocketErrorCode == SocketError.Shutdown || 
-                        e.SocketErrorCode == SocketError.ConnectionReset )
+                        e.SocketErrorCode == SocketError.Shutdown )
                     {
                         // Shutting down.
                         break;
@@ -176,8 +158,8 @@ namespace TestProtocol
 
                 if( this.Received != null )
                 {
-                    byte[] dataCopy = new byte[messageLength];
-                    Array.Copy( readBuffer, 0, dataCopy, 0, messageLength );
+                    byte[] dataCopy = new byte[length];
+                    Array.Copy( readBuffer, 0, dataCopy, 0, length );
                     Message message = new Message( operation, dataCopy );
                  
                     try

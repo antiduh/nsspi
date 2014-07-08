@@ -38,13 +38,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.serverUsernameTextbox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.impersonateButton = new System.Windows.Forms.Button();
             this.signButton = new System.Windows.Forms.Button();
             this.encryptButton = new System.Windows.Forms.Button();
             this.sendTextbox = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.receivedTextbox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.impersonateButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.portNumeric)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -168,15 +168,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Send a message to the client";
             // 
-            // impersonateButton
-            // 
-            this.impersonateButton.Location = new System.Drawing.Point(262, 350);
-            this.impersonateButton.Name = "impersonateButton";
-            this.impersonateButton.Size = new System.Drawing.Size(116, 23);
-            this.impersonateButton.TabIndex = 4;
-            this.impersonateButton.Text = "Test impersonation";
-            this.impersonateButton.UseVisualStyleBackColor = true;
-            // 
             // signButton
             // 
             this.signButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -205,7 +196,6 @@
             this.sendTextbox.Location = new System.Drawing.Point(6, 19);
             this.sendTextbox.Multiline = true;
             this.sendTextbox.Name = "sendTextbox";
-            this.sendTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.sendTextbox.Size = new System.Drawing.Size(400, 323);
             this.sendTextbox.TabIndex = 0;
             // 
@@ -226,7 +216,6 @@
             this.receivedTextbox.Location = new System.Drawing.Point(3, 16);
             this.receivedTextbox.Multiline = true;
             this.receivedTextbox.Name = "receivedTextbox";
-            this.receivedTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.receivedTextbox.Size = new System.Drawing.Size(407, 370);
             this.receivedTextbox.TabIndex = 0;
             // 
@@ -246,6 +235,15 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(838, 395);
             this.tableLayoutPanel1.TabIndex = 7;
+            // 
+            // impersonateButton
+            // 
+            this.impersonateButton.Location = new System.Drawing.Point(262, 350);
+            this.impersonateButton.Name = "impersonateButton";
+            this.impersonateButton.Size = new System.Drawing.Size(116, 23);
+            this.impersonateButton.TabIndex = 4;
+            this.impersonateButton.Text = "Test impersonation";
+            this.impersonateButton.UseVisualStyleBackColor = true;
             // 
             // ServerForm
             // 
