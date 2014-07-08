@@ -173,7 +173,7 @@ namespace TestServer
 
         private void server_Disconnected()
         {
-            this.running = false;
+            this.running = true;
             this.initializing = true;
             this.connected = false;
 
