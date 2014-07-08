@@ -143,7 +143,8 @@ namespace TestProtocol
                     if( e.SocketErrorCode == SocketError.ConnectionAborted ||
                         e.SocketErrorCode == SocketError.Interrupted ||
                         e.SocketErrorCode == SocketError.OperationAborted ||
-                        e.SocketErrorCode == SocketError.Shutdown )
+                        e.SocketErrorCode == SocketError.Shutdown || 
+                        e.SocketErrorCode == SocketError.ConnectionReset )
                     {
                         // Shutting down.
                         break;
