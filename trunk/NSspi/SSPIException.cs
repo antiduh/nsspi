@@ -71,7 +71,7 @@ namespace NSspi
             get
             {
                 return string.Format( 
-                    "{0}. Error Code = '{1:X}' - \"{2}\".", 
+                    "{0}. Error Code = '0x{1:X}' - \"{2}\".", 
                     this.message, 
                     this.errorCode, 
                     EnumMgr.ToText(this.errorCode) 
