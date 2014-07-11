@@ -59,6 +59,7 @@
     <Compile Include="Contexts\ImpersonationHandle.cs" />
     <Compile Include="Contexts\SafeContextHandle.cs" />
     <Compile Include="Credentials\CurrentCredential.cs" />
+    <Compile Include="EnumMgr.cs" />
     <Compile Include="SecPkgInfo.cs" />
     <Compile Include="Contexts\ServerContext.cs" />
     <Compile Include="Credentials\ClientCredential.cs" />

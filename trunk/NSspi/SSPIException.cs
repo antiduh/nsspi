@@ -70,7 +70,12 @@ namespace NSspi
         {
             get
             {
-                return string.Format( "{0}. Error Code = '{1:X}'.", this.message, this.errorCode );
+                return string.Format( 
+                    "{0}. Error Code = '{1:X}' - \"{2}\".", 
+                    this.message, 
+                    this.errorCode, 
+                    EnumMgr.Text(this.errorCode) 
+                );
             }
         }
     }
