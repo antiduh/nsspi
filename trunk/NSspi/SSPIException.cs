@@ -74,7 +74,7 @@ namespace NSspi
                     "{0}. Error Code = '{1:X}' - \"{2}\".", 
                     this.message, 
                     this.errorCode, 
-                    EnumMgr.Text(this.errorCode) 
+                    EnumMgr.ToText(this.errorCode) 
                 );
             }
         }

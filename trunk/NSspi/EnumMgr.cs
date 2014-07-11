@@ -6,7 +6,7 @@ using System.Text;
 
 namespace NSspi
 {
-    [AttributeUsage( AttributeTargets.Enum )]
+    [AttributeUsage( AttributeTargets.Field )]
     public class EnumStringAttribute : Attribute
     {
         public EnumStringAttribute( string text )
@@ -19,7 +19,7 @@ namespace NSspi
 
     public class EnumMgr
     {
-        public static string Text( Enum value )
+        public static string ToText( Enum value )
         {
             FieldInfo field = value.GetType().GetField( value.ToString() );
 
@@ -35,7 +35,7 @@ namespace NSspi
             }
         }
 
-        public static T Enum<T>( string text )
+        public static T FromText<T>( string text )
         {
             FieldInfo[] fields = typeof( T ).GetFields();
 
