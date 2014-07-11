@@ -183,14 +183,20 @@ namespace NSspi.Contexts
             {
                 throw new ObjectDisposedException( "ServerContext" );
             }
+            else if( this.Initialized == false )
+            {
+                throw new InvalidOperationException(
+                    "The server context has not been completely initialized."
+                );
+            }
             else if( impersonating )
             {
                 throw new InvalidOperationException( "Cannot impersonate again while already impersonating." );
             }
             else if( this.SupportsImpersonate == false )
             {
-                throw new InvalidOperationException( 
-                    "The ServerContext is using a security package that does not support impersonation." 
+                throw new InvalidOperationException(
+                    "The ServerContext is using a security package that does not support impersonation."
                 );
             }
 
