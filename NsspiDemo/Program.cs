@@ -9,9 +9,6 @@ namespace NSspi
     {
         public static void Main( string[] args )
         {
-            EnumMgr.Text( SecurityStatus.AlgorithmMismatch );
-            return;
-
             CredTest( PackageNames.Negotiate );
             CredTest( PackageNames.Kerberos );
             CredTest( PackageNames.Ntlm );
