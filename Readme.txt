@@ -1,40 +1,20 @@
-This projects provides a C# / .Net interface to the Windows Integrated Authentication API, 
-better known as SSPI (Security Service Provider Interface).
+This projects provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface).
 
-The project is provided as a .Net 4.0 assembly, but can just as easily be upgraded to .Net 4.5 
-or later. The solution file can be opened by Visual Studio 2010 SP1, Visual Studio 2012, or 
-later Visual Studio editions.
+The project is provided as a .Net 4.0 assembly, but can just as easily be upgraded to .Net 4.5 or later. The solution file can be opened by Visual Studio 2010 SP1, Visual Studio 2012, or later Visual Studio editions.
 
-The SSPI API provides an interface for real authentication protocols, such as Kerberos or 
-NTLM, to be invoked transparently by client and server code in order to perform authentication
-and message manipulation. These authentication protocols are better known as 'security packages'.
+The SSPI API provides an interface for real authentication protocols, such as Kerberos or NTLM, to be invoked transparently by client and server code in order to perform authentication and message manipulation. These authentication protocols are better known as 'security packages'.
 
-The SSPI API exposes these packages using a common API, and so a program may invoke one or the 
-other with only minor changes in implementation. SSPI also supports the 'negotiate' 'meta' 
-package, that allows a client and server to decide dynamically which real security provider to 
-use, and then itself provides a passthrough interface to the real package.
+The SSPI API exposes these packages using a common API, and so a program may invoke one or the other with only minor changes in implementation. SSPI also supports the 'negotiate' 'meta' package, that allows a client and server to decide dynamically which real security provider to use, and then itself provides a passthrough interface to the real package.
 
 ==== Usage ====
 
-Typically, a client acquires some form of a credential, either from the currently logged on
-user's security context, by acquiring a username and password from the user, or by some other
-means. The server acquires a credential in a similar manner. Each uses their credentials to 
-identify themselves to each other.
+Typically, a client acquires some form of a credential, either from the currently logged on user's security context, by acquiring a username and password from the user, or by some other means. The server acquires a credential in a similar manner. Each uses their credentials to identify themselves to each other.
 
-A client and a server each start with uninitialized security contexts. They exchange negotiation
-and authentication tokens to perform authentication, and if all succeeds, they create a shared 
-security context in the form of a client's context and a server's context. The effectively shared
-context agrees on the security package to use (kerberos, NTLM), and what parameters to use 
-for message passing. Every new client that authenticates with a server creates a new security 
-context specific to that client-server pairing.
+A client and a server each start with uninitialized security contexts. They exchange negotiation and authentication tokens to perform authentication, and if all succeeds, they create a shared security context in the form of a client's context and a server's context. The effectively shared context agrees on the security package to use (kerberos, NTLM), and what parameters to use for message passing. Every new client that authenticates with a server creates a new security context specific to that client-server pairing.
 
-From the software perspective, a client security context initializes itself by exchanging 
-authentication tokens with a server; the server initializes itself by exchanging authentication
-tokens with the client.
+From the software perspective, a client security context initializes itself by exchanging authentication tokens with a server; the server initializes itself by exchanging authentication tokens with the client.
 
-This API provides raw access to the authentication tokens created during the negotiation and 
-authentication process. In this manner, any application can integrate SSPI-based authentication
-by deciding for themselves how to integrate the tokens into their application protocol.
+This API provides raw access to the authentication tokens created during the negotiation and authentication process. In this manner, any application can integrate SSPI-based authentication by deciding for themselves how to integrate the tokens into their application protocol.
 
 The project is broken up into 3 chunks:
 
@@ -66,5 +46,3 @@ Relevant StackOverflow questions:
 
 "AcquireCredentialsHandle returns massive expiration time"
   - http://stackoverflow.com/questions/24478056/
-
-
