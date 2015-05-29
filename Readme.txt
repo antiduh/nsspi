@@ -1,4 +1,6 @@
-This projects provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface).
+This projects provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface). This allows a custom client / server system to authenticate users using their existing logon credentials. This allows a developer to provide Single-Sign-On in their application.
+
+The API provides raw access to authentication tokens so that authentication can be easily integrated into any networking system - you can send the tokens over a socket, a remoting interface, or heck even a serial port if you want; they're just bytes. Clients and servers may exchange encrypted and signed messages, and the server can perform client impersonation.
 
 The project is provided as a .Net 4.0 assembly, but can just as easily be upgraded to .Net 4.5 or later. The solution file can be opened by Visual Studio 2010 SP1, Visual Studio 2012, or later Visual Studio editions.
 
