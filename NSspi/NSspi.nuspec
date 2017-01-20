@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NSspi</id>
+    <version>0.1.1.0</version>
+    <authors>Kevin Thompson</authors>
+    <owners>Kevin Thompson</owners>
+    <projectUrl>https://github.com/antiduh/nsspi</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<description>
+		A C#/.Net interface to the Win32 SSPI authentication API, 
+		better known as Windows Integrated Authentication.
+	</description>
+    <releaseNotes>First release of NSspi.</releaseNotes>
+	<copyright>Copyright 2017</copyright>
+  </metadata>
+</package>
