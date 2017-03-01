@@ -4,8 +4,11 @@ The latest release of NSspi is v0.1.1.
 
 * [Source](https://github.com/antiduh/nsspi/archive/0.1.1.zip)
 * [Binaries](https://github.com/antiduh/nsspi/releases/download/0.1.1/nsspi-0.1.1-bin.zip)
+* [Nuget package](https://www.nuget.org/packages/NSspi)
 
 You can also browse the list of [releases](https://github.com/antiduh/nsspi/releases).
+
+
 
 ## Introduction ##
 This projects provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface). This allows a custom client / server system to authenticate users using their existing logon credentials. This allows a developer to provide Single-Sign-On in their application.
