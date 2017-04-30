@@ -35,7 +35,7 @@ namespace NSspi
         protected SSPIException( SerializationInfo info, StreamingContext context )
             : base( info, context )
         {
-            this.message = info.GetString( "messsage" );
+            this.message = info.GetString("message");
             this.errorCode = (SecurityStatus)info.GetUInt32( "errorCode" );
         }
 
