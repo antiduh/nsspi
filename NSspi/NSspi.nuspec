@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>NSspi</id>
-        <version>0.1.1.0</version>
+        <version>0.1.2.0</version>
         <authors>Kevin Thompson</authors>
         <owners>Kevin Thompson</owners>
         <projectUrl>https://github.com/antiduh/nsspi</projectUrl>
