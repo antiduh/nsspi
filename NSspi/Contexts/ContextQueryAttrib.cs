@@ -36,5 +36,18 @@ namespace NSspi.Contexts
         /// Results for a query of this type are stored in a Win32 SecPkgContext_Authority structure.
         /// </remarks>
         Authority = 6,
+
+
+        /// <summary>
+        /// Queries the context for it's neogtiated SessionKey
+        /// </summary>
+        /// <remarks>
+        /// Results for a query of this type are stored in a Win32 SecPkgContext_SessionKey structure
+        /// </remarks>
+        SessionKey = 9,
+
+
+        AccessToken = 13, //not implemented yet but this would be cool
+
     }
 }
