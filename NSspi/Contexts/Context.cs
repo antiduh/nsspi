@@ -387,21 +387,22 @@ namespace NSspi.Contexts
         /// Returns the Session Key from a context or null on failure.
         /// </summary>
         /// <remarks>
-        ///  Session keys are sometimes needed for other purposes or HMAC functions. This function will run QueryAttribute to get the session key struct, and read and return the key from that struct.
+        /// Session keys are sometimes needed for other purposes or HMAC functions. This function
+        /// will run QueryAttribute to get the session key struct, and read and return the key from
+        /// that struct.
         /// </remarks>
-        ///
         /// <returns>byte[] with the session key data or null on failure</returns>
         public byte[] QuerySessionKey()
         {
-            SecurityStatus status = SecurityStatus.InternalError;
+            SecurityStatus status;
 
             byte[] SessionKey = null;
 
             status = ContextNativeMethods.SafeQueryContextAttribute(
-                                            this.ContextHandle,
-                                            ContextQueryAttrib.SessionKey,
-                                            ref SessionKey
-                                            );
+                this.ContextHandle,
+                ContextQueryAttrib.SessionKey,
+                ref SessionKey
+            );
 
             if( status != SecurityStatus.OK )
             {
