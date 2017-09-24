@@ -20,6 +20,21 @@ namespace NSspi.Credentials
             ref TimeStamp expiry
         );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "AcquireCredentialsHandle", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus AcquireCredentialsHandle_AuthData(
+            string principleName,
+            string packageName,
+            CredentialUse credentialUse,
+            IntPtr loginId,
+            ref NativeAuthData authData,
+            IntPtr getKeyFunc,
+            IntPtr getKeyData,
+            ref RawSspiHandle credentialHandle,
+            ref TimeStamp expiry
+        );
+
+
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "FreeCredentialsHandle", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus FreeCredentialsHandle(

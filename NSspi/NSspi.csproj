@@ -55,8 +55,10 @@
     <Compile Include="Contexts\ContextQueryAttrib.cs" />
     <Compile Include="Contexts\ImpersonationHandle.cs" />
     <Compile Include="Contexts\SafeContextHandle.cs" />
+    <Compile Include="Credentials\AuthData.cs" />
     <Compile Include="Credentials\ClientCurrentCredential.cs" />
     <Compile Include="Credentials\CurrentCredential.cs" />
+    <Compile Include="Credentials\PasswordCredential.cs" />
     <Compile Include="Credentials\ServerCurrentCredential.cs" />
     <Compile Include="EnumMgr.cs" />
     <Compile Include="SecPkgInfo.cs" />
