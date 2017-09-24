@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
@@ -38,7 +34,7 @@ namespace NSspi.Credentials
             this.Handle = new SafeCredentialHandle();
 
             // The finally clause is the actual constrained region. The VM pre-allocates any stack space,
-            // performs any allocations it needs to prepare methods for execution, and postpones any 
+            // performs any allocations it needs to prepare methods for execution, and postpones any
             // instances of the 'uncatchable' exceptions (ThreadAbort, StackOverflow, OutOfMemory).
             RuntimeHelpers.PrepareConstrainedRegions();
             try { }
@@ -57,13 +53,12 @@ namespace NSspi.Credentials
                );
             }
 
-            if ( status != SecurityStatus.OK )
+            if( status != SecurityStatus.OK )
             {
                 throw new SSPIException( "Failed to call AcquireCredentialHandle", status );
             }
 
             this.Expiry = rawExpiry.ToDateTime();
         }
-
     }
 }

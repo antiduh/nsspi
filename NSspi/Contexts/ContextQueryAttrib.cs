@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Contexts
 {
@@ -37,7 +33,6 @@ namespace NSspi.Contexts
         /// </remarks>
         Authority = 6,
 
-
         /// <summary>
         /// Queries the context for it's neogtiated SessionKey
         /// </summary>
@@ -46,8 +41,6 @@ namespace NSspi.Contexts
         /// </remarks>
         SessionKey = 9,
 
-
         AccessToken = 13, //not implemented yet but this would be cool
-
     }
 }

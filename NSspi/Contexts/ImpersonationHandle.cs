@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Contexts
 {
     /// <summary>
-    /// Represents impersonation performed on a server on behalf of a client. 
+    /// Represents impersonation performed on a server on behalf of a client.
     /// </summary>
     /// <remarks>
     /// The handle controls the lifetime of impersonation, and will revert the impersonation
     /// if it is disposed, or if it is finalized ie by being leaked and garbage collected.
-    /// 
+    ///
     /// If the handle is accidentally leaked while operations are performed on behalf of the user,
     /// impersonation may be reverted at any arbitrary time, perhaps during those operations.
-    /// This may lead to operations being performed in the security context of the server, 
+    /// This may lead to operations being performed in the security context of the server,
     /// potentially leading to security vulnerabilities.
     /// </remarks>
     public class ImpersonationHandle : IDisposable
@@ -27,7 +23,7 @@ namespace NSspi.Contexts
         /// Initializes a new instance of the ImpersonationHandle. Does not perform impersonation.
         /// </summary>
         /// <param name="server">The server context that is performing impersonation.</param>
-        internal ImpersonationHandle(ServerContext server)
+        internal ImpersonationHandle( ServerContext server )
         {
             this.server = server;
             this.disposed = false;
@@ -54,6 +50,5 @@ namespace NSspi.Contexts
                 this.server.RevertImpersonate();
             }
         }
-
     }
 }

@@ -1,29 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Contexts
 {
     /// <summary>
-    /// Defines options for creating a security context via win32 InitializeSecurityContext 
+    /// Defines options for creating a security context via win32 InitializeSecurityContext
     /// (used by clients) and AcceptSecurityContext (used by servers).
     /// Required attribute flags are specified when creating the context. InitializeSecurityContext
-    /// and AcceptSecurityContext returns a value indicating what final attributes the created context 
+    /// and AcceptSecurityContext returns a value indicating what final attributes the created context
     /// actually has.
     /// </summary>
     [Flags]
-    public enum ContextAttrib : int 
+    public enum ContextAttrib : int
     {
         /// <summary>
         /// No additional attributes are provided.
         /// </summary>
         Zero = 0,
-        
+
         /// <summary>
         /// The server can use the context to authenticate to other servers as the client. The
-        /// MutualAuth flag must be set for this flag to work. Valid for Kerberos. Ignore this flag for 
+        /// MutualAuth flag must be set for this flag to work. Valid for Kerberos. Ignore this flag for
         /// constrained delegation.
         /// </summary>
         Delegate = 0x00000001,
@@ -36,17 +32,16 @@ namespace NSspi.Contexts
         /// </summary>
         MutualAuth = 0x00000002,
 
-
         /// <summary>
-        /// Detect replayed messages that have been encoded by using the EncryptMessage or MakeSignature 
+        /// Detect replayed messages that have been encoded by using the EncryptMessage or MakeSignature
         /// message support functionality.
         /// </summary>
         ReplayDetect = 0x00000004,
 
         /// <summary>
-        /// Detect messages received out of sequence when using the message support functionality. 
-        /// This flag implies all of the conditions specified by the Integrity flag - out-of-order sequence 
-        /// detection can only be trusted if the integrity of any underlying sequence detection mechanism 
+        /// Detect messages received out of sequence when using the message support functionality.
+        /// This flag implies all of the conditions specified by the Integrity flag - out-of-order sequence
+        /// detection can only be trusted if the integrity of any underlying sequence detection mechanism
         /// in transmitted data can be trusted.
         /// </summary>
         SequenceDetect = 0x00000008,
@@ -55,12 +50,12 @@ namespace NSspi.Contexts
         // Confidentiality is supported for NTLM with Microsoft
         // Windows NT version 4.0, SP4 and later and with the
         // Kerberos protocol in Microsoft Windows 2000 and later.
-        
+
         /// <summary>
         /// The context must protect data while in transit. Encrypt messages by using the EncryptMessage function.
         /// </summary>
         Confidentiality = 0x00000010,
-        
+
         /// <summary>
         /// A new session key must be negotiated.
         /// This value is supported only by the Kerberos security package.
@@ -68,13 +63,13 @@ namespace NSspi.Contexts
         UseSessionKey = 0x00000020,
 
         /// <summary>
-        /// The security package allocates output buffers for you. Buffers allocated by the security package have 
+        /// The security package allocates output buffers for you. Buffers allocated by the security package have
         /// to be released by the context memory management functions.
         /// </summary>
         AllocateMemory = 0x00000100,
 
         /// <summary>
-        /// The security context will not handle formatting messages. This value is the default for the Kerberos, 
+        /// The security context will not handle formatting messages. This value is the default for the Kerberos,
         /// Negotiate, and NTLM security packages.
         /// </summary>
         Connection = 0x00000800,
@@ -84,7 +79,7 @@ namespace NSspi.Contexts
         /// </summary>
         /// <remarks>
         /// A client specifies InitExtendedError in InitializeSecurityContext
-        /// and the server specifies AcceptExtendedError in AcceptSecurityContext. 
+        /// and the server specifies AcceptExtendedError in AcceptSecurityContext.
         /// </remarks>
         InitExtendedError = 0x00004000,
 
@@ -93,7 +88,7 @@ namespace NSspi.Contexts
         /// </summary>
         /// <remarks>
         /// A client specifies InitExtendedError in InitializeSecurityContext
-        /// and the server specifies AcceptExtendedError in AcceptSecurityContext. 
+        /// and the server specifies AcceptExtendedError in AcceptSecurityContext.
         /// </remarks>
         AcceptExtendedError = 0x00008000,
 
@@ -112,7 +107,7 @@ namespace NSspi.Contexts
         /// Replayed and out-of-sequence messages will not be detected with the setting of this attribute.
         /// Set ReplayDetect and SequenceDetect also if these behaviors are desired.
         /// </summary>
-        InitIntegrity = 0x00010000, 
+        InitIntegrity = 0x00010000,
 
         /// <summary>
         /// Sign messages and verify signatures by using the EncryptMessage and MakeSignature functions.

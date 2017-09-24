@@ -35,18 +35,17 @@ namespace NSspi
 
                 Console.Out.WriteLine( clientCred.PrincipleName );
 
-                client = new ClientContext( 
-                    clientCred, 
-                    serverCred.PrincipleName, 
-                    ContextAttrib.MutualAuth | 
+                client = new ClientContext(
+                    clientCred,
+                    serverCred.PrincipleName,
+                    ContextAttrib.MutualAuth |
                     ContextAttrib.InitIdentify |
                     ContextAttrib.Confidentiality |
                     ContextAttrib.ReplayDetect |
-                    ContextAttrib.SequenceDetect | 
+                    ContextAttrib.SequenceDetect |
                     ContextAttrib.Connection |
                     ContextAttrib.Delegate
                 );
-
 
                 server = new ServerContext(
                     serverCred,
@@ -64,17 +63,16 @@ namespace NSspi
 
                 clientStatus = client.Init( serverToken, out clientToken );
 
-                while ( true )
+                while( true )
                 {
                     serverStatus = server.AcceptToken( clientToken, out serverToken );
 
-                    if ( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
+                    if( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
 
                     clientStatus = client.Init( serverToken, out clientToken );
 
-                    if ( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
+                    if( serverStatus != SecurityStatus.ContinueNeeded && clientStatus != SecurityStatus.ContinueNeeded ) { break; }
                 }
-
 
                 Console.Out.WriteLine( "Server authority: " + server.AuthorityName );
                 Console.Out.WriteLine( "Server context user: " + server.ContextUserName );
@@ -102,7 +100,7 @@ namespace NSspi
                     throw new Exception();
                 }
 
-                for( int i= 0; i < plainText.Length; i++ )
+                for( int i = 0; i < plainText.Length; i++ )
                 {
                     if( plainText[i] != roundTripPlaintext[i] )
                     {
@@ -117,25 +115,23 @@ namespace NSspi
                     throw new Exception();
                 }
 
-
                 using( server.ImpersonateClient() )
                 {
-
                 }
 
                 cipherText = client.MakeSignature( plainText );
 
                 bool goodSig = server.VerifySignature( cipherText, out roundTripPlaintext );
 
-                if ( goodSig == false ||
+                if( goodSig == false ||
                      roundTripPlaintext.Length != plainText.Length )
                 {
                     throw new Exception();
                 }
-                
-                for ( int i = 0; i < plainText.Length; i++ )
+
+                for( int i = 0; i < plainText.Length; i++ )
                 {
-                    if ( plainText[i] != roundTripPlaintext[i] )
+                    if( plainText[i] != roundTripPlaintext[i] )
                     {
                         throw new Exception();
                     }
@@ -145,12 +141,12 @@ namespace NSspi
             }
             finally
             {
-                if ( server != null )
+                if( server != null )
                 {
                     server.Dispose();
                 }
 
-                if ( client != null )
+                if( client != null )
                 {
                     client.Dispose();
                 }
@@ -160,7 +156,7 @@ namespace NSspi
                     clientCred.Dispose();
                 }
 
-                if ( serverCred != null )
+                if( serverCred != null )
                 {
                     serverCred.Dispose();
                 }

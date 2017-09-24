@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestProtocol;
 
@@ -37,13 +31,13 @@ namespace TestServer
 
             this.serverCred = new ServerCredential( PackageNames.Negotiate );
 
-            this.serverContext = new ServerContext( 
+            this.serverContext = new ServerContext(
                 serverCred,
-                ContextAttrib.AcceptIntegrity | 
-                ContextAttrib.ReplayDetect | 
-                ContextAttrib.SequenceDetect | 
-                ContextAttrib.MutualAuth | 
-                ContextAttrib.Delegate | 
+                ContextAttrib.AcceptIntegrity |
+                ContextAttrib.ReplayDetect |
+                ContextAttrib.SequenceDetect |
+                ContextAttrib.MutualAuth |
+                ContextAttrib.Delegate |
                 ContextAttrib.Confidentiality
             );
 
@@ -129,11 +123,11 @@ namespace TestServer
             {
                 MessageBox.Show( "Starting impersonation: " + Environment.UserName );
 
-                FileStream stream = File.Create( Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory) + @"\test.txt" );
+                FileStream stream = File.Create( Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory ) + @"\test.txt" );
                 StreamWriter writer = new StreamWriter( stream, Encoding.UTF8 );
 
                 writer.WriteLine( "Hello world." );
-                
+
                 writer.Close();
                 stream.Close();
             }
@@ -149,7 +143,6 @@ namespace TestServer
             this.encryptButton.Enabled = this.connected;
             this.signButton.Enabled = this.connected;
         }
-
 
         private void server_Received( Message message )
         {
@@ -177,7 +170,6 @@ namespace TestServer
             this.initializing = true;
             this.connected = false;
 
-
             this.serverContext.Dispose();
             this.serverContext = new ServerContext(
                 serverCred,
@@ -189,13 +181,12 @@ namespace TestServer
                 ContextAttrib.Confidentiality
             );
 
-            this.BeginInvoke( (Action)delegate() 
+            this.BeginInvoke( (Action)delegate ()
             {
                 UpdateButtons();
                 this.clientUsernameTextBox.Text = "";
-            });
+            } );
         }
-
 
         private void HandleInit( Message message )
         {
@@ -218,8 +209,8 @@ namespace TestServer
                         this.initializing = false;
                         this.connected = true;
 
-                        this.Invoke( (Action)delegate() 
-                        { 
+                        this.Invoke( (Action)delegate ()
+                        {
                             UpdateButtons();
                             this.clientUsernameTextBox.Text = serverContext.ContextUserName;
                         } );
@@ -227,29 +218,28 @@ namespace TestServer
                 }
                 else
                 {
-                    this.Invoke( (Action)delegate() 
+                    this.Invoke( (Action)delegate ()
                     {
                         MessageBox.Show( "Failed to accept token from client. Sspi error code: " + status );
                     } );
                 }
-
             }
         }
 
         private void HandleEncrypted( Message message )
         {
-            this.Invoke( (Action)delegate()
+            this.Invoke( (Action)delegate ()
             {
                 byte[] plainText = this.serverContext.Decrypt( message.Data );
                 string text = Encoding.UTF8.GetString( plainText );
-                
+
                 this.receivedTextbox.Text += "Received encrypted message from client:\r\n" + text + "\r\n";
             } );
         }
 
         private void HandleSigned( Message message )
         {
-            this.Invoke( (Action)delegate()
+            this.Invoke( (Action)delegate ()
             {
                 byte[] plainText;
 
@@ -268,11 +258,10 @@ namespace TestServer
 
         private void HandleUnknown( Message message )
         {
-            this.Invoke( (Action)delegate()
+            this.Invoke( (Action)delegate ()
             {
                 MessageBox.Show( "Received unexpected message from server. Message type: " + message.Operation );
             } );
         }
-
     }
 }

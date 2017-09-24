@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NSspi;
 
@@ -13,7 +9,7 @@ namespace TestProtocol
     public class CustomConnection
     {
         private Thread receiveThread;
-        
+
         private Socket socket;
 
         private bool running;
@@ -24,7 +20,7 @@ namespace TestProtocol
         }
 
         public delegate void ReceivedAction( Message message );
-        
+
         public event ReceivedAction Received;
 
         public event Action Disconnected;
@@ -33,7 +29,7 @@ namespace TestProtocol
         {
             if( this.running )
             {
-                throw new InvalidOperationException("Already running");
+                throw new InvalidOperationException( "Already running" );
             }
 
             this.socket = new Socket( AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp );
@@ -65,7 +61,7 @@ namespace TestProtocol
                 throw new InvalidOperationException( "Not connected" );
             }
 
-            byte[] outBuffer = new byte[ message.Data.Length + 8 ];
+            byte[] outBuffer = new byte[message.Data.Length + 8];
             int position = 0;
 
             ByteWriter.WriteInt32_BE( (int)message.Operation, outBuffer, position );
@@ -124,16 +120,15 @@ namespace TestProtocol
                     //                          |--4 bytes--|--4 bytes--|---N--|
                     // Every command is a TLV - | Operation |  Length   | Data |
 
-
                     // Read the operation.
                     this.socket.Receive( readBuffer, 4, SocketFlags.None );
 
                     // Check if we popped out of a receive call after we were shut down.
                     if( this.running == false ) { break; }
-                    
+
                     operation = (ProtocolOp)ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
-                    // Read the length 
+                    // Read the length
                     this.socket.Receive( readBuffer, 4, SocketFlags.None );
                     messageLength = ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
@@ -153,14 +148,13 @@ namespace TestProtocol
                         remaining -= chunkLength;
                         position += chunkLength;
                     }
-
                 }
                 catch( SocketException e )
                 {
                     if( e.SocketErrorCode == SocketError.ConnectionAborted ||
                         e.SocketErrorCode == SocketError.Interrupted ||
                         e.SocketErrorCode == SocketError.OperationAborted ||
-                        e.SocketErrorCode == SocketError.Shutdown || 
+                        e.SocketErrorCode == SocketError.Shutdown ||
                         e.SocketErrorCode == SocketError.ConnectionReset )
                     {
                         // Shutting down.
@@ -179,7 +173,7 @@ namespace TestProtocol
                     byte[] dataCopy = new byte[messageLength];
                     Array.Copy( readBuffer, 0, dataCopy, 0, messageLength );
                     Message message = new Message( operation, dataCopy );
-                 
+
                     try
                     {
                         this.Received( message );
@@ -187,7 +181,6 @@ namespace TestProtocol
                     catch( Exception e )
                     { }
                 }
-                
             }
         }
     }

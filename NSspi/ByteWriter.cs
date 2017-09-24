@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi
 {
@@ -13,7 +8,7 @@ namespace NSspi
     public static class ByteWriter
     {
         // Big endian: Most significant byte at lowest address in memory.
-        
+
         /// <summary>
         /// Writes a 2-byte signed integer to the buffer in big-endian format.
         /// </summary>
@@ -37,8 +32,7 @@ namespace NSspi
             buffer[position + 0] = (byte)( value >> 24 );
             buffer[position + 1] = (byte)( value >> 16 );
             buffer[position + 2] = (byte)( value >> 8 );
-            buffer[position + 3] = (byte)( value);
-
+            buffer[position + 3] = (byte)( value );
         }
 
         /// <summary>

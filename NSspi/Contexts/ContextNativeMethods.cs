@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using NSspi.Buffers;
-using NSspi.Contexts;
 
 namespace NSspi.Contexts
 {
@@ -28,7 +23,7 @@ namespace NSspi.Contexts
           _Out_        PULONG pfContextAttr,
           _Out_opt_    PTimeStamp ptsTimeStamp
         );
-         
+
         SECURITY_STATUS SEC_Entry InitializeSecurityContext(
           _In_opt_     PCredHandle phCredential,                // [in] handle to the credentials
           _In_opt_     PCtxtHandle phContext,                   // [in/out] handle of partially formed context. Always NULL the first time through
@@ -45,7 +40,7 @@ namespace NSspi.Contexts
         );
         */
 
-        [DllImport("Secur32.dll", EntryPoint = "AcceptSecurityContext", CharSet = CharSet.Unicode)]
+        [DllImport( "Secur32.dll", EntryPoint = "AcceptSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus AcceptSecurityContext_1(
             ref RawSspiHandle credHandle,
             IntPtr oldContextHandle,
@@ -58,8 +53,7 @@ namespace NSspi.Contexts
             ref TimeStamp expiry
         );
 
-
-        [DllImport("Secur32.dll", EntryPoint = "AcceptSecurityContext", CharSet = CharSet.Unicode)]
+        [DllImport( "Secur32.dll", EntryPoint = "AcceptSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus AcceptSecurityContext_2(
             ref RawSspiHandle credHandle,
             ref RawSspiHandle oldContextHandle,
@@ -72,8 +66,7 @@ namespace NSspi.Contexts
             ref TimeStamp expiry
         );
 
-
-        [DllImport("Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode)]
+        [DllImport( "Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus InitializeSecurityContext_1(
             ref RawSspiHandle credentialHandle,
             IntPtr zero,
@@ -89,8 +82,7 @@ namespace NSspi.Contexts
             ref TimeStamp expiry
         );
 
-
-        [DllImport("Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode)]
+        [DllImport( "Secur32.dll", EntryPoint = "InitializeSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus InitializeSecurityContext_2(
             ref RawSspiHandle credentialHandle,
             ref RawSspiHandle previousHandle,
@@ -106,13 +98,12 @@ namespace NSspi.Contexts
             ref TimeStamp expiry
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "DeleteSecurityContext", CharSet = CharSet.Unicode)]
-        internal static extern SecurityStatus DeleteSecurityContext(ref RawSspiHandle contextHandle);
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "DeleteSecurityContext", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
-
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        [DllImport("Secur32.dll", EntryPoint = "EncryptMessage", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "EncryptMessage", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus EncryptMessage(
             ref RawSspiHandle contextHandle,
             int qualityOfProtection,
@@ -120,8 +111,8 @@ namespace NSspi.Contexts
             int sequenceNumber
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        [DllImport("Secur32.dll", EntryPoint = "DecryptMessage", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "DecryptMessage", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus DecryptMessage(
             ref RawSspiHandle contextHandle,
             IntPtr bufferDescriptor,
@@ -129,8 +120,8 @@ namespace NSspi.Contexts
             int qualityOfProtection
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        [DllImport("Secur32.dll", EntryPoint = "MakeSignature", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "MakeSignature", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus MakeSignature(
             ref RawSspiHandle contextHandle,
             int qualityOfProtection,
@@ -138,8 +129,8 @@ namespace NSspi.Contexts
             int sequenceNumber
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        [DllImport("Secur32.dll", EntryPoint = "VerifySignature", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
+        [DllImport( "Secur32.dll", EntryPoint = "VerifySignature", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus VerifySignature(
             ref RawSspiHandle contextHandle,
             IntPtr bufferDescriptor,
@@ -147,45 +138,44 @@ namespace NSspi.Contexts
             int qualityOfProtection
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus QueryContextAttributes_Sizes(
             ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_Sizes sizes
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus QueryContextAttributes_String(
             ref RawSspiHandle contextHandle,
             ContextQueryAttrib attrib,
             ref SecPkgContext_String names
         );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "QueryContextAttributes", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus QueryContextAttributes(
            ref RawSspiHandle contextHandle,
            ContextQueryAttrib attrib,
            IntPtr attribute
        );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode)]
-        internal static extern SecurityStatus FreeContextBuffer(IntPtr handle);
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "FreeContextBuffer", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus FreeContextBuffer( IntPtr handle );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "ImpersonateSecurityContext", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus ImpersonateSecurityContext( ref RawSspiHandle contextHandle );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "ImpersonateSecurityContext", CharSet = CharSet.Unicode)]
-        internal static extern SecurityStatus ImpersonateSecurityContext(ref RawSspiHandle contextHandle);
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "RevertSecurityContext", CharSet = CharSet.Unicode )]
+        internal static extern SecurityStatus RevertSecurityContext( ref RawSspiHandle contextHandle );
 
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        [DllImport("Secur32.dll", EntryPoint = "RevertSecurityContext", CharSet = CharSet.Unicode)]
-        internal static extern SecurityStatus RevertSecurityContext(ref RawSspiHandle contextHandle);
-
-        [StructLayout(LayoutKind.Sequential)]
-        class KeyStruct
+        [StructLayout( LayoutKind.Sequential )]
+        private class KeyStruct
         {
             public int size;
             public IntPtr data;
@@ -202,18 +192,17 @@ namespace NSspi.Contexts
             SecurityStatus status = SecurityStatus.InternalError;
             RuntimeHelpers.PrepareConstrainedRegions();
 
-
             int pointerSize = System.Environment.Is64BitOperatingSystem ? 8 : 4; //NOTE: update this when 128 bit processors exist
-            IntPtr alloc_buffer = Marshal.AllocHGlobal(sizeof(uint) + pointerSize); //NOTE: this is at most 4 + sizeof(void*) bytes
-                                                                                    //see struct SecPkgContext_SessionKey
-                                                                                    // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380096(v=vs.85).aspx
+            IntPtr alloc_buffer = Marshal.AllocHGlobal( sizeof( uint ) + pointerSize ); //NOTE: this is at most 4 + sizeof(void*) bytes
+                                                                                        //see struct SecPkgContext_SessionKey
+                                                                                        // https://msdn.microsoft.com/en-us/library/windows/desktop/aa380096(v=vs.85).aspx
             try
             {
-                handle.DangerousAddRef(ref gotRef);
+                handle.DangerousAddRef( ref gotRef );
             }
-            catch (Exception)
+            catch( Exception )
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     handle.DangerousRelease();
                     gotRef = false;
@@ -224,37 +213,35 @@ namespace NSspi.Contexts
             }
             finally
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     status = ContextNativeMethods.QueryContextAttributes(
                         ref handle.rawHandle,
                         attribute,
                         alloc_buffer
                     );
-                    if (status == SecurityStatus.OK)
+                    if( status == SecurityStatus.OK )
                     {
                         KeyStruct key = new KeyStruct();
 
-                        Marshal.PtrToStructure(alloc_buffer, key); // fit to the proper size, read a byte[]
+                        Marshal.PtrToStructure( alloc_buffer, key ); // fit to the proper size, read a byte[]
 
                         byte[] sizedBuffer = new byte[key.size];
 
-                        for (int i = 0; i < key.size; i++)
-                            sizedBuffer[i] = Marshal.ReadByte(key.data, i);
+                        for( int i = 0; i < key.size; i++ )
+                            sizedBuffer[i] = Marshal.ReadByte( key.data, i );
 
                         buffer = sizedBuffer;
                     }
                     handle.DangerousRelease();
                 }
             }
-            Marshal.FreeHGlobal(alloc_buffer);
+            Marshal.FreeHGlobal( alloc_buffer );
             return status;
         }
 
-
-
         /// <summary>
-        /// Safely invokes the native EncryptMessage function, making sure that handle ref counting is 
+        /// Safely invokes the native EncryptMessage function, making sure that handle ref counting is
         /// performed in a proper CER.
         /// </summary>
         /// <param name="handle"></param>
@@ -266,7 +253,7 @@ namespace NSspi.Contexts
             SafeContextHandle handle,
             int qualityOfProtection,
             SecureBufferAdapter bufferAdapter,
-            int sequenceNumber)
+            int sequenceNumber )
         {
             SecurityStatus status = SecurityStatus.InternalError;
             bool gotRef = false;
@@ -274,11 +261,11 @@ namespace NSspi.Contexts
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
-                handle.DangerousAddRef(ref gotRef);
+                handle.DangerousAddRef( ref gotRef );
             }
-            catch (Exception)
+            catch( Exception )
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     handle.DangerousRelease();
                     gotRef = false;
@@ -288,7 +275,7 @@ namespace NSspi.Contexts
             }
             finally
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     status = ContextNativeMethods.EncryptMessage(
                         ref handle.rawHandle,
@@ -305,7 +292,7 @@ namespace NSspi.Contexts
         }
 
         /// <summary>
-        /// Safely invokes the native DecryptMessage function, making sure that handle ref counting is 
+        /// Safely invokes the native DecryptMessage function, making sure that handle ref counting is
         /// performed in a proper CER.
         /// </summary>
         /// <param name="handle"></param>
@@ -317,7 +304,7 @@ namespace NSspi.Contexts
             SafeContextHandle handle,
             int qualityOfProtection,
             SecureBufferAdapter bufferAdapter,
-            int sequenceNumber)
+            int sequenceNumber )
         {
             SecurityStatus status = SecurityStatus.InvalidHandle;
             bool gotRef = false;
@@ -325,11 +312,11 @@ namespace NSspi.Contexts
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
-                handle.DangerousAddRef(ref gotRef);
+                handle.DangerousAddRef( ref gotRef );
             }
-            catch (Exception)
+            catch( Exception )
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     handle.DangerousRelease();
                     gotRef = false;
@@ -339,7 +326,7 @@ namespace NSspi.Contexts
             }
             finally
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     status = ContextNativeMethods.DecryptMessage(
                         ref handle.rawHandle,
@@ -356,7 +343,7 @@ namespace NSspi.Contexts
         }
 
         /// <summary>
-        /// Safely invokes the native MakeSignature function, making sure that handle ref counting is 
+        /// Safely invokes the native MakeSignature function, making sure that handle ref counting is
         /// performed in a proper CER.
         /// </summary>
         /// <param name="handle"></param>
@@ -368,7 +355,7 @@ namespace NSspi.Contexts
             SafeContextHandle handle,
             int qualityOfProtection,
             SecureBufferAdapter adapter,
-            int sequenceNumber)
+            int sequenceNumber )
         {
             bool gotRef = false;
             SecurityStatus status = SecurityStatus.InternalError;
@@ -376,11 +363,11 @@ namespace NSspi.Contexts
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
-                handle.DangerousAddRef(ref gotRef);
+                handle.DangerousAddRef( ref gotRef );
             }
-            catch (Exception)
+            catch( Exception )
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     handle.DangerousRelease();
                     gotRef = false;
@@ -390,7 +377,7 @@ namespace NSspi.Contexts
             }
             finally
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     status = ContextNativeMethods.MakeSignature(
                         ref handle.rawHandle,
@@ -407,7 +394,7 @@ namespace NSspi.Contexts
         }
 
         /// <summary>
-        /// Safely invokes the native VerifySignature function, making sure that handle ref counting is 
+        /// Safely invokes the native VerifySignature function, making sure that handle ref counting is
         /// performed in a proper CER.
         /// </summary>
         /// <param name="handle"></param>
@@ -419,7 +406,7 @@ namespace NSspi.Contexts
             SafeContextHandle handle,
             int qualityOfProtection,
             SecureBufferAdapter adapter,
-            int sequenceNumber)
+            int sequenceNumber )
         {
             bool gotRef = false;
             SecurityStatus status = SecurityStatus.InternalError;
@@ -427,11 +414,11 @@ namespace NSspi.Contexts
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
-                handle.DangerousAddRef(ref gotRef);
+                handle.DangerousAddRef( ref gotRef );
             }
-            catch (Exception)
+            catch( Exception )
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     handle.DangerousRelease();
                     gotRef = false;
@@ -441,7 +428,7 @@ namespace NSspi.Contexts
             }
             finally
             {
-                if (gotRef)
+                if( gotRef )
                 {
                     status = ContextNativeMethods.VerifySignature(
                         ref handle.rawHandle,

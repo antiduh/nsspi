@@ -159,7 +159,7 @@ namespace TestProtocol
 
                     operation = (ProtocolOp)ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
-                    // Read the length 
+                    // Read the length
                     this.readSocket.Receive( readBuffer, 4, SocketFlags.None );
                     messageLength = ByteWriter.ReadInt32_BE( readBuffer, 0 );
 
@@ -212,7 +212,6 @@ namespace TestProtocol
                     catch( Exception )
                     { }
                 }
-
             }
 
             try
@@ -225,5 +224,4 @@ namespace TestProtocol
             catch { }
         }
     }
-
 }

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using NSspi.Buffers;
 using NSspi.Credentials;
 
@@ -14,7 +9,7 @@ namespace NSspi.Contexts
     /// with the server and to encrypt, decrypt, sign and verify messages to and from the server.
     /// </summary>
     /// <remarks>
-    /// A client and server establish a shared security context by exchanging authentication tokens. Once 
+    /// A client and server establish a shared security context by exchanging authentication tokens. Once
     /// the shared context is established, the client and server can pass messages to each other, encrypted,
     /// signed, etc, using the established parameters of the shared context.
     /// </remarks>
@@ -47,11 +42,11 @@ namespace NSspi.Contexts
         /// This method is performed iteratively to start, continue, and end the authentication cycle with the
         /// server. Each stage works by acquiring a token from one side, presenting it to the other side
         /// which in turn may generate a new token.
-        /// 
+        ///
         /// The cycle typically starts and ends with the client. On the first invocation on the client,
         /// no server token exists, and null is provided in its place. The client returns its status, providing
-        /// its output token for the server. The server accepts the clients token as input and provides a 
-        /// token as output to send back to the client. This cycle continues until the server and client 
+        /// its output token for the server. The server accepts the clients token as input and provides a
+        /// token as output to send back to the client. This cycle continues until the server and client
         /// both indicate, typically, a SecurityStatus of 'OK'.
         /// </remarks>
         /// <param name="serverToken">The most recently received token from the server, or null if beginning
@@ -60,7 +55,7 @@ namespace NSspi.Contexts
         /// <returns>A status message indicating the progression of the authentication cycle.
         /// A status of 'OK' indicates that the cycle is complete, from the client's perspective. If the outToken
         /// is not null, it must be sent to the server.
-        /// A status of 'Continue' indicates that the output token should be sent to the server and 
+        /// A status of 'Continue' indicates that the output token should be sent to the server and
         /// a response should be anticipated.</returns>
         public SecurityStatus Init( byte[] serverToken, out byte[] outToken )
         {
@@ -73,7 +68,7 @@ namespace NSspi.Contexts
 
             SecureBuffer serverBuffer;
             SecureBufferAdapter serverAdapter;
-            
+
             if( this.Disposed )
             {
                 throw new ObjectDisposedException( "ClientContext" );
@@ -86,24 +81,24 @@ namespace NSspi.Contexts
             {
                 throw new InvalidOperationException( "Must provide the server's response when continuing the init process." );
             }
-            
+
             // The security package tells us how big its biggest token will be. We'll allocate a buffer
             // that size, and it'll tell us how much it used.
-            outTokenBuffer = new SecureBuffer( 
-                new byte[ this.Credential.PackageInfo.MaxTokenLength ], 
-                BufferType.Token 
+            outTokenBuffer = new SecureBuffer(
+                new byte[this.Credential.PackageInfo.MaxTokenLength],
+                BufferType.Token
             );
 
             serverBuffer = null;
-            if ( serverToken != null )
+            if( serverToken != null )
             {
                 serverBuffer = new SecureBuffer( serverToken, BufferType.Token );
             }
 
             // Some notes on handles and invoking InitializeSecurityContext
-            //  - The first time around, the phContext parameter (the 'old' handle) is a null pointer to what 
-            //    would be an RawSspiHandle, to indicate this is the first time it's being called. 
-            //    The phNewContext is a pointer (reference) to an RawSspiHandle struct of where to write the 
+            //  - The first time around, the phContext parameter (the 'old' handle) is a null pointer to what
+            //    would be an RawSspiHandle, to indicate this is the first time it's being called.
+            //    The phNewContext is a pointer (reference) to an RawSspiHandle struct of where to write the
             //    new handle's values.
             //  - The next time you invoke ISC, it takes a pointer to the handle it gave you last time in phContext,
             //    and takes a pointer to where it should write the new handle's values in phNewContext.
@@ -111,13 +106,13 @@ namespace NSspi.Contexts
             //       "On the second call, phNewContext can be the same as the handle specified in the phContext
             //        parameter."
             //    It will overwrite the handle you gave it with the new handle value.
-            //  - All handle structures themselves are actually *two* pointer variables, eg, 64 bits on 32-bit 
+            //  - All handle structures themselves are actually *two* pointer variables, eg, 64 bits on 32-bit
             //    Windows, 128 bits on 64-bit Windows.
             //  - So in the end, on a 64-bit machine, we're passing a 64-bit value (the pointer to the struct) that
             //    points to 128 bits of memory (the struct itself) for where to write the handle numbers.
-            using ( outAdapter = new SecureBufferAdapter( outTokenBuffer ) )
+            using( outAdapter = new SecureBufferAdapter( outTokenBuffer ) )
             {
-                if ( this.ContextHandle.IsInvalid )
+                if( this.ContextHandle.IsInvalid )
                 {
                     status = ContextNativeMethods.InitializeSecurityContext_1(
                         ref this.Credential.Handle.rawHandle,
@@ -136,7 +131,7 @@ namespace NSspi.Contexts
                 }
                 else
                 {
-                    using ( serverAdapter = new SecureBufferAdapter( serverBuffer ) )
+                    using( serverAdapter = new SecureBufferAdapter( serverBuffer ) )
                     {
                         status = ContextNativeMethods.InitializeSecurityContext_2(
                             ref this.Credential.Handle.rawHandle,

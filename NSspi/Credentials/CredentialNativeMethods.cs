@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using NSspi.Credentials;
 
 namespace NSspi.Credentials
 {
     internal static class CredentialNativeMethods
     {
-        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail)]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "AcquireCredentialsHandle", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus AcquireCredentialsHandle(
             string principleName,
@@ -30,7 +25,6 @@ namespace NSspi.Credentials
         internal static extern SecurityStatus FreeCredentialsHandle(
             ref RawSspiHandle credentialHandle
         );
-
 
         /// <summary>
         /// The overload of the QueryCredentialsAttribute method that is used for querying the name attribute.

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi
 {
@@ -26,7 +22,7 @@ namespace NSspi
             this.message = message;
             this.errorCode = errorCode;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the SSPIException class from serialization data.
         /// </summary>
@@ -35,7 +31,7 @@ namespace NSspi
         protected SSPIException( SerializationInfo info, StreamingContext context )
             : base( info, context )
         {
-            this.message = info.GetString("message");
+            this.message = info.GetString( "message" );
             this.errorCode = (SecurityStatus)info.GetUInt32( "errorCode" );
         }
 
@@ -70,11 +66,11 @@ namespace NSspi
         {
             get
             {
-                return string.Format( 
-                    "{0}. Error Code = '0x{1:X}' - \"{2}\".", 
-                    this.message, 
-                    this.errorCode, 
-                    EnumMgr.ToText(this.errorCode) 
+                return string.Format(
+                    "{0}. Error Code = '0x{1:X}' - \"{2}\".",
+                    this.message,
+                    this.errorCode,
+                    EnumMgr.ToText( this.errorCode )
                 );
             }
         }

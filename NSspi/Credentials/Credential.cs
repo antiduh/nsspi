@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.AccountManagement;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using NSspi.Credentials;
 
 namespace NSspi.Credentials
 {
@@ -49,7 +42,7 @@ namespace NSspi.Credentials
 
             this.PackageInfo = PackageSupport.GetPackageCapabilities( this.SecurityPackage );
         }
-        
+
         /// <summary>
         /// Gets metadata for the security package associated with the credential.
         /// </summary>
@@ -151,7 +144,7 @@ namespace NSspi.Credentials
             protected set
             {
                 CheckLifecycle();
-                                
+
                 this.expiry = value;
             }
         }
@@ -187,9 +180,9 @@ namespace NSspi.Credentials
 
         protected virtual void Dispose( bool disposing )
         {
-            if ( this.disposed == false )
+            if( this.disposed == false )
             {
-                if ( disposing )
+                if( disposing )
                 {
                     this.safeCredHandle.Dispose();
                 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
@@ -37,10 +33,10 @@ namespace NSspi.Buffers
     /// </summary>
     /// <remarks>The buffer is translated into a SecureBufferInternal for the actual call.
     /// To keep the call setup code simple, and to centralize the buffer pinning code,
-    /// this class stores and returns buffers as regular byte arrays. The buffer 
+    /// this class stores and returns buffers as regular byte arrays. The buffer
     /// pinning support code in SecureBufferAdapter handles conversion to SecureBufferInternal
     /// for pass to the managed api, as well as pinning relevant chunks of memory.
-    /// 
+    ///
     /// Furthermore, the native API may not use the entire buffer, and so a mechanism
     /// is needed to communicate the usage of the buffer separate from the length
     /// of the buffer.</remarks>
@@ -50,7 +46,7 @@ namespace NSspi.Buffers
         /// Initializes a new instance of the SecureBuffer class.
         /// </summary>
         /// <param name="buffer">The buffer to wrap.</param>
-        /// <param name="type">The type or purpose of the buffer, for purposes of 
+        /// <param name="type">The type or purpose of the buffer, for purposes of
         /// invoking the native API.</param>
         public SecureBuffer( byte[] buffer, BufferType type )
         {

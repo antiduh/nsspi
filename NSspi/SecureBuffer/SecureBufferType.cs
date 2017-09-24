@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
@@ -38,7 +34,7 @@ namespace NSspi.Buffers
 
         /// <summary>
         /// The buffer passed to an API call contained more data than was necessary for completing the action,
-        /// such as the case when a streaming-mode connection that does not preserve message bounders, such as TCP 
+        /// such as the case when a streaming-mode connection that does not preserve message bounders, such as TCP
         /// is used as the transport. The extra data is returned back to the caller in a buffer of this type.
         /// </summary>
         Extra = 0x05,
@@ -57,7 +53,7 @@ namespace NSspi.Buffers
         Stream = 0x0A,
         ChannelBindings = 0x0E,
         TargetHost = 0x10,
-        ReadOnlyFlag = unchecked( (int)0x80000000 ),
+        ReadOnlyFlag = unchecked((int)0x80000000),
         ReadOnlyWithChecksum = 0x10000000
     }
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using NSspi.Buffers;
 using NSspi.Credentials;
 
@@ -25,7 +21,7 @@ namespace NSspi.Contexts
         /// </summary>
         /// <param name="cred"></param>
         /// <param name="requestedAttribs"></param>
-        public ServerContext(ServerCredential cred, ContextAttrib requestedAttribs) : base ( cred )
+        public ServerContext( ServerCredential cred, ContextAttrib requestedAttribs ) : base( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;
@@ -50,11 +46,11 @@ namespace NSspi.Contexts
         /// This method is performed iteratively to continue and end the authentication cycle with the
         /// client. Each stage works by acquiring a token from one side, presenting it to the other side
         /// which in turn may generate a new token.
-        /// 
+        ///
         /// The cycle typically starts and ends with the client. On the first invocation on the client,
         /// no server token exists, and null is provided in its place. The client returns its status, providing
-        /// its output token for the server. The server accepts the clients token as input and provides a 
-        /// token as output to send back to the client. This cycle continues until the server and client 
+        /// its output token for the server. The server accepts the clients token as input and provides a
+        /// token as output to send back to the client. This cycle continues until the server and client
         /// both indicate, typically, a SecurityStatus of 'OK'.
         /// </remarks>
         /// <param name="clientToken">The most recently received token from the client.</param>
@@ -63,7 +59,7 @@ namespace NSspi.Contexts
         /// <returns>A status message indicating the progression of the authentication cycle.
         /// A status of 'OK' indicates that the cycle is complete, from the servers's perspective. If the nextToken
         /// is not null, it must be sent to the client.
-        /// A status of 'Continue' indicates that the output token should be sent to the client and 
+        /// A status of 'Continue' indicates that the output token should be sent to the client and
         /// a response should be anticipated.</returns>
         public SecurityStatus AcceptToken( byte[] clientToken, out byte[] nextToken )
         {
@@ -82,21 +78,21 @@ namespace NSspi.Contexts
             }
             else if( this.Initialized )
             {
-                throw new InvalidOperationException( 
+                throw new InvalidOperationException(
                     "Attempted to continue initialization of a ServerContext after initialization had completed."
                 );
             }
 
             clientBuffer = new SecureBuffer( clientToken, BufferType.Token );
 
-            outBuffer = new SecureBuffer( 
-                new byte[ this.Credential.PackageInfo.MaxTokenLength ], 
-                BufferType.Token 
+            outBuffer = new SecureBuffer(
+                new byte[this.Credential.PackageInfo.MaxTokenLength],
+                BufferType.Token
             );
 
-            using ( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
+            using( clientAdapter = new SecureBufferAdapter( clientBuffer ) )
             {
-                using ( outAdapter = new SecureBufferAdapter( outBuffer ) )
+                using( outAdapter = new SecureBufferAdapter( outBuffer ) )
                 {
                     if( this.ContextHandle.IsInvalid )
                     {
@@ -125,19 +121,17 @@ namespace NSspi.Contexts
                             ref this.finalAttribs,
                             ref rawExpiry
                         );
-
-
                     }
                 }
             }
 
-            if ( status == SecurityStatus.OK )
+            if( status == SecurityStatus.OK )
             {
                 nextToken = null;
 
                 base.Initialize( rawExpiry.ToDateTime() );
 
-                if ( outBuffer.Length != 0 )
+                if( outBuffer.Length != 0 )
                 {
                     nextToken = new byte[outBuffer.Length];
                     Array.Copy( outBuffer.Buffer, nextToken, nextToken.Length );
@@ -147,7 +141,7 @@ namespace NSspi.Contexts
                     nextToken = null;
                 }
             }
-            else if ( status == SecurityStatus.ContinueNeeded )
+            else if( status == SecurityStatus.ContinueNeeded )
             {
                 nextToken = new byte[outBuffer.Length];
                 Array.Copy( outBuffer.Buffer, nextToken, nextToken.Length );
@@ -161,17 +155,17 @@ namespace NSspi.Contexts
         }
 
         /// <summary>
-        /// Changes the current thread's security context to impersonate the user of the client. 
+        /// Changes the current thread's security context to impersonate the user of the client.
         /// </summary>
         /// <remarks>
-        /// Requires that the security package provided with the server's credentials, as well as the 
+        /// Requires that the security package provided with the server's credentials, as well as the
         /// client's credentials, support impersonation.
-        /// 
-        /// Currently, only one thread may initiate impersonation per security context. Impersonation may 
+        ///
+        /// Currently, only one thread may initiate impersonation per security context. Impersonation may
         /// follow threads created by the initial impersonation thread, however.
         /// </remarks>
         /// <returns>A handle to capture the lifetime of the impersonation. Dispose the handle to revert
-        /// impersonation. If the handle is leaked, the impersonation will automatically revert at a 
+        /// impersonation. If the handle is leaked, the impersonation will automatically revert at a
         /// non-deterministic time when the handle is finalized by the Garbage Collector.</returns>
         public ImpersonationHandle ImpersonateClient()
         {
@@ -242,7 +236,7 @@ namespace NSspi.Contexts
             {
                 throw new SSPIException( "Failed to impersonate the client", status );
             }
-            
+
             return handle;
         }
 

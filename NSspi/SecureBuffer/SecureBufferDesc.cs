@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Buffers
 {
@@ -12,7 +7,7 @@ namespace NSspi.Buffers
     /// Represents the native layout of the secure buffer descriptor that is provided directly
     /// to native API calls.
     /// </summary>
-    [StructLayout( LayoutKind.Sequential)]
+    [StructLayout( LayoutKind.Sequential )]
     internal struct SecureBufferDescInternal
     {
         /// <summary>

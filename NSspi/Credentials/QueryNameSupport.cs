@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NSspi.Credentials
 {
@@ -14,7 +10,7 @@ namespace NSspi.Credentials
     internal struct QueryNameAttribCarrier
     {
         /// <summary>
-        /// A pointer to a null-terminated ascii-encoded containing the principle name 
+        /// A pointer to a null-terminated ascii-encoded containing the principle name
         /// associated with a credential
         /// </summary>
         public IntPtr Name;

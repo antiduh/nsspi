@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NSspi;
 using NSspi.Contexts;
@@ -53,11 +47,11 @@ namespace TestClient
             this.context = new ClientContext(
                 cred,
                 "",
-                ContextAttrib.InitIntegrity | 
-                ContextAttrib.ReplayDetect | 
-                ContextAttrib.SequenceDetect | 
-                ContextAttrib.MutualAuth | 
-                ContextAttrib.Delegate | 
+                ContextAttrib.InitIntegrity |
+                ContextAttrib.ReplayDetect |
+                ContextAttrib.SequenceDetect |
+                ContextAttrib.MutualAuth |
+                ContextAttrib.Delegate |
                 ContextAttrib.Confidentiality
             );
 
@@ -107,7 +101,6 @@ namespace TestClient
                         throw;
                     }
                 }
-
             }
         }
 
@@ -115,7 +108,6 @@ namespace TestClient
         {
             this.connection.Stop();
         }
-
 
         private void encryptButton_Click( object sender, EventArgs e )
         {
@@ -149,7 +141,7 @@ namespace TestClient
 
         private void connection_Received( Message message )
         {
-            this.Invoke( (Action)delegate()
+            this.Invoke( (Action)delegate ()
             {
                 if( message.Operation == ProtocolOp.ServerToken )
                 {
@@ -180,11 +172,11 @@ namespace TestClient
             this.initializing = false;
             this.lastServerToken = null;
 
-            this.BeginInvoke( (Action)delegate()
+            this.BeginInvoke( (Action)delegate ()
             {
                 this.context.Dispose();
-                this.context = new ClientContext( 
-                    this.cred, 
+                this.context = new ClientContext(
+                    this.cred,
                     "",
                     ContextAttrib.InitIntegrity |
                     ContextAttrib.ReplayDetect |
@@ -195,9 +187,9 @@ namespace TestClient
                 );
 
                 UpdateButtons();
-            });
+            } );
         }
-        
+
         private void DoInit()
         {
             SecurityStatus status;
