@@ -21,7 +21,7 @@ namespace NSspi.Contexts
         /// </summary>
         /// <param name="cred"></param>
         /// <param name="requestedAttribs"></param>
-        public ServerContext( ServerCredential cred, ContextAttrib requestedAttribs ) : base( cred )
+        public ServerContext( Credential cred, ContextAttrib requestedAttribs ) : base( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;

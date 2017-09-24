@@ -28,7 +28,7 @@ namespace NSspi.Contexts
         /// <param name="requestedAttribs">Requested attributes that describe the desired properties of the
         /// context once it is established. If a context cannot be established that satisfies the indicated
         /// properties, the context initialization is aborted.</param>
-        public ClientContext( ClientCredential cred, string serverPrinc, ContextAttrib requestedAttribs )
+        public ClientContext( Credential cred, string serverPrinc, ContextAttrib requestedAttribs )
             : base( cred )
         {
             this.serverPrinc = serverPrinc;
