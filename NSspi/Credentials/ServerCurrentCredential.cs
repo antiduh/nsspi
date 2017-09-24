@@ -3,7 +3,8 @@
 namespace NSspi.Credentials
 {
     /// <summary>
-    /// Represents the credentials of the user running the current process, for use as an SSPI server.
+    /// Represents a handle to the credentials of the user running the current process, to be used to
+    /// authenticate as a server.
     /// </summary>
     public class ServerCurrentCredential : CurrentCredential
     {
