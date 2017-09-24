@@ -14,7 +14,7 @@ namespace TestClient
     public partial class ClientForm : Form
     {
         private ClientContext context;
-        private ClientCredential cred;
+        private ClientCurrentCredential cred;
 
         private CustomConnection connection;
 
@@ -42,7 +42,7 @@ namespace TestClient
             this.FormClosing += Form1_FormClosing;
 
             // --- SSPI ---
-            this.cred = new ClientCredential( PackageNames.Negotiate );
+            this.cred = new ClientCurrentCredential( PackageNames.Negotiate );
 
             this.context = new ClientContext(
                 cred,

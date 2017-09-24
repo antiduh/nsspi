@@ -13,7 +13,7 @@ namespace TestServer
 
     public partial class ServerForm : Form
     {
-        private ServerCredential serverCred;
+        private ServerCurrentCredential serverCred;
 
         private ServerContext serverContext;
 
@@ -29,7 +29,7 @@ namespace TestServer
         {
             InitializeComponent();
 
-            this.serverCred = new ServerCredential( PackageNames.Negotiate );
+            this.serverCred = new ServerCurrentCredential( PackageNames.Negotiate );
 
             this.serverContext = new ServerContext(
                 serverCred,

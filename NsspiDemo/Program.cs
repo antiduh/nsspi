@@ -16,10 +16,10 @@ namespace NSspi
 
         private static void CredTest( string packageName )
         {
-            ClientCredential clientCred = null;
+            ClientCurrentCredential clientCred = null;
             ClientContext client = null;
 
-            ServerCredential serverCred = null;
+            ServerCurrentCredential serverCred = null;
             ServerContext server = null;
 
             byte[] clientToken;
@@ -30,8 +30,8 @@ namespace NSspi
 
             try
             {
-                clientCred = new ClientCredential( packageName );
-                serverCred = new ServerCredential( packageName );
+                clientCred = new ClientCurrentCredential( packageName );
+                serverCred = new ServerCurrentCredential( packageName );
 
                 Console.Out.WriteLine( clientCred.PrincipleName );
 
