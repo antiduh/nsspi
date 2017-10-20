@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>NSspi</id>
-        <version>0.1.3.0</version>
+        <version>0.2.0.0</version>
         <authors>Kevin Thompson</authors>
         <owners>Kevin Thompson</owners>
         <projectUrl>https://github.com/antiduh/nsspi</projectUrl>
@@ -12,7 +12,7 @@
             better known as Windows Integrated Authentication.
         </description>
         <language>C#</language>
-        <releaseNotes>First release of NSspi.</releaseNotes>
+        <releaseNotes>Adds support for username/password credentials, but introduces a minor change in the interface that breaks existing code.</releaseNotes>
         <copyright>Copyright 2017</copyright>
     </metadata>
 </package>
