@@ -1,9 +1,12 @@
 ## Downloads ##
 
-The latest release of NSspi is v0.1.3.
+The latest release of NSspi is v0.2.0. 
 
-* [Source](https://github.com/antiduh/nsspi/archive/0.1.3.zip)
-* [Binaries](https://github.com/antiduh/nsspi/releases/download/0.1.3/nsspi-0.1.3-bin.zip)
+Version 0.2.0 adds the ability to authenticate using provided username/password credentials.  
+**Please note** that v0.2.0 introduces a small change in the design that breaks backwards compatibility with previous verisons.
+
+* [Source](https://github.com/antiduh/nsspi/archive/0.2.0.zip)
+* [Binaries](https://github.com/antiduh/nsspi/releases/download/0.1.3/nsspi-0.2.0-bin.zip)
 * [Nuget package](https://www.nuget.org/packages/NSspi)
 
 You can also browse the list of [releases](https://github.com/antiduh/nsspi/releases).
