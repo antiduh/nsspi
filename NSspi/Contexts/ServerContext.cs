@@ -14,6 +14,7 @@ namespace NSspi.Contexts
         private ContextAttrib finalAttribs;
 
         private bool impersonating;
+        private bool setThreadIdentity;
 
         /// <summary>
         /// Performs basic initialization of a new instance of the ServerContext class. The ServerContext
@@ -21,12 +22,14 @@ namespace NSspi.Contexts
         /// </summary>
         /// <param name="cred"></param>
         /// <param name="requestedAttribs"></param>
-        public ServerContext( Credential cred, ContextAttrib requestedAttribs ) : base( cred )
+        /// <param name="setThreadIdentity">True to automatically set the thread identity while impersonating</param>
+        public ServerContext( Credential cred, ContextAttrib requestedAttribs, bool setThreadIdentity = false ) : base( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;
 
             this.impersonating = false;
+            this.setThreadIdentity = setThreadIdentity;
 
             this.SupportsImpersonate = this.Credential.PackageInfo.Capabilities.HasFlag( SecPkgCapability.Impersonation );
         }
@@ -235,6 +238,11 @@ namespace NSspi.Contexts
             else if( status != SecurityStatus.OK )
             {
                 throw new SSPIException( "Failed to impersonate the client", status );
+            }
+
+            if ( this.impersonating && this.setThreadIdentity )
+            {
+                handle.SetThreadIdentity();
             }
 
             return handle;
