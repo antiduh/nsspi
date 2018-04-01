@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Principal;
+using System.Threading;
 
 namespace NSspi.Contexts
 {

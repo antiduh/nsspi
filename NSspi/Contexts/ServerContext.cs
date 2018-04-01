@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
+using System.Threading;
 using NSspi.Buffers;
 using NSspi.Credentials;
 
@@ -14,19 +16,25 @@ namespace NSspi.Contexts
         private ContextAttrib finalAttribs;
 
         private bool impersonating;
+        private bool impersonationSetsThreadPrinciple;
 
         /// <summary>
-        /// Performs basic initialization of a new instance of the ServerContext class. The ServerContext
-        /// is not ready for message manipulation until a security context has been established with a client.
+        /// Performs basic initialization of a new instance of the ServerContext class. The
+        /// ServerContext is not ready for message manipulation until a security context has been
+        /// established with a client.
         /// </summary>
         /// <param name="cred"></param>
         /// <param name="requestedAttribs"></param>
-        public ServerContext( Credential cred, ContextAttrib requestedAttribs ) : base( cred )
+        /// <param name="impersonationSetsThreadPrinciple">
+        /// If true, the `Thread.CurrentPrinciple` property will be modified by successful impersonation.
+        /// </param>
+        public ServerContext( Credential cred, ContextAttrib requestedAttribs, bool impersonationSetsThreadPrinciple = false ) : base( cred )
         {
             this.requestedAttribs = requestedAttribs;
             this.finalAttribs = ContextAttrib.Zero;
 
             this.impersonating = false;
+            this.impersonationSetsThreadPrinciple = impersonationSetsThreadPrinciple;
 
             this.SupportsImpersonate = this.Credential.PackageInfo.Capabilities.HasFlag( SecPkgCapability.Impersonation );
         }
@@ -220,7 +228,7 @@ namespace NSspi.Contexts
 
                     this.ContextHandle.DangerousRelease();
 
-                    this.impersonating = true;
+                    this.impersonating = status == SecurityStatus.OK;
                 }
             }
 
@@ -235,6 +243,11 @@ namespace NSspi.Contexts
             else if( status != SecurityStatus.OK )
             {
                 throw new SSPIException( "Failed to impersonate the client", status );
+            }
+
+            if( this.impersonating && this.impersonationSetsThreadPrinciple )
+            {
+                SetThreadPrinciple();
             }
 
             return handle;
@@ -298,6 +311,16 @@ namespace NSspi.Contexts
             }
 
             base.Dispose( disposing );
+        }
+
+        /// <summary>
+        /// Set the current thread security context to the impersonated identity.
+        /// </summary>
+        private void SetThreadPrinciple()
+        {
+            Thread.CurrentPrincipal = new WindowsPrincipal(
+                WindowsIdentity.GetCurrent( TokenAccessLevels.AllAccess ) 
+            );
         }
     }
 }

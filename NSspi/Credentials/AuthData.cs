@@ -50,6 +50,6 @@ namespace NSspi.Credentials
     {
         Ansi = 1,
 
-        Unicode = 1
+        Unicode = 2
     }
 }
