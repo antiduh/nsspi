@@ -31,14 +31,6 @@ namespace NSspi.Contexts
             this.disposed = false;
         }
 
-        /// <summary>
-        /// Set the current thread security context to the impersonated identity
-        /// </summary>
-        public void SetThreadIdentity()
-        {
-            Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent(TokenAccessLevels.AllAccess));
-        }
-
         ~ImpersonationHandle()
         {
             Dispose( false );
@@ -55,7 +47,7 @@ namespace NSspi.Contexts
 
         protected virtual void Dispose( bool disposing )
         {
-            if ( disposing && this.disposed == false  && this.server != null && this.server.Disposed == false )
+            if( disposing && this.disposed == false && this.server != null && this.server.Disposed == false )
             {
                 this.server.RevertImpersonate();
             }
