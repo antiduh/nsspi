@@ -13,7 +13,7 @@ You can also browse the list of [releases](https://github.com/antiduh/nsspi/rele
 
 
 ## Introduction ##
-This projects provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface). This allows a custom client / server system to authenticate users using their existing logon credentials. This allows a developer to provide Single-Sign-On in their application.
+This project provides a C# / .Net interface to the Windows Integrated Authentication API, better known as SSPI (Security Service Provider Interface). This allows a custom client / server system to authenticate users using their existing logon credentials. This allows a developer to provide Single-Sign-On in their application.
 
 ## Overview ##
 The API provides raw access to authentication tokens so that authentication can be easily integrated into any networking system - you can send the tokens over a socket, a remoting interface, or heck even a serial port if you want; they're just bytes. Clients and servers may exchange encrypted and signed messages, and the server can perform client impersonation.
