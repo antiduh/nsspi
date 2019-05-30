@@ -1,97 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B4CD933-BF62-4F92-B8FA-6771758C5197}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>NSspi</RootNamespace>
     <AssemblyName>NSspi</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Kevin Thompson</Authors>
+    <PackageReleaseNotes>Adds support for username/password credentials, but introduces a minor change in the interface that breaks existing code.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/antiduh/nsspi</PackageProjectUrl>
+    <Version>0.2.1.0</Version>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\NSspi.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\NSspi.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.Data" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ByteWriter.cs" />
-    <Compile Include="Contexts\ClientContext.cs" />
-    <Compile Include="Contexts\Context.cs" />
-    <Compile Include="Contexts\ContextAttrib.cs" />
-    <Compile Include="Contexts\ContextNativeMethods.cs" />
-    <Compile Include="Contexts\ContextQueries.cs" />
-    <Compile Include="Contexts\ContextQueryAttrib.cs" />
-    <Compile Include="Contexts\ImpersonationHandle.cs" />
-    <Compile Include="Contexts\SafeContextHandle.cs" />
-    <Compile Include="Credentials\AuthData.cs" />
-    <Compile Include="Credentials\ClientCurrentCredential.cs" />
-    <Compile Include="Credentials\CurrentCredential.cs" />
-    <Compile Include="Credentials\PasswordCredential.cs" />
-    <Compile Include="Credentials\ServerCurrentCredential.cs" />
-    <Compile Include="EnumMgr.cs" />
-    <Compile Include="SecPkgInfo.cs" />
-    <Compile Include="Contexts\ServerContext.cs" />
-    <Compile Include="Credentials\Credential.cs" />
-    <Compile Include="Credentials\CredentialNativeMethods.cs" />
-    <Compile Include="Credentials\CredentialQueryAttrib.cs" />
-    <Compile Include="Credentials\CredentialUse.cs" />
-    <Compile Include="Credentials\QueryNameSupport.cs" />
-    <Compile Include="Credentials\SafeCredentialHandle.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="PackageSupport.cs" />
-    <Compile Include="PackageNames.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecureBuffer\SecureBuffer.cs" />
-    <Compile Include="SecureBuffer\SecureBufferAdapter.cs" />
-    <Compile Include="SecureBuffer\SecureBufferDataRep.cs" />
-    <Compile Include="SecureBuffer\SecureBufferDesc.cs" />
-    <Compile Include="SecureBuffer\SecureBufferType.cs" />
-    <Compile Include="SecurityStatus.cs" />
-    <Compile Include="SSPIException.cs" />
-    <Compile Include="SspiHandle.cs" />
-    <Compile Include="TimeStamp.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NSspi.nuspec" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
