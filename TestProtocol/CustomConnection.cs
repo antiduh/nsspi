@@ -93,10 +93,7 @@ namespace TestProtocol
 
                 try
                 {
-                    if( this.Disconnected != null )
-                    {
-                        this.Disconnected();
-                    }
+                    this.Disconnected?.Invoke();
                 }
                 catch
                 { }
