@@ -178,7 +178,7 @@ namespace TestProtocol
                     {
                         this.Received( message );
                     }
-                    catch( Exception e )
+                    catch( Exception )
                     { }
                 }
             }
