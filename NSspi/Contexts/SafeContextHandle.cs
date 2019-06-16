@@ -8,10 +8,17 @@ namespace NSspi.Contexts
     /// </summary>
     public class SafeContextHandle : SafeSspiHandle
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafeContextHandle"/> class.
+        /// </summary>
         public SafeContextHandle()
             : base()
         { }
 
+        /// <summary>
+        /// Releases the safe context handle.
+        /// </summary>
+        /// <returns></returns>
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         protected override bool ReleaseHandle()
         {

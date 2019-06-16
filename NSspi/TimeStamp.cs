@@ -10,6 +10,9 @@ namespace NSspi
     [StructLayout( LayoutKind.Sequential )]
     public struct TimeStamp
     {
+        /// <summary>
+        /// Returns the calendar date and time corresponding a zero timestamp.
+        /// </summary>
         public static readonly DateTime Epoch = new DateTime( 1601, 1, 1, 0, 0, 0, DateTimeKind.Utc );
 
         /// <summary>

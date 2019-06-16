@@ -55,17 +55,27 @@ namespace NSspi
     {
         internal RawSspiHandle rawHandle;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafeSspiHandle"/> class.
+        /// </summary>
         protected SafeSspiHandle()
             : base( IntPtr.Zero, true )
         {
             this.rawHandle = new RawSspiHandle();
         }
 
+        /// <summary>
+        /// Gets whether the handle is invalid.
+        /// </summary>
         public override bool IsInvalid
         {
             get { return IsClosed || this.rawHandle.IsZero(); }
         }
 
+        /// <summary>
+        /// Marks the handle as no longer being in use.
+        /// </summary>
+        /// <returns></returns>
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         protected override bool ReleaseHandle()
         {

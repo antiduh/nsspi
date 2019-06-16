@@ -10,14 +10,14 @@ namespace NSspi.Credentials
     public class Credential : IDisposable
     {
         /// <summary>
+        /// The name of the security package that controls the credential.
+        /// </summary>
+        private readonly string securityPackage;
+        
+        /// <summary>
         /// Whether the Credential has been disposed.
         /// </summary>
         private bool disposed;
-
-        /// <summary>
-        /// The name of the security package that controls the credential.
-        /// </summary>
-        private string securityPackage;
 
         /// <summary>
         /// A safe handle to the credential's handle.
@@ -35,11 +35,10 @@ namespace NSspi.Credentials
         /// <param name="package">The security package to acquire the credential from.</param>
         public Credential( string package )
         {
-            this.disposed = false;
             this.securityPackage = package;
 
+            this.disposed = false;
             this.expiry = DateTime.MinValue;
-
             this.PackageInfo = PackageSupport.GetPackageCapabilities( this.SecurityPackage );
         }
 
@@ -178,6 +177,10 @@ namespace NSspi.Credentials
             GC.SuppressFinalize( this );
         }
 
+        /// <summary>
+        /// Releases all resources associted with the credential.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose( bool disposing )
         {
             if( this.disposed == false )

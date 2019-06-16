@@ -8,10 +8,17 @@ namespace NSspi.Credentials
     /// </summary>
     public class SafeCredentialHandle : SafeSspiHandle
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafeCredentialHandle"/> class.
+        /// </summary>
         public SafeCredentialHandle()
             : base()
         { }
 
+        /// <summary>
+        /// Releases the resources held by the credential handle.
+        /// </summary>
+        /// <returns></returns>
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         protected override bool ReleaseHandle()
         {
