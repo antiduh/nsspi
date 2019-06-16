@@ -31,13 +31,16 @@ namespace NSspi.Contexts
             this.disposed = false;
         }
 
+        /// <summary>
+        /// Finalizes the ImpersonationHandle by reverting the impersonation.
+        /// </summary>
         ~ImpersonationHandle()
         {
             Dispose( false );
         }
 
         /// <summary>
-        /// Reverts the impersonation.
+        /// Reverts impersonation.
         /// </summary>
         public void Dispose()
         {
@@ -45,11 +48,27 @@ namespace NSspi.Contexts
             GC.SuppressFinalize( this );
         }
 
-        protected virtual void Dispose( bool disposing )
+        /// <summary>
+        /// Reverts impersonation.
+        /// </summary>
+        /// <param name="disposing">True if being disposed, false if being finalized.</param>
+        private void Dispose( bool disposing )
         {
-            if( disposing && this.disposed == false && this.server != null && this.server.Disposed == false )
+            // This implements a variant of the typical dispose pattern. Always try to revert
+            // impersonation, even if finalizing. Don't do anything if we're already reverted.
+
+            if( this.disposed == false )
             {
-                this.server.RevertImpersonate();
+                this.disposed = true;
+
+                // Just in case the reference is being pulled out from under us, pull a stable copy
+                // of the reference while we're null-checking.
+                var serverCopy = this.server;
+
+                if( serverCopy != null && serverCopy.Disposed == false )
+                {
+                    serverCopy.RevertImpersonate();
+                }
             }
         }
     }
