@@ -7,7 +7,13 @@
     <Authors>Kevin Thompson</Authors>
     <PackageReleaseNotes>Adds support for username/password credentials, but introduces a minor change in the interface that breaks existing code.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/antiduh/nsspi</PackageProjectUrl>
-    <Version>0.2.1.0</Version>
+    <Version>0.3.0.0</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>NSspi.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>NSspi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
