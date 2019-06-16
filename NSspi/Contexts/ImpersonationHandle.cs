@@ -18,8 +18,9 @@ namespace NSspi.Contexts
     /// </remarks>
     public class ImpersonationHandle : IDisposable
     {
+        private readonly ServerContext server;
+
         private bool disposed;
-        private ServerContext server;
 
         /// <summary>
         /// Initializes a new instance of the ImpersonationHandle. Does not perform impersonation.

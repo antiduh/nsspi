@@ -12,11 +12,11 @@ namespace NSspi.Contexts
     /// </summary>
     public class ServerContext : Context
     {
-        private ContextAttrib requestedAttribs;
-        private ContextAttrib finalAttribs;
+        private readonly ContextAttrib requestedAttribs;
+        private readonly bool impersonationSetsThreadPrinciple;
 
+        private ContextAttrib finalAttribs;
         private bool impersonating;
-        private bool impersonationSetsThreadPrinciple;
 
         /// <summary>
         /// Performs basic initialization of a new instance of the ServerContext class. The
@@ -31,11 +31,12 @@ namespace NSspi.Contexts
         public ServerContext( Credential cred, ContextAttrib requestedAttribs, bool impersonationSetsThreadPrinciple = false ) : base( cred )
         {
             this.requestedAttribs = requestedAttribs;
+            this.impersonationSetsThreadPrinciple = impersonationSetsThreadPrinciple;
+
             this.finalAttribs = ContextAttrib.Zero;
 
             this.impersonating = false;
-            this.impersonationSetsThreadPrinciple = impersonationSetsThreadPrinciple;
-
+            
             this.SupportsImpersonate = this.Credential.PackageInfo.Capabilities.HasFlag( SecPkgCapability.Impersonation );
         }
 
@@ -135,8 +136,6 @@ namespace NSspi.Contexts
 
             if( status == SecurityStatus.OK )
             {
-                nextToken = null;
-
                 base.Initialize( rawExpiry.ToDateTime() );
 
                 if( outBuffer.Length != 0 )
@@ -295,6 +294,10 @@ namespace NSspi.Contexts
             }
         }
 
+        /// <summary>
+        /// Releases all resources associted with the ServerContext.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose( bool disposing )
         {
             // We were disposed while impersonating. This means that the consumer that is currently holding
