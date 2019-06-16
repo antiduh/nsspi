@@ -116,7 +116,16 @@ namespace NSspi.Contexts
         /// </summary>
         AcceptIntegrity = 0x00020000,
 
+        /// <summary>
+        /// Set by a client; indicates the context can only impersonate with limited privileges,
+        /// allowing the server only to identify the client when impersonating.
+        /// </summary>
         InitIdentify = 0x00020000,
+
+        /// <summary>
+        /// Set by a server; indicates the context can only impersonate with limited privileges,
+        /// allowing the server only to identify the client when impersonating.
+        /// </summary>
         AcceptIdentify = 0x00080000,
 
         /// <summary>
