@@ -11,6 +11,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>nsspi key.snk</AssemblyOriginatorKeyFile>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>NSspi.xml</DocumentationFile>
@@ -21,5 +22,12 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Security.Principal.Windows" Version="4.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\License.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
