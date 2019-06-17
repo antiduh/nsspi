@@ -1,4 +1,4 @@
-Copyright (c) 2014, Kevin Thompson
+Copyright (c) 2019, Kevin Thompson
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
