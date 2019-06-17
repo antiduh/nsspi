@@ -1,11 +1,11 @@
 ## Downloads ##
 
-The latest release of NSspi is v0.2.1. 
+The latest release of NSspi is v0.3.0, released 16-Jun-2019. 
 
-Version 0.2.1 is a minor bugfix release that improves impersonation.
+Version 0.3.0 adds multi-targeting to add simulataneous support for .Net framework and .Net standard 2.0. The library is now also strong-name signed.
 
-* [Source](https://github.com/antiduh/nsspi/archive/0.2.1.zip)
-* [Binaries](https://github.com/antiduh/nsspi/releases/download/0.2.1/nsspi-0.2.1-bin.zip)
+* [Source](https://github.com/antiduh/nsspi/archive/0.3.0.zip)
+* [Binaries](https://github.com/antiduh/nsspi/releases/download/0.3.0/nsspi-0.3.0-bin.zip)
 * [Nuget package](https://www.nuget.org/packages/NSspi)
 
 You can also browse the list of [releases](https://github.com/antiduh/nsspi/releases).
