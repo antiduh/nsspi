@@ -17,5 +17,9 @@ namespace NSspi
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
         [DllImport( "Secur32.dll", EntryPoint = "EnumerateSecurityPackages", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus EnumerateSecurityPackages( ref int numPackages, ref IntPtr pkgInfoArry );
+
+        [DllImport( "Kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true )]
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        internal static extern bool CloseHandle( IntPtr handle );
     }
 }

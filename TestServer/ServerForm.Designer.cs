@@ -170,7 +170,8 @@
             // 
             // impersonateButton
             // 
-            this.impersonateButton.Location = new System.Drawing.Point(262, 350);
+            this.impersonateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.impersonateButton.Location = new System.Drawing.Point(262, 356);
             this.impersonateButton.Name = "impersonateButton";
             this.impersonateButton.Size = new System.Drawing.Size(116, 23);
             this.impersonateButton.TabIndex = 4;

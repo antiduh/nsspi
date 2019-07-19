@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using NSspi.Buffers;
 using NSspi.Credentials;
 
@@ -115,6 +116,68 @@ namespace NSspi.Contexts
             }
 
             this.Disposed = true;
+        }
+
+        public IIdentity GetRemoteIdentity()
+        {
+            using( var tokenHandle = GetContextToken() )
+            {
+                return new WindowsIdentity(
+                    tokenHandle.DangerousGetHandle(),
+                    this.Credential.SecurityPackage
+                );
+            }
+        }
+
+        private SafeTokenHandle GetContextToken()
+        {
+            bool gotRef = false;
+            SecurityStatus status = SecurityStatus.InternalError;
+            SafeTokenHandle token;
+
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                this.ContextHandle.DangerousAddRef( ref gotRef );
+            }
+            catch( Exception )
+            {
+                if( gotRef )
+                {
+                    this.ContextHandle.DangerousRelease();
+                    gotRef = false;
+                }
+
+                throw;
+            }
+            finally
+            {
+                if( gotRef )
+                {
+                    try
+                    {
+                        status = ContextNativeMethods.QuerySecurityContextToken(
+                            ref this.ContextHandle.rawHandle,
+                            out token
+                        );
+                    }
+                    finally
+                    {
+                        this.ContextHandle.DangerousRelease();
+                    }
+                }
+                else
+                {
+                    token = null;
+                }
+            }
+
+            if( status != SecurityStatus.OK )
+            {
+                throw new SSPIException( "Failed to query context token.", status );
+            }
+
+            return token;
         }
 
         /// <summary>

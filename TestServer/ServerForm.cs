@@ -1,14 +1,16 @@
 ﻿using System;
+using System.IO;
+using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
+using NSspi;
+using NSspi.Contexts;
+using NSspi.Credentials;
 using TestProtocol;
 
 namespace TestServer
 {
-    using System.IO;
-    using NSspi;
-    using NSspi.Contexts;
-    using NSspi.Credentials;
+
     using Message = TestProtocol.Message;
 
     public partial class ServerForm : Form
@@ -38,7 +40,8 @@ namespace TestServer
                 ContextAttrib.SequenceDetect |
                 ContextAttrib.MutualAuth |
                 ContextAttrib.Delegate |
-                ContextAttrib.Confidentiality
+                ContextAttrib.Confidentiality,
+                true
             );
 
             this.server = new CustomServer();
@@ -123,7 +126,11 @@ namespace TestServer
             {
                 MessageBox.Show( "Starting impersonation: " + Environment.UserName );
 
-                FileStream stream = File.Create( Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory ) + @"\test.txt" );
+                var directory = Environment.GetFolderPath( Environment.SpecialFolder.DesktopDirectory );
+
+                Directory.CreateDirectory( directory );
+
+                FileStream stream = File.Create( directory + @"\test.txt" );
                 StreamWriter writer = new StreamWriter( stream, Encoding.UTF8 );
 
                 writer.WriteLine( "Hello world." );
@@ -162,6 +169,32 @@ namespace TestServer
             {
                 HandleUnknown( message );
             }
+        }
+
+        private void InitComplete()
+        {
+            UpdateButtons();
+            this.clientUsernameTextBox.Text = serverContext.ContextUserName;
+
+            var builder = new StringBuilder();
+            var remoteId = this.serverContext.GetRemoteIdentity();
+
+            builder.AppendLine( "Client identity information:" );
+            builder.AppendLine( " - Name: " + remoteId.Name );
+
+            var windowsId = remoteId as WindowsIdentity;
+
+            if( windowsId != null )
+            {
+                builder.AppendLine( " - User SID: " + windowsId.User.Value );
+
+                foreach( var claim in windowsId.Claims )
+                {
+                    builder.AppendLine( " - " + claim.ToString() );
+                }
+            }
+
+            this.receivedTextbox.AppendText( builder.ToString() );
         }
 
         private void server_Disconnected()
@@ -209,11 +242,7 @@ namespace TestServer
                         this.initializing = false;
                         this.connected = true;
 
-                        this.Invoke( (Action)delegate ()
-                        {
-                            UpdateButtons();
-                            this.clientUsernameTextBox.Text = serverContext.ContextUserName;
-                        } );
+                        this.Invoke( (Action)InitComplete );
                     }
                 }
                 else

@@ -174,6 +174,10 @@ namespace NSspi.Contexts
         [DllImport( "Secur32.dll", EntryPoint = "RevertSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus RevertSecurityContext( ref RawSspiHandle contextHandle );
 
+        [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]
+        [DllImport( "Secur32.dll", EntryPoint = "QuerySecurityContextToken", SetLastError = true )]
+        internal static extern SecurityStatus QuerySecurityContextToken( ref RawSspiHandle contextHandle, [Out] out SafeTokenHandle handle );
+
         [StructLayout( LayoutKind.Sequential )]
         private class KeyStruct
         {

@@ -246,7 +246,7 @@ namespace NSspi.Contexts
 
             if( this.impersonating && this.impersonationSetsThreadPrinciple )
             {
-                SetThreadPrinciple();
+                Thread.CurrentPrincipal = new WindowsPrincipal( (WindowsIdentity)GetRemoteIdentity() );
             }
 
             return handle;
@@ -314,16 +314,6 @@ namespace NSspi.Contexts
             }
 
             base.Dispose( disposing );
-        }
-
-        /// <summary>
-        /// Set the current thread security context to the impersonated identity.
-        /// </summary>
-        private void SetThreadPrinciple()
-        {
-            Thread.CurrentPrincipal = new WindowsPrincipal(
-                WindowsIdentity.GetCurrent( TokenAccessLevels.AllAccess ) 
-            );
         }
     }
 }
