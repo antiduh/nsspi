@@ -118,15 +118,52 @@ namespace NSspi.Contexts
             this.Disposed = true;
         }
 
+        /// <summary>
+        /// Returns the identity of the remote entity.
+        /// </summary>
+        /// <returns></returns>
         public IIdentity GetRemoteIdentity()
         {
+            IIdentity result = null;
+
             using( var tokenHandle = GetContextToken() )
             {
-                return new WindowsIdentity(
-                    tokenHandle.DangerousGetHandle(),
-                    this.Credential.SecurityPackage
-                );
+                bool gotRef = false;
+
+                RuntimeHelpers.PrepareConstrainedRegions();
+                try
+                {
+                    tokenHandle.DangerousAddRef( ref gotRef );
+                }
+                catch( Exception )
+                {
+                    if( gotRef )
+                    {
+                        tokenHandle.DangerousRelease();
+                        gotRef = false;
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    try
+                    {
+                        result = new WindowsIdentity(
+                            tokenHandle.DangerousGetHandle(),
+                            this.Credential.SecurityPackage
+                        );
+                    }
+                    finally
+                    {
+                        // Make sure we release the handle, even if the allocation for
+                        // WindowsIdentity fails.
+                        tokenHandle.DangerousRelease();
+                    }
+                }
             }
+
+            return result;
         }
 
         private SafeTokenHandle GetContextToken()
