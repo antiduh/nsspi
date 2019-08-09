@@ -5,7 +5,6 @@ The latest release of NSspi is v0.3.1, released 5-Aug-2019.
 Version 0.3.1 adds support to obtain an IIdentity/WindowsPrinciple representing the remote connection. This is useful for servers that wish to query the properties on the principle, such as claims.
 
 * [Source](https://github.com/antiduh/nsspi/archive/0.3.1.zip)
-* [Binaries](https://github.com/antiduh/nsspi/releases/download/0.3.1/nsspi-0.3.1-bin.zip)
 * [Nuget package](https://www.nuget.org/packages/NSspi)
 
 You can also browse the list of [releases](https://github.com/antiduh/nsspi/releases).
