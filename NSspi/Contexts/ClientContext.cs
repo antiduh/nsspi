@@ -149,26 +149,32 @@ namespace NSspi.Contexts
                         );
                     }
                 }
-            }
 
-            if( status.IsError() == false )
-            {
-                if( status == SecurityStatus.OK )
+                if (status.IsError() == false)
                 {
-                    base.Initialize( rawExpiry.ToDateTime() );
+                    if (status == SecurityStatus.OK)
+                    {
+                        base.Initialize(rawExpiry.ToDateTime());
+                    }
+
+                    outToken = null;
+
+                    if (outTokenBuffer.Length != 0)
+                    {
+                        outToken = new byte[outTokenBuffer.Length];
+                        Array.Copy(outTokenBuffer.Buffer, outToken, outToken.Length);
+                    }
+
+                    if (status == SecurityStatus.CompleteNeeded || status == SecurityStatus.CompAndContinue)
+                    {
+                        ContextNativeMethods.CompleteAuthToken(ref this.ContextHandle.rawHandle, outAdapter.Handle);
+                        status = (status == SecurityStatus.CompleteNeeded) ? SecurityStatus.OK : SecurityStatus.ContinueNeeded;
+                    }
                 }
-
-                outToken = null;
-
-                if( outTokenBuffer.Length != 0 )
+                else
                 {
-                    outToken = new byte[outTokenBuffer.Length];
-                    Array.Copy( outTokenBuffer.Buffer, outToken, outToken.Length );
+                    throw new SSPIException("Failed to invoke InitializeSecurityContext for a client", status);
                 }
-            }
-            else
-            {
-                throw new SSPIException( "Failed to invoke InitializeSecurityContext for a client", status );
             }
 
             return status;
