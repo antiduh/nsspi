@@ -102,6 +102,10 @@ namespace NSspi.Contexts
         [DllImport( "Secur32.dll", EntryPoint = "DeleteSecurityContext", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus DeleteSecurityContext( ref RawSspiHandle contextHandle );
 
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        [DllImport("Secur32.dll", EntryPoint = "CompleteAuthToken", CharSet = CharSet.Unicode)]
+        internal static extern SecurityStatus CompleteAuthToken(ref RawSspiHandle contextHandle, IntPtr buffer);
+
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.MayFail )]
         [DllImport( "Secur32.dll", EntryPoint = "EncryptMessage", CharSet = CharSet.Unicode )]
         internal static extern SecurityStatus EncryptMessage(
