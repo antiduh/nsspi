@@ -221,17 +221,18 @@ namespace NSspi.Contexts
         /// Encrypts the byte array using the context's session key.
         /// </summary>
         /// <remarks>
-        /// The structure of the returned data is as follows:
-        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the trailer buffer size
-        ///  - 4 bytes, an unsigned big-endian integer indicating the length of the message buffer size.
-        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the encryption padding buffer size.
+        /// If <paramref name="stream"/> is <c>false</c>, this is equivalent to calling <see cref="Encrypt(byte[])"/> and
+        /// the returned array contains encoded versions of the trailer, message and padding buffers.
+        /// 
+        /// If <paramref name="stream"/> is <c>true</c> the lengths will be ommitted and the returned array contains only:
         ///  - The trailer buffer
         ///  - The message buffer
         ///  - The padding buffer.
         /// </remarks>
         /// <param name="input">The raw message to encrypt.</param>
+        /// <param name="stream">Indicates if the returned data should contain only the encrypted data (<c>true</c>) or also an encoded version of the length of each buffer (<c>false</c>)</param>
         /// <returns>The packed and encrypted message.</returns>
-        public byte[] Encrypt( byte[] input )
+        public byte[] Encrypt( byte[] input, bool stream )
         {
             // The message is encrypted in place in the buffer we provide to Win32 EncryptMessage
             SecPkgContext_Sizes sizes;
@@ -276,16 +277,19 @@ namespace NSspi.Contexts
             //  -- 4 bytes for the message size
             //  -- 2 bytes for the padding size.
             //  -- The encrypted message
-            result = new byte[2 + 4 + 2 + trailerBuffer.Length + dataBuffer.Length + paddingBuffer.Length];
+            result = new byte[(stream ? 0 : (2 + 4 + 2)) + trailerBuffer.Length + dataBuffer.Length + paddingBuffer.Length];
 
-            ByteWriter.WriteInt16_BE( (short)trailerBuffer.Length, result, position );
-            position += 2;
+            if( !stream )
+            { 
+                ByteWriter.WriteInt16_BE( (short)trailerBuffer.Length, result, position );
+                position += 2;
 
-            ByteWriter.WriteInt32_BE( dataBuffer.Length, result, position );
-            position += 4;
+                ByteWriter.WriteInt32_BE( dataBuffer.Length, result, position );
+                position += 4;
 
-            ByteWriter.WriteInt16_BE( (short)paddingBuffer.Length, result, position );
-            position += 2;
+                ByteWriter.WriteInt16_BE( (short)paddingBuffer.Length, result, position );
+                position += 2;
+            }
 
             Array.Copy( trailerBuffer.Buffer, 0, result, position, trailerBuffer.Length );
             position += trailerBuffer.Length;
@@ -297,6 +301,72 @@ namespace NSspi.Contexts
             position += paddingBuffer.Length;
 
             return result;
+        }
+
+        /// <summary>
+        /// Encrypts the byte array using the context's session key.
+        /// </summary>
+        /// <remarks>
+        /// The structure of the returned data is as follows:
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the trailer buffer size
+        ///  - 4 bytes, an unsigned big-endian integer indicating the length of the message buffer size.
+        ///  - 2 bytes, an unsigned big-endian integer indicating the length of the encryption padding buffer size.
+        ///  - The trailer buffer
+        ///  - The message buffer
+        ///  - The padding buffer.
+        /// </remarks>
+        /// <param name="input">The raw message to encrypt.</param>
+        /// <returns>The packed and encrypted message.</returns>
+        public byte[] Encrypt( byte[] input )
+        {
+            return Encrypt( input, false );
+        }
+
+        /// <summary>
+        /// Decrypts a previously encrypted message.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="stream"/> is <c>false</c>, this is equivalent to calling <see cref="Decrypt(byte[])"/> and
+        /// the <paramref name="input"/> must contain encoded versions of the trailer, message and padding buffers.
+        /// 
+        /// If <paramref name="stream"/> is <c>true</c> the lengths should be ommitted and the <paramref name="input"/>
+        /// should contain only:
+        ///  - The trailer buffer
+        ///  - The message buffer
+        ///  - The padding buffer.
+        /// </remarks>
+        /// <param name="input">The packed and encrypted data.</param>
+        /// <param name="stream">Indicates if the data contains only the encrypted data (<c>true</c>) or also contains an encoded version of the length of each buffer (<c>false</c>)</param>
+        /// <returns>The original plaintext message.</returns>
+        public byte[] Decrypt( byte[] input, bool stream )
+        {
+            if( !stream )
+            { 
+                return Decrypt( input );
+            }
+
+            byte[] inputCopy = new byte[input.Length];
+            Array.Copy( input, 0, inputCopy, 0, input.Length );
+
+            SecureBuffer inputBuffer;
+            SecureBuffer outputBuffer;
+            SecureBufferAdapter adapter;
+            SecurityStatus status;
+
+            inputBuffer = new SecureBuffer( inputCopy, BufferType.Stream );
+            outputBuffer = new SecureBuffer( null, BufferType.Data );
+
+            using( adapter = new SecureBufferAdapter( new[] { inputBuffer, outputBuffer } ) )
+            {
+                status = ContextNativeMethods.SafeDecryptMessage(
+                    this.ContextHandle,
+                    0,
+                    adapter,
+                    0
+                );
+
+                return adapter.ExtractData(1);
+            }
         }
 
         /// <summary>
