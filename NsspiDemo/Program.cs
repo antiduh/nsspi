@@ -137,6 +137,30 @@ namespace NSspi
                     }
                 }
 
+                cipherText = client.Encrypt(plainText, true);
+
+                roundTripPlaintext = server.Decrypt(cipherText, true);
+
+                if (roundTripPlaintext.Length != plainText.Length)
+                {
+                    throw new Exception();
+                }
+
+                for (int i = 0; i < plainText.Length; i++)
+                {
+                    if (plainText[i] != roundTripPlaintext[i])
+                    {
+                        throw new Exception();
+                    }
+                }
+
+                rtMessage = Encoding.UTF8.GetString(roundTripPlaintext, 0, roundTripPlaintext.Length);
+
+                if (rtMessage.Equals(message) == false)
+                {
+                    throw new Exception();
+                }
+
                 Console.Out.Flush();
             }
             finally

@@ -123,7 +123,7 @@ namespace NSspi.Buffers
 
                 this.bufferCarrier[i] = new SecureBufferInternal();
                 this.bufferCarrier[i].Type = this.buffers[i].Type;
-                this.bufferCarrier[i].Count = this.buffers[i].Buffer.Length;
+                this.bufferCarrier[i].Count = this.buffers[i].Buffer?.Length ?? 0;
                 this.bufferCarrier[i].Buffer = bufferHandles[i].AddrOfPinnedObject();
             }
 
@@ -135,6 +135,23 @@ namespace NSspi.Buffers
             this.descriptor.Buffers = bufferCarrierHandle.AddrOfPinnedObject();
 
             this.descriptorHandle = GCHandle.Alloc( descriptor, GCHandleType.Pinned );
+        }
+
+        /// <summary>
+        /// Extracts data from a buffer allocated by the platform
+        /// </summary>
+        /// <remarks>
+        /// If a buffer is allocated by the platform, the original .NET byte[] would be <c>null</c> and so can't
+        /// be read directly by the caller. This method extracts the data from the unmanaged buffer and copies it
+        /// to managed memory so it can be used easily.
+        /// </remarks>
+        /// <param name="index">The index of the buffer to extract the data from</param>
+        /// <returns>The data in the buffer</returns>
+        public byte[] ExtractData(int index)
+        {
+            byte[] buf = new byte[this.bufferCarrier[index].Count];
+            Marshal.Copy( this.bufferCarrier[index].Buffer, buf, 0, this.bufferCarrier[index].Count );
+            return buf;
         }
 
         [ReliabilityContract( Consistency.WillNotCorruptState, Cer.Success )]

@@ -52,7 +52,7 @@ namespace NSspi.Buffers
         {
             this.Buffer = buffer;
             this.Type = type;
-            this.Length = this.Buffer.Length;
+            this.Length = this.Buffer?.Length ?? 0;
         }
 
         /// <summary>
